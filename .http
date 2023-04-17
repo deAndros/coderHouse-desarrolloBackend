@@ -11,11 +11,11 @@ POST http://localhost:8080/api/products
 content-type: application/json
 
 {
-    "title": "Producto prueba 13",
+    "title": "Producto prueba 11",
     "description": "Este es un producto de prueba",
     "price": 200,
     "thumbnails": ["Sin imagen"],
-    "code": "abc192 13",
+    "code": "abc192 11",
     "stock": 25,
     "category": "Comicbook"
 }
@@ -34,7 +34,7 @@ content-type: application/json
     "category": "Categoría modificada"
   }
 ###
-DELETE http://localhost:8080/api/products/12
+DELETE http://localhost:8080/api/products/11
 
 //___________CARTS Endpoints___________
 ###
