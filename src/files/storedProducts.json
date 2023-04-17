@@ -1,0 +1,135 @@
+[
+  {
+    "title": "Producto prueba 1",
+    "description": "Este es un producto de prueba",
+    "price": 200,
+    "thumbnails": [
+      "Sin imagen"
+    ],
+    "code": "abc1",
+    "stock": 25,
+    "status": true,
+    "category": "Comicbook",
+    "id": 1
+  },
+  {
+    "title": "Producto prueba 2",
+    "description": "Este es un producto de prueba",
+    "price": 200,
+    "thumbnails": "Sin imagen",
+    "code": "abc123 2",
+    "stock": 25,
+    "id": 2
+  },
+  {
+    "title": "Producto prueba 3",
+    "description": "Este es un producto de prueba",
+    "price": 200,
+    "thumbnails": "Sin imagen",
+    "code": "abc123 3",
+    "stock": 25,
+    "id": 3
+  },
+  {
+    "title": "Producto prueba 4",
+    "description": "Este es un producto de prueba",
+    "price": 200,
+    "thumbnails": "Sin imagen",
+    "code": "abc123 4",
+    "stock": 25,
+    "id": 4
+  },
+  {
+    "title": "Producto prueba 5",
+    "description": "Este es un producto de prueba",
+    "price": 200,
+    "thumbnails": "Sin imagen",
+    "code": "abc123 5",
+    "stock": 25,
+    "id": 5
+  },
+  {
+    "title": "Producto prueba 6",
+    "description": "Este es un producto de prueba",
+    "price": 200,
+    "thumbnails": "Sin imagen",
+    "code": "abc123 6",
+    "stock": 25,
+    "id": 6
+  },
+  {
+    "title": "Producto prueba 7",
+    "description": "Este es un producto de prueba",
+    "price": 200,
+    "thumbnails": "Sin imagen",
+    "code": "abc123 7",
+    "stock": 25,
+    "id": 7
+  },
+  {
+    "title": "Producto prueba 8",
+    "description": "Este es un producto de prueba",
+    "price": 200,
+    "thumbnails": "Sin imagen",
+    "code": "abc123 8",
+    "stock": 25,
+    "id": 8
+  },
+  {
+    "title": "Producto prueba 9",
+    "description": "Este es un producto de prueba",
+    "price": 200,
+    "thumbnails": "Sin imagen",
+    "code": "abc123 9",
+    "stock": 25,
+    "id": 9
+  },
+  {
+    "title": "Producto prueba 10",
+    "description": "Este es un producto de prueba",
+    "price": 200,
+    "thumbnails": "Sin imagen",
+    "code": "abc123 10",
+    "stock": 25,
+    "id": 10
+  },
+  {
+    "title": "Producto prueba 11",
+    "description": "Este es un producto de prueba",
+    "price": 200,
+    "thumbnails": [
+      "Sin imagen"
+    ],
+    "code": "abc192 11",
+    "stock": 25,
+    "status": true,
+    "category": "Comicbook",
+    "id": 11
+  },
+  {
+    "title": "Producto prueba 12",
+    "description": "Este es un producto de prueba",
+    "price": 200,
+    "thumbnails": [
+      "Sin imagen"
+    ],
+    "code": "abc192 12",
+    "stock": 25,
+    "status": true,
+    "category": "Comicbook",
+    "id": 12
+  },
+  {
+    "title": "Producto prueba 13",
+    "description": "Este es un producto de prueba",
+    "price": 200,
+    "thumbnails": [
+      "Sin imagen"
+    ],
+    "code": "abc192 13",
+    "stock": 25,
+    "status": true,
+    "category": "Comicbook",
+    "id": 13
+  }
+]

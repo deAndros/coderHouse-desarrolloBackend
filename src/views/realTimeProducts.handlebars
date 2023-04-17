@@ -1,0 +1,28 @@
+<div>
+  <h2>Real Time Products</h2>
+  <table class="tg" id="productsTable">
+    <thead>
+      <tr>
+        <th class="tg-tk2y"><span style="font-weight:bold">Nombre</span></th>
+        <th class="tg-tk2y"><span style="font-weight:bold">Precio</span></th>
+        <th class="tg-tk2y"><span style="font-weight:bold">Código</span></th>
+        <th class="tg-tk2y"><span style="font-weight:bold">Stock</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="tg-0lax">{{this.title}}</td>
+        <td class="tg-0lax">{{this.price}}</td>
+        <td class="tg-0lax">{{this.code}}</td>
+        <td class="tg-0lax">{{this.stock}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/static/js/realTimeProducts.js"></script>
+<script
+  src="
+https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js
+"
+></script>
