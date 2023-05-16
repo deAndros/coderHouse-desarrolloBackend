@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require('fs');
 
 //path sugerido: "./files/storedProducts.json"
 
@@ -12,7 +12,7 @@ class ProductManager {
   fetchStoredProducts = async () => {
     try {
       const products = JSON.parse(
-        await fs.promises.readFile(this.path, "utf-8")
+        await fs.promises.readFile(this.path, 'utf-8')
       );
       ProductManager.idCounter = products.length;
 
@@ -41,7 +41,7 @@ class ProductManager {
       const productFound = products.find((product) => product.id === id);
 
       if (!productFound)
-        throw new Error("No existe un producto con el ID seleccionado");
+        throw new Error('No existe un producto con el ID seleccionado');
 
       return productFound;
     } catch (error) {
@@ -67,13 +67,12 @@ class ProductManager {
     await fs.promises.writeFile(
       this.path,
       JSON.stringify(products, null, 2),
-      "utf-8"
+      'utf-8'
     );
 
     return true;
   };
 
-  //TODO: Validar por qué no elimina el producto anterior
   updateProduct = async (id, properties) => {
     try {
       const productToBeUpdated = await this.getProductById(id);
@@ -86,7 +85,7 @@ class ProductManager {
       await fs.promises.writeFile(
         this.path,
         JSON.stringify(products, null, 2),
-        "utf-8"
+        'utf-8'
       );
 
       return updatedProduct;
@@ -95,13 +94,12 @@ class ProductManager {
     }
   };
 
-  //TODO: Validar por qué no elimina
   deleteProduct = async (id) => {
     let products = await this.fetchStoredProducts();
     const objectIndex = products.findIndex((product) => product.id === id);
 
     if (objectIndex === -1) {
-      throw new Error("No existe el producto que se desea eliminar");
+      throw new Error('No existe el producto que se desea eliminar');
     }
 
     //products = products.splice(objectIndex, 1);
@@ -109,7 +107,7 @@ class ProductManager {
     await fs.promises.writeFile(
       this.path,
       JSON.stringify(products, null, 2),
-      "utf-8"
+      'utf-8'
     );
     return true;
   };

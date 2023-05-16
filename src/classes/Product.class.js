@@ -1,12 +1,3 @@
-const keyConfig = [
-  { name: "title", mandatory: true, dataType: "String", maxLength: 50 },
-  { name: "code", mandatory: true, dataType: "String", maxLength: 5 },
-  { name: "stock", mandatory: true, dataType: "number", maxLength: 5 },
-  { name: "description", mandatory: true, dataType: "String", maxLength: 150 },
-  { name: "price", mandatory: true, dataType: "number", maxLength: 7 },
-  { name: "category", mandatory: true, dataType: "String", maxLength: 50 },
-];
-
 class Product {
   constructor(
     title,
@@ -20,27 +11,27 @@ class Product {
   ) {
     //TODO: Mejorar el manejo de errores y validación de keys obligatorias
     if (!title) {
-      throw new Error(this.#buildError("title"));
+      throw new Error(this.#buildError('title'));
     }
 
     if (!code) {
-      throw new Error(this.#buildError("code"));
+      throw new Error(this.#buildError('code'));
     }
 
     if (!description) {
-      throw new Error(this.#buildError("description"));
+      throw new Error(this.#buildError('description'));
     }
 
     if (!price) {
-      throw new Error(this.#buildError("price"));
+      throw new Error(this.#buildError('price'));
     }
 
     if (!category) {
-      throw new Error(this.#buildError("category"));
+      throw new Error(this.#buildError('category'));
     }
 
     if (!thumbnails) {
-      throw new Error(this.#buildError("thumbnails"));
+      throw new Error(this.#buildError('thumbnails'));
     }
 
     this.title = title;
@@ -57,9 +48,7 @@ class Product {
     this.id = id;
   }
 
-  validateKeys(object) {}
-
-  #buildError(err = "Error desconocido") {
+  #buildError(err = 'Error desconocido') {
     return `El dato ${err} es obligatorio`;
   }
 }

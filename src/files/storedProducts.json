@@ -3,7 +3,9 @@
     "title": "Producto prueba 1",
     "description": "Este es un producto de prueba",
     "price": 200,
-    "thumbnails": ["Sin imagen"],
+    "thumbnails": [
+      "Sin imagen"
+    ],
     "code": "abc1",
     "stock": 25,
     "status": true,
@@ -90,5 +92,18 @@
     "code": "abc123 10",
     "stock": 25,
     "id": 10
+  },
+  {
+    "title": "Producto prueba 11",
+    "description": "Este es un producto de prueba",
+    "price": 200,
+    "thumbnails": [
+      "Sin imagen"
+    ],
+    "code": "abc192 11",
+    "stock": 25,
+    "status": true,
+    "category": "Comicbook",
+    "id": 11
   }
 ]

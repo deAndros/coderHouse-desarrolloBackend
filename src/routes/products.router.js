@@ -1,23 +1,41 @@
-const { Router } = require("express");
+const { Router } = require('express');
 const router = Router();
 
-const ProductManager = require("../classes/ProductManager.class.js");
-const productManager = new ProductManager("./src/files/storedProducts.json");
-const Product = require("../classes/Product.class.js");
+const ProductManagerMongo = require('../managerDaos/mongo/ProductManager.mongo.class.js');
+const productManagerMongo = new ProductManagerMongo();
+const Product = require('../classes/Product.class.js');
 
-router.get("/", async (request, response) => {
+router.get('/', async (request, response) => {
+  //TODO: Agregar las agregaciones para filtrar por category y status
   try {
-    const products = await productManager.getProducts();
-    //Valido que el limit se haya enviado por parámetro y que sea un valor numérico entero
-    if (
-      request.query.hasOwnProperty("limit") &&
-      !isNaN(parseInt(request.query.limit))
-    )
-      return response.send({
-        products: products.slice(0, parseInt(request.query.limit)),
-      });
+    const { limit, page, sort } = request.query;
 
-    response.send({ products: products });
+    let { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } =
+      await productManagerMongo.getProducts(limit, page, sort);
+
+    let prevLink;
+    let nextLink;
+
+    !hasPrevPage
+      ? (prevLink = null)
+      : (prevLink = `/api/products?page=${prevPage}&limit=${limit}&sort=${sort}`);
+
+    !hasNextPage
+      ? (nextLink = null)
+      : (prevLink = `/api/products?page=${nextPage}&limit=${limit}&sort=${sort}`);
+
+    response.status(200).send({
+      status: 'success',
+      products: docs,
+      totalPages,
+      prevPage,
+      nextPage,
+      page,
+      hasPrevPage,
+      hasNextPage,
+      prevLink,
+      nextLink,
+    });
   } catch (error) {
     return response.status(400).send({
       error: error.message,
@@ -25,18 +43,10 @@ router.get("/", async (request, response) => {
   }
 });
 
-router.get("/:id", async (request, response) => {
-  const id = parseInt(request.params.id);
-
-  if (isNaN(id) || !id) {
-    return response.status(400).send({
-      error: "El id proporcionado debe ser un número entero y positivo",
-    });
-  }
-
+router.get('/:id', async (request, response) => {
   try {
-    const product = await productManager.getProductById(request.params.id);
-    response.send({ message: "Producto hallado", product: product });
+    const product = await productManagerMongo.getProductById(request.params.id);
+    response.send({ message: 'Producto hallado', product: product });
   } catch (error) {
     return response.status(400).send({
       error: error.message,
@@ -44,14 +54,9 @@ router.get("/:id", async (request, response) => {
   }
 });
 
-router.post("/", async (request, response) => {
+router.post('/', async (request, response) => {
   if (Object.keys(request.body).length === 0)
-    return response.status(400).send({ error: "No se encontró post-data" });
-
-  if (request.body.id)
-    return response
-      .status(400)
-      .send({ error: "No se permite ingresar el campo id" });
+    return response.status(400).send({ error: 'No se encontró post-data' });
 
   let productToAdd = new Product(
     request.body.title,
@@ -65,37 +70,29 @@ router.post("/", async (request, response) => {
   );
 
   try {
-    await productManager.addProduct(productToAdd);
+    await productManagerMongo.addProduct(productToAdd);
   } catch (error) {
     return response.status(400).send({
       status: 400,
-      message: "Se produjo un error al agregar el producto",
+      message: 'Se produjo un error al agregar el producto',
       error: error.message,
     });
   }
 
   response
     .status(200)
-    .send({ status: 200, message: "El producto se agregó correctamente" });
-
-  //TODO: Agregar una validación para que el objeto que se envía por body solo pueda tener las keys: [title, code, stock, description, price, thumbnail]
+    .send({ status: 200, message: 'El producto se agregó correctamente' });
 });
 
-//TODO: No llega el mensaje de error cuando se ingresa el ID de un producto no existente
-router.put("/:id", async (request, response) => {
-  const id = parseInt(request.params.id);
-
-  if (isNaN(id) || !id) {
-    return response.status(400).send({
-      error: "El id proporcionado debe ser un número entero y positivo",
-    });
-  }
-
+router.put('/:id', async (request, response) => {
   try {
-    updatedProduct = await productManager.updateProduct(id, request.body);
+    const updatedProduct = await productManagerMongo.updateProduct(
+      request.params.id,
+      request.body
+    );
 
     response.status(200).send({
-      message: "El producto se actualizó correctamente",
+      message: 'El producto se actualizó correctamente',
       updatedProduct: updatedProduct,
     });
   } catch (error) {
@@ -103,20 +100,12 @@ router.put("/:id", async (request, response) => {
   }
 });
 
-router.delete("/:id", async (request, response) => {
-  const id = parseInt(request.params.id);
-
-  if (isNaN(id) || !id) {
-    return response.status(400).send({
-      error: "El id proporcionado debe ser un número entero y positivo",
-    });
-  }
-
+router.delete('/:id', async (request, response) => {
   try {
-    deletedProduct = await productManager.deleteProduct(id);
+    deletedProduct = await productManagerMongo.deleteProduct(request.params.id);
 
     response.status(200).send({
-      message: "El producto se eliminó correctamente",
+      message: 'El producto se eliminó correctamente',
       deletedProduct: deletedProduct,
     });
   } catch (error) {

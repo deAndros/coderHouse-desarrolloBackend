@@ -1,8 +1,8 @@
-const Cart = require("./Cart.class.js");
-const ProductManager = require("./ProductManager.class.js");
-const productManager = new ProductManager("./src/files/storedProducts.json");
+const Cart = require('../../classes/Cart.class.js');
+const ProductManager = require('./ProductManager.class.js');
+const productManager = new ProductManager('./src/files/storedProducts.json');
 
-const fs = require("fs");
+const fs = require('fs');
 
 //path sugerido: "./files/storedCarts.json"
 
@@ -15,7 +15,7 @@ class CartManager {
 
   fetchStoredCarts = async () => {
     try {
-      const carts = JSON.parse(await fs.promises.readFile(this.path, "utf-8"));
+      const carts = JSON.parse(await fs.promises.readFile(this.path, 'utf-8'));
       CartManager.idCounter = carts.length;
 
       return carts;
@@ -40,9 +40,9 @@ class CartManager {
       const carts = await this.fetchStoredCarts();
       const cartFound = carts.find((cart) => cart.id === cartId);
 
-      if (!cartFound && callSource === "client")
-        throw new Error("No existe un carrito con el ID seleccionado");
-      else if (!cartFound && callSource === "server")
+      if (!cartFound && callSource === 'client')
+        throw new Error('No existe un carrito con el ID seleccionado');
+      else if (!cartFound && callSource === 'server')
         return { id: cartId, products: [] };
 
       return cartFound;
@@ -53,7 +53,7 @@ class CartManager {
 
   addProductToCart = async (cartId, productId) => {
     try {
-      const cartFound = await this.getCartById(cartId, "server");
+      const cartFound = await this.getCartById(cartId, 'server');
       await productManager.getProductById(productId);
 
       const newCart = new Cart(cartId);
@@ -66,13 +66,13 @@ class CartManager {
       await fs.promises.writeFile(
         this.path,
         JSON.stringify(carts, null, 2),
-        "utf-8"
+        'utf-8'
       );
 
       return newCart;
     } catch (error) {
-      if (error.name === "cartNotFound")
-        throw new Error("El carrito ingresado no existe");
+      if (error.name === 'cartNotFound')
+        throw new Error('El carrito ingresado no existe');
 
       throw new Error(error.message);
     }
@@ -91,7 +91,7 @@ class CartManager {
       await fs.promises.writeFile(
         this.path,
         JSON.stringify(carts, null, 2),
-        "utf-8"
+        'utf-8'
       );
 
       return cartFound;
@@ -110,7 +110,7 @@ class CartManager {
       await fs.promises.writeFile(
         this.path,
         JSON.stringify(carts, null, 2),
-        "utf-8"
+        'utf-8'
       );
 
       return newCart;
@@ -126,9 +126,9 @@ class CartManager {
 
     if (objectIndex === -1) {
       const cartNotFound = new Error(
-        "No existe el carrito que se desea eliminar"
+        'No existe el carrito que se desea eliminar'
       );
-      cartNotFound.name = "cartNotFound";
+      cartNotFound.name = 'cartNotFound';
       throw cartNotFound;
     }
 
@@ -137,7 +137,7 @@ class CartManager {
     await fs.promises.writeFile(
       this.path,
       JSON.stringify(carts, null, 2),
-      "utf-8"
+      'utf-8'
     );
     return true;
   };
