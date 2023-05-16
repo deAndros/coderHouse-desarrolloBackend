@@ -1,9 +1,9 @@
 //___________PRODUCTS Endpoints___________
 GET http://localhost:8080/api/products
 ###
-GET http://localhost:8080/api/products?limit=5
+GET http://localhost:8080/api/products?limit=2&sort=desc
 ###
-GET http://localhost:8080/api/products/2
+GET http://localhost:8080/api/products/64550d87def1d16c4d481fb7
 ###
 GET http://localhost:8080/api/products/34123123
 ###
@@ -11,35 +11,95 @@ POST http://localhost:8080/api/products
 content-type: application/json
 
 {
-    "title": "Producto prueba 11",
+    "title": "Producto prueba 3",
     "description": "Este es un producto de prueba",
-    "price": 200,
+    "price": "200",
     "thumbnails": ["Sin imagen"],
-    "code": "abc192 11",
-    "stock": 25,
+    "code": "abc3",
     "category": "Comicbook"
 }
 ###
-PUT http://localhost:8080/api/products/12
+PUT http://localhost:8080/api/products/64550c96def1d16c4d481fb1
 content-type: application/json
 
-  {
-    "title": "PRODUCTO MODIFICADO",
-    "description": "PRODUCTO MODIFICADO",
-    "price": 200,
+{
+    "title": "Producto prueba 1",
+    "description": "Este es un producto de prueba modificado",
+    "code": "abc1",
+    "price": 250,
+    "category": "Comicbook",
     "thumbnails": ["Sin imagen"],
-    "code": "abc1222277",
-    "stock": 65,
-    "status": true,
-    "category": "Categoría modificada"
-  }
+    "stock": 20
+}
 ###
-DELETE http://localhost:8080/api/products/11
+DELETE http://localhost:8080/api/products/645513b3def1d16c4d481fc1
 
 //___________CARTS Endpoints___________
 ###
+GET http://localhost:8080/api/carts/
+###
+GET http://localhost:8080/api/carts/6460ffff3e2cbc0e4f4e9604
+###
 POST http://localhost:8080/api/carts/
 ###
-GET http://localhost:8080/api/carts/2
+POST http://localhost:8080/api/carts/6460ffff3e2cbc0e4f4e9604/product/64550c96def1d16c4d481fb1
+Content-Type: application/json
+
+{
+    "quantity": 5
+}
 ###
-POST http://localhost:8080/api/carts/4/product/15
+POST http://localhost:8080/api/carts/6460ffff3e2cbc0e4f4e9604/product/64550d87def1d16c4d481fb7
+Content-Type: application/json
+
+{
+    "quantity": 5
+}
+###
+PUT http://localhost:8080/api/carts/6461873dd7bc4537fa4b041a
+Content-Type: application/json
+
+{
+ "products": [
+    {
+    "product": "64550d87def1d16c4d481fb7",
+    "quantity": 10
+    }
+ ]   
+}
+###
+PUT http://localhost:8080/api/carts/6460ffff3e2cbc0e4f4e9604
+Content-Type: application/json
+
+{
+ "products": [
+    {
+    "product": "64550d87def1d16c4d481fb7",
+    "quantity": 10
+    },
+    {
+    "product": "64550c96def1d16c4d481fb1",
+    "quantity": 20
+    },
+    {
+    "product": "64550c96def1d16c4d481fb9",
+    "quantity": 20
+    },
+    {
+    "product": "64550c96def1d16c4d481fb8",
+    "quantity": 20
+    }
+
+ ]   
+}
+###
+PUT http://localhost:8080/api/carts/6461873dd7bc4537fa4b041a/product/64550d87def1d16c4d481fb7
+Content-Type: application/json
+
+{
+    "quantity": 18
+}
+###
+DELETE http://localhost:8080/api/carts/6460ffff3e2cbc0e4f4e9604/product/64550d87def1d16c4d481fb7
+###
+DELETE http://localhost:8080/api/carts/6460ffff3e2cbc0e4f4e9604
