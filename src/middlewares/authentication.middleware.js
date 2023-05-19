@@ -1,11 +1,8 @@
 function auth(request, response, next) {
-  console.log('user', request.session.user.role);
-  console.log(!(request.session.user.role === 'Admin'));
-  if (!(request.session.user.role === 'Admin')) {
-    console.log('ENTRE');
+  console.log('user', request.session);
+  if (!request.session.user || !(request.session?.user?.role === 'Admin')) {
     return response.status(401).send('Error de autenticación');
   }
-  console.log('NO ENTRE');
   next();
 }
 

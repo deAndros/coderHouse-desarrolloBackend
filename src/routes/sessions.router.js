@@ -40,7 +40,6 @@ router.post('/login', async (request, response) => {
 });
 
 router.get('/logout', async (request, response) => {
-  console.log('ENTRE AL LOGOUT');
   request.session.destroy((error) => {
     if (error) {
       return response.send({ status: 'error', error: error.message });
