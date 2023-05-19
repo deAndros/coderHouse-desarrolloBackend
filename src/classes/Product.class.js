@@ -9,7 +9,6 @@ class Product {
     category,
     thumbnails
   ) {
-    //TODO: Mejorar el manejo de errores y validación de keys obligatorias
     if (!title) {
       throw new Error(this.#buildError('title'));
     }

@@ -9,10 +9,10 @@ class ProductManagerMongo {
 
       const products = await productModel.paginate(
         {},
-        { page: page, limit: limit }
+        { page: page, limit: limit, lean: true }
       );
 
-      return products;
+      return products.docs;
     } catch (error) {
       throw new Error(error.message);
     }

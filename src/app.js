@@ -1,3 +1,5 @@
+//PARA REDIRECCIONAR EN UNA RESPUESTA:  res.send y luego abajo res.redirect('/ruta')
+
 //DB Config
 const dbObjectConfig = require('./config/dbObject.config');
 
@@ -12,20 +14,30 @@ app.use(express.json());
 app.use('/static', express.static(__dirname + '/public')); //static es una carpeta virtual, creada por el middleware. Podría ponerle otro nombre si quisiera.
 
 //Middlewares de Terceros
+const session = require('express-session');
+const { create } = require('connect-mongo');
+
+app.use(
+  session({
+    store: create({
+      mongoUrl:
+        'mongodb+srv://andramos:VxZcHcbWw18AW3A5@coderhouse-desarrolloba.x33ap7o.mongodb.net/e_commerce?retryWrites=true&w=majority',
+      mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+      ttl: 10000,
+    }),
+    secret: 'S3c123t',
+    resave: false, //Permite tener una sesión activa
+    saveUninitialized: false, //Permite guardar cualquier sesión
+  })
+);
+
 const cookieParser = require('cookie-parser');
-app.use(cookieParser('s3c123t'));
+app.use(cookieParser('S3c123t'));
 
 const logger = require('morgan');
 app.use(logger('dev'));
 
-const session = require('express-session');
-app.use(
-  session({
-    secret: 's3c123t',
-    resave: true,
-    saveUninitialized: true,
-  })
-);
+//Sessions
 
 //Socket IO
 const { Server } = require('socket.io');

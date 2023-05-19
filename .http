@@ -103,3 +103,5 @@ Content-Type: application/json
 DELETE http://localhost:8080/api/carts/6460ffff3e2cbc0e4f4e9604/product/64550d87def1d16c4d481fb7
 ###
 DELETE http://localhost:8080/api/carts/6460ffff3e2cbc0e4f4e9604
+###
+GET http://localhost:8080/api/sessions/privada

@@ -78,7 +78,6 @@ class CartManager {
     }
   };
 
-  //TODO: Falta exponerlo
   deleteProductFromCart = async (cartId, productId) => {
     try {
       const cartFound = await getCartById(cartId);
@@ -119,7 +118,6 @@ class CartManager {
     }
   };
 
-  //TODO: Falta probarlo y exponerlo
   deleteCart = async (cartId) => {
     let carts = await this.fetchStoredCarts();
     const objectIndex = carts.findIndex((cart) => cart.id === cartId);
