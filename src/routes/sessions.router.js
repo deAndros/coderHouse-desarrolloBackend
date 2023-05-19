@@ -26,7 +26,6 @@ router.post('/login', async (request, response) => {
         message: 'El usuario o la contraseña son incorrectos',
       });
 
-    console.log('userFromDB.role ', userFromDB.role);
     request.session.user = {
       first_name: userFromDB.first_name,
       last_name: userFromDB.last_name,

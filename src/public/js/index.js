@@ -1,8 +1,8 @@
 console.log('Este es mi index');
 
-document.getElementById('btnLogout').addEventListener('click', function () {
+/*document.getElementById('btnLogout').addEventListener('click', function () {
   // Lógica para enviar la petición de logout al endpoint
-  fetch('/logout', {
+  fetch('http://localhost:8080/api/sessions/logout', {
     method: 'GET',
   })
     .then((response) => {
@@ -20,4 +20,4 @@ document.getElementById('btnLogout').addEventListener('click', function () {
       // Manejo de errores de red u otros errores
       console.log('Error en la petición de logout:', error);
     });
-});
+});*/

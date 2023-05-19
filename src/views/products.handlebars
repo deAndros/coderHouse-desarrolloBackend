@@ -33,5 +33,10 @@
   {{/if}}
 </div>
 <br />
-<button id='btnLogout'>Logout</button>
+<!--<button id='btnLogout'>Logout</button>-->
+
+<form id='logoutForm' action='/api/sessions/logout' method='GET'>
+  <input name='Logout' type='submit' value='Logout' />
+</form>
+
 <script src='/static/js/index.js'></script>
