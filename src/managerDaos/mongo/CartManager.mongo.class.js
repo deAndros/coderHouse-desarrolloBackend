@@ -5,7 +5,7 @@ const productManagerMongo = new ProductManagerMongo();
 class CartManagerMongo {
   getCarts = async () => {
     try {
-      const carts = await cartModel.find({});
+      const carts = await cartModel.find({}).populate('products.product');
       return carts;
     } catch (error) {
       throw new Error(error.message);
