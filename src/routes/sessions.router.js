@@ -54,8 +54,6 @@ router.post('/register', async (request, response) => {
 
     let isAdmin = request.body.isAdmin;
 
-    console.log('isAdmin', isAdmin);
-
     if (!userName || !firstName || !lastName || !eMail || !password)
       return response.status(400).send({
         status: 'error',
@@ -68,7 +66,6 @@ router.post('/register', async (request, response) => {
     });
     const eMailExists = await userModel.findOne({ email: eMail });
 
-    console.log('userNameExists', userNameExists);
     //Preguntar por qué no responde con el mensaje de error
     if (userNameExists)
       return response.status(400).send({
