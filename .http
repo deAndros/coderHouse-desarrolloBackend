@@ -149,6 +149,14 @@ Content-Type: application/json
     "password": "pass"
 }
 ###
+POST http://localhost:8080/api/sessions/login
+Content-Type: application/json
+
+{
+    "eMail": "atricci@gmail.com",
+    "password": "pass"
+}
+###
 POST http://localhost:8080/api/sessions/restorePassword
 Content-Type: application/json
 

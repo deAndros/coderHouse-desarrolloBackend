@@ -9,7 +9,7 @@ Client ID: Iv1.be67aebe5cf30c15*/
 const dbObjectConfig = require('./config/dbObject.config');
 
 //Passport
-const { initPassport } = require('./config/passportConfig');
+const { initPassport, initPassportGithub } = require('./config/passportConfig');
 const passport = require('passport');
 
 //Express
@@ -73,6 +73,7 @@ app.set('view engine', 'handlebars'); //Le digo a mi app que lo use
 
 //Uso de Passport
 initPassport();
+initPassportGithub();
 passport.use(passport.initialize());
 passport.use(passport.session());
 

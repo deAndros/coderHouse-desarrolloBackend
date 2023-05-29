@@ -182,8 +182,6 @@ router.post('/restorePassword', async (request, response) => {
       { $set: { password: createHash(newPassword) } }
     );
 
-    console.log(userFromDB);
-
     if (!userFromDB)
       //TODO: Redireccionar a una página de error o arrojar un modal con un error
       return response.status(401).send({
@@ -201,6 +199,21 @@ router.post('/restorePassword', async (request, response) => {
   }
 });
 
+router.get(
+  '/githublogin',
+  passport.authenticate('githublogin', { scope: ['user:email'] }),
+  async (request, response) => {}
+);
+
+router.get(
+  '/githubcallback',
+  passport.authenticate('githublogin', { failureRedirect: '/login' }),
+  async (request, response) => {
+    request.session.user = request.user;
+    response.redirect('/products');
+  }
+);
+
 router.get('/privada', auth, (request, response) => {
   response.send('Todo lo que esta acá solo lo puede ver un admin loagueado');
 });
@@ -215,6 +228,7 @@ router.get('/counter', (request, response) => {
   }
 });
 
+//TODO: Incorporar el uso de esta función a mis estratégias de passport
 isValidString = (string, pattern) => {
   //Patrones REGEX, se instancian con sugar syntax solo poniéndolos entre /patron/
   const firstLastNamePattern = '/^[a-zA-Z0-9sáéíóúÁÉÍÓÚ]+$/';
