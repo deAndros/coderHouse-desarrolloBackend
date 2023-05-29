@@ -10,7 +10,7 @@ const initPassport = () => {
   passport.use(
     'register',
     new LocalStrategy(
-      { passReqToCallback: true, userNameField: 'eMail' },
+      { passReqToCallback: true, usernameField: 'eMail' },
       async (request, username, password, done) => {
         try {
           //No me traigo el eMail porque ya viene en el "username" que recibe por parámetro esta callback
@@ -40,7 +40,7 @@ const initPassport = () => {
             user_name: userName.toUpperCase(),
             first_name: firstName,
             last_name: lastName,
-            email: eMail,
+            email: username,
             password: createHash(password),
             role: isAdmin,
           };
@@ -49,10 +49,7 @@ const initPassport = () => {
           console.log('newUser ', newUser);
           return done(null, newUser);
         } catch (error) {
-          return done(
-            'Se produjo un error al obtener el usuario: ' + error.message,
-            false
-          );
+          return done('Se produjo un error: ' + error.message, false);
         }
       }
     )
@@ -61,7 +58,7 @@ const initPassport = () => {
   passport.use(
     'login',
     new LocalStrategy(
-      { userNameField: 'eMail' },
+      { usernameField: 'eMail' },
       async (username, password, done) => {
         console.log('Entré');
         try {
