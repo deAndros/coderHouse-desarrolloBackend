@@ -1,7 +1,16 @@
 //PARA REDIRECCIONAR EN UNA RESPUESTA:  res.send y luego abajo res.redirect('/ruta')
 
+/*Github Authentication DATA: 
+SECRET: a4dbfe46251d89f005187b2c4c08b3adb35f91f1
+App ID: 337421
+Client ID: Iv1.be67aebe5cf30c15*/
+
 //DB Config
 const dbObjectConfig = require('./config/dbObject.config');
+
+//Passport
+const { initPassport } = require('./config/passportConfig');
+const passport = require('passport');
 
 //Express
 const express = require('express');
@@ -61,6 +70,11 @@ const handlebars = require('express-handlebars');
 app.engine('handlebars', handlebars.engine()); //Inicializo el engine de handlebars
 app.set('views', __dirname + '/views'); //Le digo a mi app donde están mis vistas
 app.set('view engine', 'handlebars'); //Le digo a mi app que lo use
+
+//Uso de Passport
+initPassport();
+passport.use(passport.initialize());
+passport.use(passport.session());
 
 //Routers
 const appRouter = require('./routes/index.router');

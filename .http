@@ -105,3 +105,43 @@ DELETE http://localhost:8080/api/carts/6460ffff3e2cbc0e4f4e9604/product/64550d87
 DELETE http://localhost:8080/api/carts/6460ffff3e2cbc0e4f4e9604
 ###
 GET http://localhost:8080/api/sessions/privada
+###
+POST http://localhost:8080/api/sessions/login
+Content-Type: application/json
+
+{
+    "eMail": "ggramos@gmail.com",
+    "password": "estaesmipass"
+}
+
+###
+POST http://localhost:8080/api/sessions/register
+Content-Type: application/json
+
+{
+    "userName": "GRAMOS",
+    "firstName": "Gonzalo",
+    "lastName": "Ramos",
+    "eMail": "ggramos@gmail.com",
+    "password": "estaesmipass"
+}
+
+###
+POST http://localhost:8080/api/sessions/register
+Content-Type: application/json
+
+{
+    "userName": "HMATZSCHKE",
+    "firstName": "Horacio",
+    "lastName": "Matzschke",
+    "eMail": "hmatz@gmail.com",
+    "password": "unapassword"
+}
+###
+POST http://localhost:8080/api/sessions/restorePassword
+Content-Type: application/json
+
+{
+    "eMail": "hmatz@gmail.com",
+    "newPassword": "otrapassword"
+}
