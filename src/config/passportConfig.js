@@ -1,11 +1,11 @@
-const passport = require('passport');
-const passportLocal = require('passport-local');
-const { userModel } = require('../managerDaos/mongo/models/user.model');
-const { createHash, isValidPassword } = require('../utils/bcryptHash');
-const GithubStrategy = require('passport-github2');
-require('dotenv').config();
+const passport = require('passport')
+const passportLocal = require('passport-local')
+const { userModel } = require('../managerDaos/mongo/models/user.model')
+const { createHash, isValidPassword } = require('../utils/bcryptHash')
+const GithubStrategy = require('passport-github2')
+require('dotenv').config()
 
-const LocalStrategy = passportLocal.Strategy;
+const LocalStrategy = passportLocal.Strategy
 
 //Función que va a inicializar mis middlewares de passport
 const initPassport = () => {
@@ -15,28 +15,30 @@ const initPassport = () => {
       { passReqToCallback: true, usernameField: 'eMail' },
       async (request, username, password, done) => {
         try {
+          console.log(username, password)
           //No me traigo el eMail porque ya viene en el "username" que recibe por parámetro esta callback
-          const { userName, firstName, lastName } = request.body;
-          let isAdmin = request.body.isAdmin;
+          const { userName, firstName, lastName } = request.body
+          let isAdmin = request.body.isAdmin
 
           if (!userName || !firstName || !lastName || !username || !password)
             return done(
               'Los campos "Username", "Nombre", "Apellido", "E-Mail" y "Password" son obligatorios',
               false
-            );
+            )
 
           //TODO: Busco dos veces en la base. Una por usuario y una por eMail para poder tener una validación discriminada de c/u. Revisar maneras de mejorar.
           const userNameExists = await userModel.findOne({
             user_name: userName.toUpperCase(),
-          });
-          const eMailExists = await userModel.findOne({ email: username });
+          })
+          const eMailExists = await userModel.findOne({ email: username })
 
           //TODO: Preguntar por que no devolvemos un error en el primer parámetro de done
-          if (userNameExists) return done(null, false);
+          if (userNameExists)
+            return done('El nombre de usuario ingresado ya existe', false)
 
-          if (eMailExists) return done(null, false);
+          if (eMailExists) return done('El e-mail ingresado ya existe', false)
 
-          isAdmin === 'on' ? (isAdmin = 'Admin') : (isAdmin = 'Client');
+          isAdmin === 'on' ? (isAdmin = 'Admin') : (isAdmin = 'Client')
 
           const userData = {
             user_name: userName.toUpperCase(),
@@ -45,16 +47,17 @@ const initPassport = () => {
             email: username,
             password: createHash(password),
             role: isAdmin,
-          };
+          }
 
-          let newUser = await userModel.create(userData);
-          return done(null, newUser);
+          let newUser = await userModel.create(userData)
+          console.log(newUser)
+          return done(null, newUser)
         } catch (error) {
-          return done('Se produjo un error: ' + error.message, false);
+          return done('Se produjo un error: ' + error.message, false)
         }
       }
     )
-  );
+  )
 
   passport.use(
     'login',
@@ -62,40 +65,46 @@ const initPassport = () => {
       { usernameField: 'eMail' },
       async (username, password, done) => {
         try {
+          console.log('username', username)
+          console.log('password', password)
+
           if (!username || !password)
-            return done('El e-mail y la constraseña son obligatiorios', false);
+            return done('El e-mail y la constraseña son obligatiorios', false)
 
           const userFromDB = await userModel.findOne({
             email: username,
-          });
+          })
+
+          console.log(userFromDB)
 
           //TODO: Preguntar por qué no retorno un error en el done
-          if (!userFromDB) return done(null, false);
+          if (!userFromDB) return done('El usuario ingresado no existe', false)
 
-          if (!isValidPassword(password, userFromDB)) return done(null, false);
+          if (!isValidPassword(password, userFromDB))
+            return done('La contraseña ingresada es inválida', false)
 
-          return done(null, userFromDB);
+          return done(null, userFromDB)
         } catch (error) {
           return done(
             'Se produjo un error al obtener el usuario: ' + error.message,
             false
-          );
+          )
         }
       }
     )
-  );
+  )
 
   //Guarda el ID del usuario en mi objeto de sesión
   passport.serializeUser((user, done) => {
-    done(null, user._id);
-  });
+    done(null, user._id)
+  })
 
   //Busca el ID del usuario que está en mi objeto de sesión en la base de datos
   passport.deserializeUser(async (user, done) => {
-    let deserializedUser = await userModel.findOne({ _id: user.id });
-    done(null, deserializedUser);
-  });
-};
+    let deserializedUser = await userModel.findOne({ _id: user.id })
+    done(null, deserializedUser)
+  })
+}
 
 const initPassportGithub = () => {
   passport.use(
@@ -108,7 +117,7 @@ const initPassportGithub = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          let user = await userModel.findOne({ email: profile._json.email });
+          let user = await userModel.findOne({ email: profile._json.email })
 
           //Si no existe el usuario, lo registro y lo creo en mi DB
           if (!user) {
@@ -119,31 +128,31 @@ const initPassportGithub = () => {
               email: profile._json.email,
               password: '-',
               role: 'Admin', //TODO: Modificar esto, solo está así para que el usuario que se registre pueda ver la ruta de productos
-            };
+            }
 
-            let newUser = await userModel.create(userData);
-            return done(null, newUser);
+            let newUser = await userModel.create(userData)
+            return done(null, newUser)
           }
 
           //Si existe, lo retorno
-          return done(null, user);
+          return done(null, user)
         } catch (error) {
-          console.log(error.message);
+          console.log(error.message)
         }
       }
     )
-  );
+  )
 
   //Guarda el ID del usuario en mi objeto de sesión
   passport.serializeUser((user, done) => {
-    done(null, user._id);
-  });
+    done(null, user._id)
+  })
 
   //Busca el ID del usuario que está en mi objeto de sesión en la base de datos
   passport.deserializeUser(async (user, done) => {
-    let deserializedUser = await userModel.findOne({ _id: user.id });
-    done(null, deserializedUser);
-  });
-};
+    let deserializedUser = await userModel.findOne({ _id: user.id })
+    done(null, deserializedUser)
+  })
+}
 
-module.exports = { initPassport, initPassportGithub };
+module.exports = { initPassport, initPassportGithub }

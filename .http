@@ -11,11 +11,11 @@ POST http://localhost:8080/api/products
 content-type: application/json
 
 {
-    "title": "Producto prueba 3",
+    "title": "Producto prueba 4",
     "description": "Este es un producto de prueba",
-    "price": "200",
+    "price": "500",
     "thumbnails": ["Sin imagen"],
-    "code": "abc3",
+    "code": "abc4",
     "category": "Comicbook"
 }
 ###

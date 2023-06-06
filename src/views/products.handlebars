@@ -6,7 +6,7 @@
       - Rol:
       {{loggedUserData.role}}</h1>
   {{/if}}
-  {{#if products}}
+  {{#if products.docs}}
     <h2>Listado de Productos</h2>
     <table class='tg'>
       <thead>
@@ -18,7 +18,7 @@
         </tr>
       </thead>
       <tbody>
-        {{#each products}}
+        {{#each products.docs}}
           <tr>
             <td class='tg-0lax'>{{this.title}}</td>
             <td class='tg-0lax'>{{this.price}}</td>

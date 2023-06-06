@@ -1,14 +1,13 @@
-const { Router } = require('express');
-const { auth } = require('../middlewares/authentication.middleware');
+const { Router } = require('express')
+const { auth } = require('../middlewares/authentication.middleware')
 //TODO: Implementar el userManagerMongo para desligar a este archivo del manejo de usuarios
-const { userModel } = require('../managerDaos/mongo/models/user.model');
-const { createHash, isValidPassword } = require('../utils/bcryptHash');
-const passport = require('passport');
+const { userModel } = require('../managerDaos/mongo/models/user.model')
+const { createHash, isValidPassword } = require('../utils/bcryptHash')
+const passport = require('passport')
 
-const router = Router();
+const router = Router()
 
-/*
-LOGIN SIN PASSPORT
+/*LOGIN SIN PASSPORT
 router.post('/login', async (request, response) => {
   try {
     const { eMail, password } = request.body;
@@ -48,6 +47,8 @@ router.post('/login', async (request, response) => {
     response.status(400).send({ status: 'error', error: error.message });
   }
 });*/
+
+//LOGIN CON SESSION y PASSPORT
 router.post(
   '/login',
   passport.authenticate('login', { failureRedirect: '/loginFailed' }),
@@ -56,31 +57,31 @@ router.post(
       return response.status(401).send({
         status: 'error',
         message: 'Las credenciales proporcionadas son inválidas',
-      });
+      })
 
     request.session.user = {
       first_name: request.user.first_name,
       last_name: request.user.last_name,
       email: request.user.email,
       role: request.user.role,
-    };
+    }
 
-    response.status(200).send({ status: 'success', message: 'Login exitoso' });
+    response.redirect('/products')
   }
-);
+)
 
 router.get('/logout', async (request, response) => {
   try {
     request.session.destroy((error) => {
       if (error) {
-        return response.send({ status: 'error', error: error.message });
+        return response.send({ status: 'error', error: error.message })
       }
-      response.redirect('/login');
-    });
+      response.redirect('/login')
+    })
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.message)
   }
-});
+})
 
 /*
 REGISTER SIN PASSPORT
@@ -147,106 +148,107 @@ router.post(
   async (request, response) => {
     response
       .status(200)
-      .send({ status: 'success', message: 'Usuario registrado exitosamente' });
+      .send({ status: 'success', message: 'Usuario registrado exitosamente' })
   }
-);
+)
 
 router.get('/loginFailed', async (request, response) => {
-  console.log('Falló la estrategia de login');
+  console.log('Falló la estrategia de login')
   response
     .status(500)
-    .send({ status: 'error', message: 'Se produjo un error al loguearse' });
-});
+    .send({ status: 'error', message: 'Se produjo un error al loguearse' })
+})
 
 router.get('/registrationFailed', async (request, response) => {
-  console.log('Falló la estrategia de registro');
+  console.log('Falló la estrategia de registro')
   response
     .status(500)
-    .send({ status: 'error', message: 'Se produjo un error al registrarse' });
-});
+    .send({ status: 'error', message: 'Se produjo un error al registrarse' })
+})
 
 router.post('/restorePassword', async (request, response) => {
   try {
-    const { eMail, newPassword } = request.body;
+    const { eMail, newPassword } = request.body
 
     if (!eMail || !newPassword)
       return response.status(400).send({
         status: 'error',
         message: '"E-Mail" y "Password" son obligatorios',
-      });
+      })
 
     const userFromDB = await userModel.findOneAndUpdate(
       {
         email: eMail,
       },
       { $set: { password: createHash(newPassword) } }
-    );
+    )
 
     if (!userFromDB)
       //TODO: Redireccionar a una página de error o arrojar un modal con un error
       return response.status(401).send({
         status: 'error',
         message: 'El usuario ingresado no existe',
-      });
+      })
 
     //TODO: Redireccionar a la página de login
     response.status(200).send({
       status: 'success',
       message: 'Constaseña actualizada exitosamente',
-    });
+    })
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.message)
   }
-});
+})
 
+//TODO: Falta la implementación de JWT correspondiente a la clase 21 (a partir del minuto 1:36)
 router.get(
   '/githublogin',
   passport.authenticate('githublogin', { scope: ['user:email'] }),
   async (request, response) => {}
-);
+)
 
 router.get(
   '/githubcallback',
   passport.authenticate('githublogin', { failureRedirect: '/login' }),
   async (request, response) => {
-    request.session.user = request.user;
-    response.redirect('/products');
+    request.session.user = request.user
+    response.redirect('/products')
   }
-);
+)
 
 router.get('/privada', auth, (request, response) => {
-  response.send('Todo lo que esta acá solo lo puede ver un admin loagueado');
-});
+  response.send('Todo lo que esta acá solo lo puede ver un admin loagueado')
+})
 
 router.get('/counter', (request, response) => {
   if (request.session.counter) {
-    request.session.counter++;
-    response.send(`se ha visitado el sitio ${req.session.counter} veces.`);
+    request.session.counter++
+    response.send(`se ha visitado el sitio ${req.session.counter} veces.`)
   } else {
-    request.session.counter = 1;
-    response.send('Bienvenido');
+    request.session.counter = 1
+    response.send('Bienvenido')
   }
-});
+})
 
 //TODO: Incorporar el uso de esta función a mis estratégias de passport
 isValidString = (string, pattern) => {
   //Patrones REGEX, se instancian con sugar syntax solo poniéndolos entre /patron/
-  const firstLastNamePattern = '/^[a-zA-Z0-9sáéíóúÁÉÍÓÚ]+$/';
-  const eMailPattern = '/^[^s@]+@[^s@]+.[^s@]+$/';
-  const userNamePattern = '/^[a-zA-Z0-9]+$/';
+  const firstLastNamePattern = '/^[a-zA-Z0-9sáéíóúÁÉÍÓÚ]+$/'
+  const eMailPattern = '/^[^s@]+@[^s@]+.[^s@]+$/'
+  const userNamePattern = '/^[a-zA-Z0-9]+$/'
 
   if (pattern === 'firstName' || pattern === 'lastName') {
-    pattern = firstLastNamePattern;
+    pattern = firstLastNamePattern
   } else if (pattern === 'eMail') {
-    pattern = eMailPattern;
+    pattern = eMailPattern
   } else if (pattern === 'userName') {
-    pattern === userNamePattern;
+    pattern === userNamePattern
   } else {
-    throw new Error('El patrón ingresado es incorrecto');
+    throw new Error('El patrón ingresado es incorrecto')
   }
 
   //Verifico si la cadena coincide con el patrón
-  pattern.test(string) ? true : false;
-};
+  pattern.test(string) ? true : false
+}
 
-module.exports = router;
+module.exports = router
