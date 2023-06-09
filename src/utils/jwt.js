@@ -1,11 +1,9 @@
 const jwt = require('jsonwebtoken')
 
 const generateToken = (user) => {
-  const token = jwt.sign({ user }, process.env.JWT_PRIVATE_KEY, {
+  return (token = jwt.sign({ user }, process.env.JWT_PRIVATE_KEY, {
     expiresIn: '10m',
-  })
-
-  return token
+  }))
 }
 
 const validateToken = (request, response, next) => {
@@ -25,6 +23,7 @@ const validateToken = (request, response, next) => {
         .status(401)
         .send({ status: error, message: 'No se encuentra autenticado' })
 
+    console.log('credentials', credentials)
     request.user = credentials.user
     next()
   })

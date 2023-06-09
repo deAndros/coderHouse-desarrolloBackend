@@ -1,9 +1,8 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model } = require('mongoose')
 
-const collection = 'users';
+const collection = 'users2'
 
 const userSchema = new Schema({
-  user_name: { type: String, required: true, unique: true },
   first_name: { type: String, required: true },
   last_name: {
     type: String,
@@ -15,12 +14,17 @@ const userSchema = new Schema({
     unique: true,
     index: true,
   },
+  age: { type: Number, required: true },
+  cart: {
+    type: Schema.Types.ObjectId,
+    ref: 'carts',
+  },
   password: { type: String, required: true },
-  role: { type: String, default: 'Client' },
-});
+  role: { type: String, default: 'User' },
+})
 
-const userModel = model(collection, userSchema);
+const userModel = model(collection, userSchema)
 
 module.exports = {
   userModel,
-};
+}

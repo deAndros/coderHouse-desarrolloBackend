@@ -6,7 +6,6 @@ exports.createHash = (password) =>
 
 //Esta función compara las contraseñas
 exports.isValidPassword = (password, user) => {
-  console.log('ENTRÉ a BCRYPT: ', user)
   return bcrypt.compareSync(password, user.password)
 }
 
