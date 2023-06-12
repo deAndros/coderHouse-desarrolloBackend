@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 
-const collection = 'users2'
+const collection = 'users'
 
 const userSchema = new Schema({
   first_name: { type: String, required: true },
