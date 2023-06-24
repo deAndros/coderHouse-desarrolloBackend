@@ -1,11 +1,10 @@
 const { generateToken } = require('../utils/jwt')
-const { userModel } = require('../managerDaos/mongo/models/user.model')
+const { userModel } = require('../daos/mongo/models/user.model')
 const { createHash, isValidPassword } = require('../utils/bcryptHash')
 
 class SessionsController {
   login = async (request, response) => {
     try {
-      console.log(request.body)
       const { email, password } = request.body
 
       if (!email || !password)
@@ -38,6 +37,17 @@ class SessionsController {
         .redirect('/products')
     } catch (error) {
       response.send({ status: 'error', message: error.message })
+    }
+  }
+
+  logout = async (request, response) => {
+    try {
+      response.clearCookie('accessToken').redirect('/login')
+    } catch (error) {
+      response.status(500).send({
+        status: 'error',
+        message: 'Se produjo un error al desloguearse',
+      })
     }
   }
 
@@ -89,6 +99,42 @@ class SessionsController {
       })
     } catch (error) {
       response.send({ status: 'error', message: error.message })
+    }
+  }
+
+  restorePassword = async (request, response) => {
+    try {
+      const { email, password } = request.body
+
+      if (!email || !password)
+        return response.status(400).send({
+          status: 'error',
+          message: '"E-Mail" y "Password" son obligatorios',
+        })
+
+      const userFromDB = await userModel.findOneAndUpdate(
+        {
+          email: email,
+        },
+        { $set: { password: createHash(password) } }
+      )
+
+      if (!userFromDB)
+        //TODO: Redireccionar a una página de error o arrojar un modal con un error
+        return response.status(401).send({
+          status: 'error',
+          message: 'El usuario ingresado no existe',
+        })
+
+      //TODO: Redireccionar a la página de login
+      response.status(200).send({
+        status: 'success',
+        message: 'Constaseña actualizada correctamente',
+      })
+      /*TODO: Hacer un redirect a la página de login y arrojar una alerta indicando que la contraseña se actualizó correctamente*/
+      //.redirect('/login')
+    } catch (error) {
+      response.status(500).send({ status: 'error', error: error.message })
     }
   }
 

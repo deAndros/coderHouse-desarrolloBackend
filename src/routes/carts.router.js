@@ -1,129 +1,49 @@
-const { Router } = require('express')
-const router = Router()
+const CustomRouter = require('./customRouter.class')
 
-const CartManagerMongo = require('../managerDaos/mongo/CartManager.mongo.class.js')
-const cartManagerMongo = new CartManagerMongo()
+const {
+  getCarts,
+  getCartById,
+  createCart,
+  addProductToCart,
+  updateCartProducts,
+  updateProductQuantity,
+  deleteProductFromCart,
+  emptyCart,
+  deleteCart,
+} = require('../controllers/carts.controller.js')
 
-router.get('/', async (request, response) => {
-  try {
-    const carts = await cartManagerMongo.getCarts()
-    response.status(200).send({ carts: carts })
-  } catch (error) {
-    throw new Error(error.message)
+class CartsRouter extends CustomRouter {
+  init() {
+    this.get('/', ['ADMIN'], getCarts)
+
+    this.get('/:cid([a-zA-Z0-9]+)', ['ADMIN'], getCartById)
+
+    this.post('/', ['ADMIN'], createCart)
+
+    this.post(
+      '/:cid([a-zA-Z0-9]+)/product/:pid([a-zA-Z0-9]+)',
+      ['ADMIN'],
+      addProductToCart
+    )
+
+    this.put('/:cid([a-zA-Z0-9]+)', ['ADMIN'], updateCartProducts)
+
+    this.put(
+      '/:cid([a-zA-Z0-9]+)/product/:pid([a-zA-Z0-9]+)',
+      ['ADMIN'],
+      updateProductQuantity
+    )
+
+    this.delete(
+      '/:cid([a-zA-Z0-9]+)/product/:pid([a-zA-Z0-9]+)',
+      ['ADMIN'],
+      deleteProductFromCart
+    )
+
+    this.delete('/:cid([a-zA-Z0-9]+)/empty', ['ADMIN'], emptyCart)
+
+    this.delete('/:cid([a-zA-Z0-9]+)', ['ADMIN'], deleteCart)
   }
-})
+}
 
-router.get('/:id([a-zA-Z0-9]+)', async (request, response) => {
-  try {
-    const cartFound = await cartManagerMongo.getCartById(request.params.id)
-    response
-      .status(200)
-      .send({ status: 'success', message: 'Carrito hallado', cart: cartFound })
-  } catch (error) {
-    response.status(401).send({ status: 'error', error: error.message })
-  }
-})
-
-router.post('/', async (request, response) => {
-  try {
-    const newcart = await cartManagerMongo.createCart()
-    response.status(200).send({
-      status: 'success',
-      message: 'Carrito creado exitosamente',
-      cartId: newcart.id,
-    })
-  } catch (error) {
-    response.status(400).send({ error: error.message })
-  }
-})
-
-router.post(
-  '/:cid([a-zA-Z0-9]+)/product/:pid([a-zA-Z0-9]+)',
-  async (request, response) => {
-    try {
-      const { cid, pid } = request.params
-      const { quantity } = request.body
-      const cart = await cartManagerMongo.addProductToCart(cid, pid, quantity)
-
-      response.status(200).send({
-        message: 'Producto agregado correctamente',
-        cart: cart,
-      })
-    } catch (error) {
-      response.status(400).send({ error: error.message })
-    }
-  }
-)
-
-router.put('/:cid', async (request, response) => {
-  try {
-    const cid = request.params.cid
-    const products = request.body.products
-    const updatedCart = await cartManagerMongo.updateCartProducts(cid, products)
-    response.status(200).send({
-      status: 'success',
-      message: 'Productos actualizados correctamente',
-      cart: updatedCart,
-    })
-  } catch (error) {
-    response.status(400).send({ error: error.message })
-  }
-})
-
-router.put(
-  '/:cid([a-zA-Z0-9]+)/product/:pid([a-zA-Z0-9]+)',
-  async (request, response) => {
-    try {
-      const { cid, pid } = request.params
-      const { quantity } = request.body
-
-      const updatedCart = await cartManagerMongo.updateProductQuantity(
-        cid,
-        pid,
-        quantity
-      )
-
-      response.status(200).send({
-        status: 'success',
-        message: 'Producto actualizado correctamente',
-        cart: updatedCart,
-      })
-    } catch (error) {
-      response.status(400).send({ error: error.message })
-    }
-  }
-)
-
-router.delete(
-  '/:cid([a-zA-Z0-9]+)/product/:pid([a-zA-Z0-9]+)',
-  async (request, response) => {
-    try {
-      const { cid, pid } = request.params
-
-      const updatedCart = await cartManagerMongo.deleteProductFromCart(cid, pid)
-
-      response.status(200).send({
-        status: 'success',
-        message: 'Producto eliminado correctamente',
-        cart: updatedCart,
-      })
-    } catch (error) {
-      response.status(400).send({ error: error.message })
-    }
-  }
-)
-
-router.delete('/:cid([a-zA-Z0-9]+)', async (request, response) => {
-  try {
-    const cid = request.params.cid
-    const emptyCart = await cartManagerMongo.emptyCart(cid)
-
-    response
-      .status(200)
-      .send({ status: 'success', message: 'Carrito vaciado', cart: emptyCart })
-  } catch (error) {
-    response.status(400).json({ error: error.message })
-  }
-})
-
-module.exports = router
+module.exports = new CartsRouter()

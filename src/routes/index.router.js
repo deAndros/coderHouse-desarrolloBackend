@@ -10,11 +10,11 @@ const router = Router()
 router.use('/', viewsRouter)
 
 //_________________Apartado de PRODUCTOS_________________
-router.use('/api/products', productsRouter)
+router.use('/api/products', productsRouter.getRouter())
 
 //_________________Apartado de CARRITOS_________________
 //TODO: Exponer las rutas para los endpoints que faltan
-router.use('/api/carts', cartsRouter)
+router.use('/api/carts', cartsRouter.getRouter())
 
 //_________________Apartado de SESIONES_________________
 router.use('/api/sessions', sessionsRouter)

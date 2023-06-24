@@ -119,7 +119,7 @@
   },
   "scripts": {
     "start:dev": "nodemon src/app.js",
-    "start": "node src/app.js",
+    "start:prd": "node src/app.js --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

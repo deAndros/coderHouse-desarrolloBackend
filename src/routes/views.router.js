@@ -1,7 +1,8 @@
 const { Router } = require('express')
 const router = Router()
-const ProductManagerMongo = require('../managerDaos/mongo/ProductManager.mongo.class')
+const ProductManagerMongo = require('../daos/mongo/ProductManager.mongo.class')
 const productManagerMongo = new ProductManagerMongo()
+const { productsService } = require('../services/index')
 const { passportAuth } = require('../middlewares/passportAuthentication')
 const {
   passportAuthorization,
@@ -13,7 +14,8 @@ router.get(
   passportAuthorization('Admin'),
   async (request, response) => {
     try {
-      const products = await productManagerMongo.getProducts()
+      const { docs } = await productsService.get()
+      const products = docs
       const loggedUserData = request.user.user
 
       response.render('products', {
@@ -47,6 +49,10 @@ router.get('/register', (request, response) => {
   response.render('register', {
     style: 'index.css',
   })
+})
+
+router.get('/restorePassword', (request, response) => {
+  response.render('restorePassword', { style: 'index.css' })
 })
 
 module.exports = router

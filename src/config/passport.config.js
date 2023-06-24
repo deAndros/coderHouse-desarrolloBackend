@@ -1,5 +1,5 @@
 const passport = require('passport')
-const { userModel } = require('../managerDaos/mongo/models/user.model')
+const { userModel } = require('../daos/mongo/models/user.model')
 const GithubStrategy = require('passport-github2')
 const { Strategy, ExtractJwt } = require('passport-jwt')
 const { generateToken } = require('../utils/jwt')
@@ -64,8 +64,9 @@ const initPassportGithub = () => {
               password: '-',
               role: 'Admin', //TODO: Modificar esto, solo está así para que el usuario que se registre pueda ver la ruta de productos
             }
-            console.log(userData)
+
             let newUser = await userModel.create(userData)
+
             const {
               _id,
               password: dbPassword,
