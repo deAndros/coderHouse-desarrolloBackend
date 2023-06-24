@@ -9,7 +9,6 @@ class ProductsController {
       const sortOptions = {
         page: page,
         limit: limit,
-        lean: true,
         //sort: sort === 'asc' ? 1 : -1,
       }
 

@@ -3,7 +3,7 @@ const { productModel } = require('./models/product.model')
 class ProductManagerMongo {
   get = async (sortOptions) => {
     try {
-      return await productModel.paginate({}, sortOptions)
+      return await productModel.paginate({}, { ...sortOptions, lean: true })
     } catch (error) {
       throw new Error(error.message)
     }
