@@ -1,5 +1,5 @@
 //DB Config
-const dbObjectConfig = require('./config/dbObject.config')
+const { PORT, connectDB } = require('./config/object.config')
 
 //Passport
 const { initPassport, initPassportGithub } = require('./config/passport.config')
@@ -8,7 +8,10 @@ const passport = require('passport')
 //Express
 const express = require('express')
 const app = express()
-const PORT = 8080
+
+//Cors
+/*const cors = require('cors')
+app.use(cors)*/
 
 //Middlewares Nativos de Express
 app.use(express.urlencoded({ extended: true }))
@@ -33,13 +36,14 @@ const httpServer = app.listen(PORT, (error) => {
 const socketServer = new Server(httpServer)
 
 //DB Connection
-dbObjectConfig.connectDB()
+connectDB()
 
 //Real Time Products
 const productsSocket = require('./utils/products.socket.js')
 productsSocket(socketServer)
 
 //Handlebars
+//TODO: No funciona la vista de productos. Arreglarla
 const handlebars = require('express-handlebars')
 app.engine('handlebars', handlebars.engine()) //Inicializo el engine de handlebars
 app.set('views', __dirname + '/views') //Le digo a mi app donde están mis vistas
