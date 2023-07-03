@@ -1,7 +1,5 @@
 const { Router } = require('express')
 const router = Router()
-const ProductManagerMongo = require('../daos/mongo/ProductManager.mongo.class')
-const productManagerMongo = new ProductManagerMongo()
 const { productsService } = require('../services/index')
 const { passportAuth } = require('../middlewares/passportAuthentication')
 const {

@@ -1,5 +1,5 @@
 //DB Config
-const { PORT, connectDB } = require('./config/object.config')
+const { PORT } = require('./config/object.config')
 
 //Passport
 const { initPassport, initPassportGithub } = require('./config/passport.config')
@@ -10,8 +10,9 @@ const express = require('express')
 const app = express()
 
 //Cors
-/*const cors = require('cors')
-app.use(cors)*/
+//Acepto peticiones desde cualquier front externo si paso el cors sin objeto de configuración
+const cors = require('cors')
+app.use(cors())
 
 //Middlewares Nativos de Express
 app.use(express.urlencoded({ extended: true }))
@@ -34,9 +35,6 @@ const httpServer = app.listen(PORT, (error) => {
 })
 
 const socketServer = new Server(httpServer)
-
-//DB Connection
-connectDB()
 
 //Real Time Products
 const productsSocket = require('./utils/products.socket.js')

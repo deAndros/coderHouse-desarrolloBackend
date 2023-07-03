@@ -1,7 +1,7 @@
 //___________PRODUCTS Endpoints___________
 GET http://localhost:8080/api/products
 content-type: application/json
-accessToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0X25hbWUiOiJBbmRyw6lzIiwibGFzdF9uYW1lIjoiUmFtb3MiLCJlbWFpbCI6ImFuZHJlc2dhYnJpZWwuOTJAZ21haWwuY29tIiwiYWdlIjozMSwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4NzYyNDM1NiwiZXhwIjoxNjg3NjI3MzU2fQ.kCIQX78eVMY8BXgW2kbCg5UkEkJn9EAqmuVrOHGN-0w
+accessToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0X25hbWUiOiJBbmRyw6lzIiwibGFzdF9uYW1lIjoiUmFtb3MiLCJlbWFpbCI6ImFuZHJlc2dhYnJpZWwuOTJAZ21haWwuY29tIiwiYWdlIjozMSwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4ODMzOTMxOCwiZXhwIjoxNjg4MzQyMzE4fQ.QvtwAdCVwNAB9uEhqF5gLWbDuJhnroIVsEgyBEurm14
 ###
 GET http://localhost:8080/api/products?limit=2&sort=desc
 ###
@@ -16,37 +16,51 @@ content-type: application/json
 accessToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0X25hbWUiOiJBbmRyw6lzIiwibGFzdF9uYW1lIjoiUmFtb3MiLCJlbWFpbCI6ImFuZHJlc2dhYnJpZWwuOTJAZ21haWwuY29tIiwiYWdlIjozMSwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4NzQ5ODk0NSwiZXhwIjoxNjg3NTAxOTQ1fQ._0db7js-o4CB3NPvIhyNano9O7xIIIjJoZ9IeCyDUl8
 
 {
-    "title": "Producto prueba 6",
+    "title": "Producto prueba 7",
     "description": "Este es un producto de prueba",
-    "price": "45",
+    "price": "65",
     "thumbnails": ["Sin imagen"],
-    "code": "abc6",
+    "code": "abc7",
     "category": "Comicbook"
 }
 ###
-PUT http://localhost:8080/api/products/6495323a83bb2a3aad75948e
+POST http://localhost:8080/api/products
 content-type: application/json
-accessToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0X25hbWUiOiJBbmRyw6lzIiwibGFzdF9uYW1lIjoiUmFtb3MiLCJlbWFpbCI6ImFuZHJlc2dhYnJpZWwuOTJAZ21haWwuY29tIiwiYWdlIjozMSwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4NzQ5ODk0NSwiZXhwIjoxNjg3NTAxOTQ1fQ._0db7js-o4CB3NPvIhyNano9O7xIIIjJoZ9IeCyDUl8
+accessToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0X25hbWUiOiJBbmRyw6lzIiwibGFzdF9uYW1lIjoiUmFtb3MiLCJlbWFpbCI6ImFuZHJlc2dhYnJpZWwuOTJAZ21haWwuY29tIiwiYWdlIjozMSwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4ODM0ODcxOSwiZXhwIjoxNjg4MzUxNzE5fQ.eVxe_N__apazdDfFAD4LRtSv6AQLXbY472-9sH12erU
 
 {
-    "title": "Producto prueba 6 MODIFICADO",
-    "description": "Producto modificado nuevamente",
-    "code": "ABC6",
-    "price": 500,
-    "category": "Hat",
-    "thumbnails": ["Image URL"],
-    "stock": 5
+    "titulo": "Producto prueba 9",
+    "descripcion": "Este es un producto de prueba",
+    "precio": "65",
+    "fotos": ["Sin imagen"],
+    "codigo": "abc9",
+    "categoria": "Comicbook",
+    "propiedad_cualquiera": 123123
 }
 ###
-DELETE http://localhost:8080/api/products/6495323a83bb2a3aad75948e
+PUT http://localhost:8080/api/products/64550c96def1d16c4d481fb1
 content-type: application/json
-accessToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0X25hbWUiOiJBbmRyw6lzIiwibGFzdF9uYW1lIjoiUmFtb3MiLCJlbWFpbCI6ImFuZHJlc2dhYnJpZWwuOTJAZ21haWwuY29tIiwiYWdlIjozMSwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4NzQ5ODk0NSwiZXhwIjoxNjg3NTAxOTQ1fQ._0db7js-o4CB3NPvIhyNano9O7xIIIjJoZ9IeCyDUl8
+accessToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0X25hbWUiOiJBbmRyw6lzIiwibGFzdF9uYW1lIjoiUmFtb3MiLCJlbWFpbCI6ImFuZHJlc2dhYnJpZWwuOTJAZ21haWwuY29tIiwiYWdlIjozMSwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4ODM1MDI2MCwiZXhwIjoxNjg4MzUzMjYwfQ.c5t7oR191XyAOQQOH1HjY5IF7yqwAAx6ICSt8VbpmbY
+
+{
+    "description": "Producto modificado nuevamente",
+    "code": "ZXW1",
+    "price": 33,
+    "category": "Coat",
+    "thumbnails": ["Image URL"],
+    "stock": 5,
+    "propiedad_cualquiera": 21312311231
+}
+###
+DELETE http://localhost:8080/api/products/64a22b73e7e16472866b7cf9
+content-type: application/json
+accessToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0X25hbWUiOiJBbmRyw6lzIiwibGFzdF9uYW1lIjoiUmFtb3MiLCJlbWFpbCI6ImFuZHJlc2dhYnJpZWwuOTJAZ21haWwuY29tIiwiYWdlIjozMSwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4ODM1MDI2MCwiZXhwIjoxNjg4MzUzMjYwfQ.c5t7oR191XyAOQQOH1HjY5IF7yqwAAx6ICSt8VbpmbY
 
 //___________CARTS Endpoints___________
 ###
 GET http://localhost:8080/api/carts/
 content-type: application/json
-accessToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0X25hbWUiOiJBbmRyw6lzIiwibGFzdF9uYW1lIjoiUmFtb3MiLCJlbWFpbCI6ImFuZHJlc2dhYnJpZWwuOTJAZ21haWwuY29tIiwiYWdlIjozMSwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4NzU1ODcwMSwiZXhwIjoxNjg3NTYxNzAxfQ.8_bdRAurKituZT9pX7c6NE6_K_QNdxb4yx_2R2icZb0
+accessToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0X25hbWUiOiJBbmRyw6lzIiwibGFzdF9uYW1lIjoiUmFtb3MiLCJlbWFpbCI6ImFuZHJlc2dhYnJpZWwuOTJAZ21haWwuY29tIiwiYWdlIjozMSwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4ODMzNzY5NywiZXhwIjoxNjg4MzQwNjk3fQ.FA1EEPJ2X1UoKy6FolLaD0bgfznbY-IHunJmC8dBZjY
 ###
 GET http://localhost:8080/api/carts/6460ffff3e2cbc0e4f4e9604
 content-type: application/json
@@ -54,7 +68,7 @@ accessToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0X25
 ###
 POST http://localhost:8080/api/carts/
 content-type: application/json
-accessToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0X25hbWUiOiJBbmRyw6lzIiwibGFzdF9uYW1lIjoiUmFtb3MiLCJlbWFpbCI6ImFuZHJlc2dhYnJpZWwuOTJAZ21haWwuY29tIiwiYWdlIjozMSwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4NzU3ODU2NSwiZXhwIjoxNjg3NTgxNTY1fQ.ayN23lmZeeHDXbeOaum-zNeCoxfawpejEdYwH8aLUX4
+accessToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0X25hbWUiOiJBbmRyw6lzIiwibGFzdF9uYW1lIjoiUmFtb3MiLCJlbWFpbCI6ImFuZHJlc2dhYnJpZWwuOTJAZ21haWwuY29tIiwiYWdlIjozMSwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4ODMzNzY5NywiZXhwIjoxNjg4MzQwNjk3fQ.FA1EEPJ2X1UoKy6FolLaD0bgfznbY-IHunJmC8dBZjY
 
 {
  "products": [

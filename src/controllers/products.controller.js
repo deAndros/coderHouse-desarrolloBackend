@@ -1,4 +1,5 @@
 const { productsService } = require('../services')
+const ProductDto = require('../dtos/product.dto')
 
 class ProductsController {
   getProducts = async (request, response) => {
@@ -71,27 +72,17 @@ class ProductsController {
       if (Object.keys(request.body).length === 0)
         return response.sendUserError(new Error('No se encontró post-data'))
 
-      const productFound = await productsService.getByCode(request.body.code)
+      const productFound = await productsService.getByCode(request.body)
 
       if (productFound)
         return response.sendUserError(
           new Error(
-            `El código ${product.code} ya se encuentra utilizado por otro producto.`
+            `El código ${productFound.code} ya se encuentra utilizado por otro producto.`
           )
         )
 
-      const productToCreate = {
-        title: request.body.title,
-        code: request.body.code,
-        stock: request.body.stock,
-        description: request.body.description,
-        price: request.body.price,
-        status: request.body.status,
-        category: request.body.category,
-        thumbnails: request.body.thumbnails,
-      }
+      const newProduct = await productsService.create(request.body)
 
-      const newProduct = await productsService.create(productToCreate)
       response.sendSuccess({ newProduct: newProduct })
     } catch (error) {
       response.sendServerError(error)
@@ -100,57 +91,28 @@ class ProductsController {
 
   updateProduct = async (request, response) => {
     try {
-      const {
-        newId,
-        title,
-        code,
-        description,
-        category,
-        price,
-        status,
-        thumbnails,
-        stock,
-      } = request.body
+      if (Object.keys(request.body).length === 0)
+        return response.sendUserError(new Error('No se encontró post-data'))
 
-      if (newId)
+      if (request.body.id || request.body._id)
         return response.sendUserError(
-          new Error(
-            'El ID de un producto no puede ser actualizado. No se debe enviar el parámetro "id" en el body de esta petición'
-          )
-        )
-
-      if (!title || !code || !description || !category || !price)
-        return response.sendUserError(
-          new Error(
-            'Los parámetros title, code, description, category y price son obligatorios'
-          )
+          new Error('El ID de un producto no puede ser actualizado')
         )
 
       //Si el código ingresado es distinto al que tenía ese producto y a su vez existe otro producto con ese código arrojo un error.
       const hasRepeatedCode = await productsService.getByCustomFilter({
-        code: code,
+        code: request.body.code.toLowerCase(),
         _id: { $ne: request.params.id },
       })
 
       if (hasRepeatedCode.length != 0)
         return response.sendUserError(
           new Error(
-            `El código ${product.code} ya se encuentra utilizado por otro producto.`
+            `El código ${request.body.code} ya se encuentra utilizado por otro producto.`
           )
         )
 
-      const productToBeReplaced = {
-        title: title,
-        code: code,
-        description: description,
-        category: category,
-        price: price,
-        stock: stock,
-        status: status,
-        thumbnails: thumbnails,
-      }
-
-      await productsService.update(request.params.id, productToBeReplaced)
+      await productsService.update(request.params.id, request.body)
 
       response.sendSuccess({
         message: 'El producto fue actualizado correctamente',
