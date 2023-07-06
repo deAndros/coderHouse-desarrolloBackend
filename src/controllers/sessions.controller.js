@@ -1,6 +1,6 @@
 const { generateToken } = require('../utils/jwt')
-const { userModel } = require('../daos/mongo/models/user.model')
 const { createHash, isValidPassword } = require('../utils/bcryptHash')
+const { usersService } = require('../services')
 
 class SessionsController {
   login = async (request, response) => {
@@ -10,9 +10,7 @@ class SessionsController {
       if (!email || !password)
         throw new Error('Los campos E-mail y Password son obligatorios')
 
-      const userFromDB = await userModel.findOne({
-        email: email,
-      })
+      const userFromDB = await usersService.getByEmail(email)
 
       if (!userFromDB)
         throw new Error('No existe un usuario con el correo indicado')
@@ -53,38 +51,25 @@ class SessionsController {
 
   register = async (request, response) => {
     try {
-      const { firstName, lastName, email, age, password } = request.body
-      let isAdmin = request.body.isAdmin
-
-      console.log(request.body)
+      const { firstName, lastName, email, age, password, isAdmin } =
+        request.body
 
       if (!firstName || !lastName || !email || !password)
-        response.send({
+        return response.send({
           status: 'error',
           message:
             'Los campos "Nombre", "Apellido", "E-Mail" y "Password" son obligatorios',
         })
 
-      const eMailExists = await userModel.findOne({ email: email })
+      const eMailExists = await usersService.getByEmail(email)
 
       if (eMailExists)
-        response.send({
+        return response.send({
           status: 'error',
           message: 'El E-mail ingresado ya existe',
         })
 
-      const userData = {
-        first_name: firstName,
-        last_name: lastName,
-        email: email,
-        age: age ? age : null,
-        password: createHash(password),
-        role: isAdmin === 'on' ? (isAdmin = 'Admin') : (isAdmin = 'User'),
-      }
-
-      console.log('userData', userData)
-
-      let newUser = await userModel.create(userData)
+      let newUser = await usersService.create(request.body)
 
       const {
         _id,
@@ -112,12 +97,7 @@ class SessionsController {
           message: '"E-Mail" y "Password" son obligatorios',
         })
 
-      const userFromDB = await userModel.findOneAndUpdate(
-        {
-          email: email,
-        },
-        { $set: { password: createHash(password) } }
-      )
+      const userFromDB = await usersService.getByEmail(email)
 
       if (!userFromDB)
         //TODO: Redireccionar a una página de error o arrojar un modal con un error
@@ -125,6 +105,10 @@ class SessionsController {
           status: 'error',
           message: 'El usuario ingresado no existe',
         })
+
+      userFromDB.password = password
+
+      await usersService.update(userFromDB._id, userFromDB)
 
       //TODO: Redireccionar a la página de login
       response.status(200).send({

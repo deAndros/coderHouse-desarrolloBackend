@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const collection = 'users'
 
@@ -14,7 +15,7 @@ const userSchema = new Schema({
     unique: true,
     index: true,
   },
-  age: { type: Number, required: true },
+  age: { type: Number },
   cart: {
     type: Schema.Types.ObjectId,
     ref: 'carts',
@@ -23,6 +24,7 @@ const userSchema = new Schema({
   role: { type: String, default: 'User' },
 })
 
+userSchema.plugin(mongoosePaginate)
 const userModel = model(collection, userSchema)
 
 module.exports = {

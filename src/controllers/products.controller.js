@@ -1,5 +1,4 @@
 const { productsService } = require('../services')
-const ProductDto = require('../dtos/product.dto')
 
 class ProductsController {
   getProducts = async (request, response) => {

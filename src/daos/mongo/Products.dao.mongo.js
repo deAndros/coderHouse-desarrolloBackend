@@ -10,7 +10,6 @@ class ProductsDaoMongo {
   }
 
   getByCustomFilter = async (customFilter) => {
-    console.log('ENTRÉ AL CUSTOM FILTER DEL DAO')
     return await productModel.find(customFilter)
   }
 
@@ -24,6 +23,11 @@ class ProductsDaoMongo {
 
   update = async (id, product) => {
     return await productModel.findOneAndUpdate({ _id: id }, product)
+  }
+
+  updateCustom = async (filter, operation) => {
+    console.log('STOCK QUE ME LLEGÓ AL DAO', operation)
+    return await productModel.findOneAndUpdate(filter, operation)
   }
 
   delete = async (id) => {

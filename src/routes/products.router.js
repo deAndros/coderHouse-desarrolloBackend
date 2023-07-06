@@ -9,7 +9,7 @@ const {
 
 class ProductsRouter extends CustomRouter {
   init() {
-    this.get('/', ['ADMIN'], getProducts)
+    this.get('/', ['USER', 'ADMIN'], getProducts)
 
     this.get('/:pid([a-zA-Z0-9]+)', ['ADMIN'], getProductById)
 

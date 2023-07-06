@@ -8,8 +8,8 @@ const {
   updateCartProducts,
   updateProductQuantity,
   deleteProductFromCart,
-  emptyCart,
   deleteCart,
+  generateTicket,
 } = require('../controllers/carts.controller.js')
 
 class CartsRouter extends CustomRouter {
@@ -18,11 +18,13 @@ class CartsRouter extends CustomRouter {
 
     this.get('/:cid([a-zA-Z0-9]+)', ['ADMIN'], getCartById)
 
-    this.post('/', ['ADMIN'], createCart)
+    this.post('/', ['USER', 'ADMIN'], createCart)
+
+    this.post('/:cid([a-zA-Z0-9]+)/purchase/', ['USER'], generateTicket)
 
     this.post(
       '/:cid([a-zA-Z0-9]+)/product/:pid([a-zA-Z0-9]+)',
-      ['ADMIN'],
+      ['USER'],
       addProductToCart
     )
 
@@ -30,17 +32,15 @@ class CartsRouter extends CustomRouter {
 
     this.put(
       '/:cid([a-zA-Z0-9]+)/product/:pid([a-zA-Z0-9]+)',
-      ['ADMIN'],
+      ['USER'],
       updateProductQuantity
     )
 
     this.delete(
       '/:cid([a-zA-Z0-9]+)/product/:pid([a-zA-Z0-9]+)',
-      ['ADMIN'],
+      ['USER'],
       deleteProductFromCart
     )
-
-    this.delete('/:cid([a-zA-Z0-9]+)/empty', ['ADMIN'], emptyCart)
 
     this.delete('/:cid([a-zA-Z0-9]+)', ['ADMIN'], deleteCart)
   }

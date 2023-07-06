@@ -21,7 +21,7 @@ router
   .get(
     '/current',
     passportAuth('jwt'),
-    passportAuthorization('Admin'),
+    passportAuthorization(['ADMIN']),
     async (request, response) => {
       response.send('LLEGASTE A CURRENT')
     }

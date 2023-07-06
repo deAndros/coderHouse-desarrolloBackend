@@ -6,10 +6,11 @@ const {
   passportAuthorization,
 } = require('../middlewares/passportAuthorization')
 
+//TODO: Aplicar CUSTOM ROUTER acá
 router.get(
   '/products',
   passportAuth('jwt'),
-  passportAuthorization('Admin'),
+  passportAuthorization(['USER', 'ADMIN']),
   async (request, response) => {
     try {
       const { docs } = await productsService.get()

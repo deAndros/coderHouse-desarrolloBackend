@@ -9,7 +9,6 @@ class UsersController {
       const sortOptions = {
         page: page,
         limit: limit,
-        lean: true,
         //sort: sort === 'asc' ? 1 : -1,
       }
 
@@ -61,7 +60,14 @@ class UsersController {
         return true
       }
 
-      response.sendSuccess({ user: userFound })
+      const {
+        _id,
+        password: dbPassword,
+        __v,
+        ...userMetadata
+      } = userFound.toObject()
+
+      response.sendSuccess({ user: userMetadata })
     } catch (error) {
       response.sendServerError(error)
     }
@@ -72,89 +78,68 @@ class UsersController {
       if (Object.keys(request.body).length === 0)
         return response.sendUserError(new Error('No se encontró post-data'))
 
-      const productFound = await productsService.getByCode(request.body.code)
+      const { firstName, lastName, email, password } = request.body
 
-      if (productFound)
-        return response.sendUserError(
+      if (!firstName || !lastName || !email || !password)
+        response.sendUserError(
           new Error(
-            `El código ${product.code} ya se encuentra utilizado por otro producto.`
+            'Los campos "Nombre", "Apellido", "E-Mail" y "Password" son obligatorios'
           )
         )
 
-      const productToCreate = {
-        title: request.body.title,
-        code: request.body.code,
-        stock: request.body.stock,
-        description: request.body.description,
-        price: request.body.price,
-        status: request.body.status,
-        category: request.body.category,
-        thumbnails: request.body.thumbnails,
-      }
+      const userFound = await usersService.getByEmail(request.body)
 
-      const newProduct = await productsService.create(productToCreate)
-      response.sendSuccess({ newProduct: newProduct })
+      if (userFound)
+        return response.sendUserError(
+          new Error(
+            `El email ${request.body.email} ya se encuentra utilizado por otro usuario.`
+          )
+        )
+
+      const newUser = await usersService.create(request.body)
+
+      const {
+        _id,
+        password: dbPassword,
+        __v,
+        ...newUserMetadata
+      } = newUser.toObject()
+
+      response.sendSuccess({ newUser: newUserMetadata })
     } catch (error) {
+      if (request.headers.internalRequest)
+        return {
+          error: true,
+          message: error.message,
+        }
       response.sendServerError(error)
     }
   }
 
   updateUser = async (request, response) => {
     try {
-      const {
-        newId,
-        title,
-        code,
-        description,
-        category,
-        price,
-        status,
-        thumbnails,
-        stock,
-      } = request.body
-
-      if (newId)
+      if (request.body.id || request.body._id)
         return response.sendUserError(
-          new Error(
-            'El ID de un producto no puede ser actualizado. No se debe enviar el parámetro "id" en el body de esta petición'
-          )
+          new Error('El ID de un usuario no puede ser actualizado.')
         )
 
-      if (!title || !code || !description || !category || !price)
-        return response.sendUserError(
-          new Error(
-            'Los parámetros title, code, description, category y price son obligatorios'
-          )
-        )
-
-      //Si el código ingresado es distinto al que tenía ese producto y a su vez existe otro producto con ese código arrojo un error.
-      const hasRepeatedCode = await productsService.getByCustomFilter({
-        code: code,
+      //Si el email ingresado es distinto al que tenía ese usuario y a su vez existe otro usuario con ese código arrojo un error.
+      const hasRepeatedEmail = await usersService.getByCustomFilter({
+        email: email,
         _id: { $ne: request.params.id },
       })
 
-      if (hasRepeatedCode.length != 0)
+      if (hasRepeatedEmail.length != 0)
         return response.sendUserError(
           new Error(
-            `El código ${product.code} ya se encuentra utilizado por otro producto.`
+            `El email ${request.body.email} ya se encuentra utilizado por otro usuario.`
           )
         )
 
-      const productToBeReplaced = {
-        title: title,
-        code: code,
-        description: description,
-        category: category,
-        price: price,
-        stock: stock,
-        status: status,
-        thumbnails: thumbnails,
-      }
-
-      await productsService.update(request.params.id, productToBeReplaced)
+      await usersService.update(request.params.uid, request.body)
 
       response.sendSuccess({
-        message: 'El producto fue actualizado correctamente',
+        message: 'El usuario fue actualizado correctamente',
       })
     } catch (error) {
       response.sendServerError(error)
@@ -163,23 +148,26 @@ class UsersController {
 
   deleteUser = async (request, response) => {
     try {
-      const id = request.params.id
+      const deletedUser = await usersService.delete(request.params.uid)
 
-      const deletedProduct = await productsService.delete(id)
-
-      if (!deletedProduct)
+      if (!deletedUser)
         return response.sendUserError(
-          new Error(`No existe un producto con ID igual a ${id}`)
+          new Error(`No existe un usuario con ID igual a ${request.params.uid}`)
         )
 
       response.sendSuccess({
         message: 'El producto se eliminó correctamente',
-        deletedProduct: deletedProduct,
+        deletedProduct: deletedUser,
       })
     } catch (error) {
       response.sendServerError(error.message)
     }
   }
+
+  retorePassword = async (request, response) => {
+    try {
+    } catch (error) {}
+  }
 }
 
-module.exports = new ProductsController()
+module.exports = new UsersController()

@@ -1,5 +1,6 @@
 const { Router } = require('express')
 const viewsRouter = require('./views.router')
+const usersRouter = require('./users.router')
 const productsRouter = require('./products.router')
 const cartsRouter = require('./carts.router')
 const sessionsRouter = require('./sessions.router')
@@ -18,6 +19,9 @@ router.use('/api/carts', cartsRouter.getRouter())
 
 //_________________Apartado de SESIONES_________________
 router.use('/api/sessions', sessionsRouter)
+
+//_________________Apartado de USUARIOS_________________
+router.use('/api/users', usersRouter.getRouter())
 
 /*//_________________Rutas Indefinidas_________________
 router.get('*', async (request, response) => {

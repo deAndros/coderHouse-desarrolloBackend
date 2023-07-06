@@ -1,5 +1,6 @@
 const { getProducts, getProductById } = require('./products.controller')
-const { cartsService } = require('../services/index')
+const { cartsService, productsService } = require('../services/index')
+const ticketModel = require('../daos/mongo/models/ticket.model')
 
 class CartController {
   getCarts = async (request, response) => {
@@ -62,6 +63,8 @@ class CartController {
           )}. La operación será realizada solo si existen todos los productos enviados y los mismos se ingresan con cantidades enteras y positivas`
         )
       )
+
+    console.log('products', products)
 
     const newCart = await cartsService.create(products)
 
@@ -234,28 +237,6 @@ class CartController {
     }
   }
 
-  emptyCart = async (request, response) => {
-    try {
-      const cid = request.params.cid
-
-      const emptyCart = await cartsService.update(
-        { _id: cid },
-        { $set: { products: [] } },
-        { new: true }
-      )
-
-      if (!emptyCart) {
-        return response.sendUserError(
-          new Error('No existe un carrito con el ID proporcionado')
-        )
-      }
-
-      response.sendSuccess({ emptyCart: emptyCart })
-    } catch (error) {
-      response.sendServerError(error)
-    }
-  }
-
   deleteCart = async (request, response) => {
     const cid = request.params.cid
 
@@ -271,6 +252,68 @@ class CartController {
       messge: 'El carrito fue eliminado correctamente',
       deletedCart: deletedCart,
     })
+  }
+
+  generateTicket = async (request, response) => {
+    try {
+      const cart = await cartsService.getById(request.params.cid)
+      let purchasedProducts = []
+      let productsOutOfStock = []
+      let totalPrice = 0
+
+      for (const cartItem of cart.products) {
+        console.log(cartItem)
+        if (cartItem.product.stock > cartItem.quantity) {
+          let updatedProductQuantity =
+            cartItem.product.stock - cartItem.quantity
+
+          if (updatedProductQuantity === 0) {
+            await productsService.delete(cartItem.product._id)
+          } else {
+            await productsService.updateStock(
+              cartItem.product._id,
+              updatedProductQuantity
+            )
+          }
+
+          totalPrice += cartItem.product.price
+          purchasedProducts.push(cartItem.product)
+        } else {
+          productsOutOfStock.push({
+            product: cartItem.product._id,
+            quantity: cartItem.quantity,
+          })
+        }
+      }
+
+      if (purchasedProducts.length > 0) {
+        const ticketTocreate = {
+          amount: totalPrice,
+          purchaser: request.user.email,
+          purchasedProducts: purchasedProducts,
+        }
+
+        await cartsService.update(
+          { _id: cart._id },
+          { $set: { products: productsOutOfStock } }
+        )
+
+        const ticket = await ticketModel.create(ticketTocreate)
+
+        return response.sendSuccess({
+          message: '¡Compra exitosa!',
+          ticket: ticket,
+          //Buscar la manera de notificarle al usuario que algunos productos no se pudieron comprar por falta de stock
+          //producstOutOfStock: `La compra de los siguientes productos no pudo llevarse a cabo por falta de stock: ${productsOutOfStock}`,
+        })
+      } else {
+        return response.sendUserError({
+          message: `La compra no pudo llevarse a cabo porque había productos sin stock: ${productsOutOfStock}`,
+        })
+      }
+    } catch (error) {
+      response.sendServerError(error)
+    }
   }
 }
 

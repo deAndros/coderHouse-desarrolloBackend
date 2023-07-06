@@ -38,7 +38,13 @@ class ProductsRepository {
     return await this.dao.update(id, productToUpdate)
   }
 
+  updateStock = async (id, stock) => {
+    console.log('STOCK QUE ME LLEGO AL REPOSITORY', stock)
+    return await this.dao.update({ _id: id }, { $set: { stock: stock } })
+  }
+
   delete = async (id) => {
+    //TODO: Agregar una validación para que se eliminen todos los productos cuyo ID coincidan con el que se recibió por parámetro de los carritos
     return await this.dao.delete(id)
   }
 }
