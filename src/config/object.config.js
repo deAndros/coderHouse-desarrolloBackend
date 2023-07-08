@@ -12,8 +12,7 @@ module.exports = {
   persistance: process.env.PERSISTANCE,
   PORT: process.env.PORT,
   gmailAppUser: process.env.GMAIL_APP_USER,
-  gmailAppPassword: process.env.GMAIL_APP_USER,
-
+  gmailAppPassword: process.env.GMAIL_APP_PASSWORD,
   connectDB: async () => {
     try {
       MongoConnector.getInstance()

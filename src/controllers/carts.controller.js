@@ -5,6 +5,7 @@ const {
   usersService,
 } = require('../services/index')
 const ticketModel = require('../daos/mongo/models/ticket.model')
+const { sendEmail } = require('../utils/emailSender')
 
 class CartController {
   getCarts = async (request, response) => {
@@ -321,6 +322,45 @@ class CartController {
         )
 
         const ticket = await ticketModel.create(ticketTocreate)
+
+        const html = `<div>
+        //     <h1>¡${request.user.email} tu compra fue exitosa!</h1>
+        // </div>`
+
+        //TODO: Implementar rendering para el correo que se envía al realizar la compra
+        /*const html = `<html>
+        <head>
+          <title>Productos Comprados</title>
+          <style>
+            .product {
+              display: flex;
+              align-items: center;
+              margin-bottom: 10px;
+            }
+        
+            .product-image {
+              width: 50px;
+              height: 50px;
+              margin-right: 10px;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Productos Comprados</h1>
+        
+          <h2>Lista de Productos:</h2>
+          <ul>
+            <!-- Aquí debes repetir estos bloques para cada producto -->
+            <li class="product">
+              <img src="ruta_imagen1.jpg" alt="Producto 1" class="product-image">
+              <span>${purchasedProducts[i].title}</span>
+            </li>
+            <!-- Fin del bloque del producto -->
+          </ul>
+        </body>
+        </html>`*/
+
+        await sendEmail(request.user.email, '!Compra exitosa!', html)
 
         return response.sendSuccess({
           message: '¡Compra exitosa!',
