@@ -1,5 +1,9 @@
 const { getProducts, getProductById } = require('./products.controller')
-const { cartsService, productsService } = require('../services/index')
+const {
+  cartsService,
+  productsService,
+  usersService,
+} = require('../services/index')
 const ticketModel = require('../daos/mongo/models/ticket.model')
 
 class CartController {
@@ -28,7 +32,7 @@ class CartController {
   }
 
   createCart = async (request, response) => {
-    const products = request.body.products
+    const products = request.body.products ? request.body.products : []
 
     request.headers.internalRequest = true
 
@@ -37,34 +41,35 @@ class CartController {
 
     //TODO: Agregar validación para que no se pueda ingresar el mismo producto dos veces
 
-    //Valido que los productos que recibí por parámetro existan en mi colección de productos
-    for (const productToValidate of products) {
-      let productFound = storedProducts.find((storedProduct) => {
-        let isValidProduct =
-          storedProduct._id.toString() === productToValidate.product.toString()
+    if (products.length > 0) {
+      //Valido que los productos que recibí por parámetro existan en mi colección de productos
+      for (const productToValidate of products) {
+        let productFound = storedProducts.find((storedProduct) => {
+          let isValidProduct =
+            storedProduct._id.toString() ===
+            productToValidate.product.toString()
 
-        let isValidQuantity =
-          Number.isInteger(productToValidate.quantity) &&
-          productToValidate.quantity > 0
+          let isValidQuantity =
+            Number.isInteger(productToValidate.quantity) &&
+            productToValidate.quantity > 0
 
-        return isValidProduct && isValidQuantity
-      })
+          return isValidProduct && isValidQuantity
+        })
 
-      if (!productFound) {
-        missingProducts.push(productToValidate.product)
+        if (!productFound) {
+          missingProducts.push(productToValidate.product)
+        }
       }
-    }
 
-    if (missingProducts.length > 0)
-      return response.sendUserError(
-        new Error(
-          `Los siguientes productos no existen en la base de datos o bien fueron ingresados con cantidades negativas/decimales: ${missingProducts.join(
-            ', '
-          )}. La operación será realizada solo si existen todos los productos enviados y los mismos se ingresan con cantidades enteras y positivas`
+      if (missingProducts.length > 0)
+        return response.sendUserError(
+          new Error(
+            `Los siguientes productos no existen en la base de datos o bien fueron ingresados con cantidades negativas/decimales: ${missingProducts.join(
+              ', '
+            )}. La operación será realizada solo si existen todos los productos enviados y los mismos se ingresan con cantidades enteras y positivas`
+          )
         )
-      )
-
-    console.log('products', products)
+    }
 
     const newCart = await cartsService.create(products)
 
@@ -255,8 +260,25 @@ class CartController {
   }
 
   generateTicket = async (request, response) => {
+    //Este método toma directamente el carrito del usuario que se encuentra autenticado. No necesita recibirlo como parámetro
     try {
-      const cart = await cartsService.getById(request.params.cid)
+      //Necesito traer el cart aún teniendolo en el JWT para que este se popule y por ende pueda manipular la propiedad "stock"
+      const cart = await cartsService.getById(request.user.cart._id)
+
+      if (cart.products.length === 0) {
+        return response.sendUserError(
+          new Error('El carrito del usuario se encuentra vacío')
+        )
+      }
+
+      if (!cart._id) {
+        return response.sendUserError(
+          new Error(
+            'El usuario autenticado no posee un carrito inicializado. Contáctese con el administrador.'
+          )
+        )
+      }
+
       let purchasedProducts = []
       let productsOutOfStock = []
       let totalPrice = 0
@@ -308,7 +330,7 @@ class CartController {
         })
       } else {
         return response.sendUserError({
-          message: `La compra no pudo llevarse a cabo porque había productos sin stock: ${productsOutOfStock}`,
+          message: `La compra no pudo llevarse a cabo porque no había stock de los productos: ${productsOutOfStock}`,
         })
       }
     } catch (error) {

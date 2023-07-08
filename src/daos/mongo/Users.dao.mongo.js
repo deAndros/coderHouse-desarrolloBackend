@@ -2,19 +2,21 @@ const { userModel } = require('./models/user.model')
 
 class UsersDaoMongo {
   get = async (sortOptions) => {
-    return await userModel.paginate({}, { ...sortOptions, lean: true })
+    return await userModel
+      .paginate({}, { ...sortOptions, lean: true })
+      .populate('cart')
   }
 
   getById = async (id) => {
-    return await userModel.findOne({ _id: id })
+    return await userModel.findOne({ _id: id }).populate('cart')
   }
 
   getByCustomFilter = async (customFilter) => {
-    return await userModel.find(customFilter)
+    return await userModel.find(customFilter).populate('cart')
   }
 
   getByEmail = async (email) => {
-    return await userModel.findOne({ email: email })
+    return await userModel.findOne({ email: email }).populate('cart')
   }
 
   create = async (user) => {

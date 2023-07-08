@@ -27,8 +27,8 @@ class UsersRepository {
     return new UserDto(user)
   }
 
-  create = async (user) => {
-    let userToCreate = new UserDto(user)
+  create = async (user, cart) => {
+    let userToCreate = new UserDto(user, cart)
     return await this.dao.create(userToCreate)
   }
 

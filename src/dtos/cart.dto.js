@@ -1,7 +1,6 @@
 class CartDto {
-  constructor(products) {
+  constructor(products = []) {
     this.products = products
-    this.products.quantity = products.quantity
   }
 }
 

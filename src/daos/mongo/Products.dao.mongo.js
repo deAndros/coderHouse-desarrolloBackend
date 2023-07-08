@@ -26,7 +26,6 @@ class ProductsDaoMongo {
   }
 
   updateCustom = async (filter, operation) => {
-    console.log('STOCK QUE ME LLEGÓ AL DAO', operation)
     return await productModel.findOneAndUpdate(filter, operation)
   }
 

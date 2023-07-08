@@ -18,8 +18,11 @@ class CartsRepository {
     return new CartDto(cart)
   }
 
-  create = async (cart) => {
-    let cartToCreate = new CartDto(cart)
+  create = async (products) => {
+    /*if (cart) {
+      let cartToCreate = new CartDto(cart)
+    }*/
+    let cartToCreate = new CartDto(products)
     return await this.dao.create(cartToCreate.products)
   }
 

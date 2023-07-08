@@ -1,12 +1,13 @@
 const { createHash } = require('../utils/bcryptHash')
 
 class UserDto {
-  constructor(user) {
+  constructor(user, cart) {
     this.first_name = user.firstName ? user.firstName : user.first_name
     this.last_name = user.lastName ? user.lastName : user.last_name
     this.email = user.email
     this.age = user.age ? user.age : null
     this.password = createHash(user.password)
+    this.cart = cart
 
     if (
       user.isAdmin === 'on' ||

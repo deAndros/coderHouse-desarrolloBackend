@@ -11,6 +11,9 @@ dotenv.config({
 module.exports = {
   persistance: process.env.PERSISTANCE,
   PORT: process.env.PORT,
+  gmailAppUser: process.env.GMAIL_APP_USER,
+  gmailAppPassword: process.env.GMAIL_APP_USER,
+
   connectDB: async () => {
     try {
       MongoConnector.getInstance()

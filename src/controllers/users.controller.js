@@ -96,7 +96,8 @@ class UsersController {
           )
         )
 
-      const newUser = await usersService.create(request.body)
+      const newUserCart = await cartsService.create()
+      const newUser = await usersService.create(request.body, newUserCart)
 
       const {
         _id,

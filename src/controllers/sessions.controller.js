@@ -1,6 +1,6 @@
 const { generateToken } = require('../utils/jwt')
 const { createHash, isValidPassword } = require('../utils/bcryptHash')
-const { usersService } = require('../services')
+const { usersService, cartsService } = require('../services')
 
 class SessionsController {
   login = async (request, response) => {
@@ -61,15 +61,16 @@ class SessionsController {
             'Los campos "Nombre", "Apellido", "E-Mail" y "Password" son obligatorios',
         })
 
-      const eMailExists = await usersService.getByEmail(email)
+      const emailExists = await usersService.getByEmail(email)
 
-      if (eMailExists)
+      if (emailExists)
         return response.send({
           status: 'error',
           message: 'El E-mail ingresado ya existe',
         })
 
-      let newUser = await usersService.create(request.body)
+      const newUserCart = await cartsService.create()
+      let newUser = await usersService.create(request.body, newUserCart)
 
       const {
         _id,

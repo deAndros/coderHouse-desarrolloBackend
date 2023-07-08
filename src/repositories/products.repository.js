@@ -39,7 +39,6 @@ class ProductsRepository {
   }
 
   updateStock = async (id, stock) => {
-    console.log('STOCK QUE ME LLEGO AL REPOSITORY', stock)
     return await this.dao.update({ _id: id }, { $set: { stock: stock } })
   }
 
