@@ -11,8 +11,13 @@ dotenv.config({
 module.exports = {
   persistance: process.env.PERSISTANCE,
   PORT: process.env.PORT,
-  gmailAppUser: process.env.GMAIL_APP_USER,
-  gmailAppPassword: process.env.GMAIL_APP_PASSWORD,
+  gmail_app_user: process.env.GMAIL_APP_USER,
+  gmail_app_Password: process.env.GMAIL_APP_PASSWORD,
+  twilio_sid: process.env.TWILIO_SID,
+  twilio_auth_token: process.env.TWILIO_AUTH_TOKEN,
+  twilio_phone_number: process.env.TWILIO_PHONE,
+  twilio_whatsapp: process.env.TWILIO_WHATSAPP,
+  my_phone: process.env.MY_PHONE,
   connectDB: async () => {
     try {
       MongoConnector.getInstance()

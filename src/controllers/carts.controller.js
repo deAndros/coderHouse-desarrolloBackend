@@ -6,6 +6,7 @@ const {
 } = require('../services/index')
 const ticketModel = require('../daos/mongo/models/ticket.model')
 const { sendEmail } = require('../utils/emailSender')
+const { sendSms, sendWhatsapp } = require('../utils/smsSender')
 
 class CartController {
   getCarts = async (request, response) => {
@@ -360,7 +361,10 @@ class CartController {
         </body>
         </html>`*/
 
+        //TODO: Buscar formas de utilizar los emails y los sms en otras partes del código, por ejemplo en el registro exitoso
         await sendEmail(request.user.email, '!Compra exitosa!', html)
+        //await sendSms(request.user.email)
+        //await sendWhatsapp(request.user.email)
 
         return response.sendSuccess({
           message: '¡Compra exitosa!',

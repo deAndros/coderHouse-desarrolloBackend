@@ -1,6 +1,11 @@
 const { generateToken } = require('../utils/jwt')
 const { createHash, isValidPassword } = require('../utils/bcryptHash')
 const { usersService, cartsService } = require('../services')
+const { CustomError } = require('../utils/customErrors/Error.custom.class')
+const {
+  generateUserErrorInfo,
+} = require('../utils/customErrors/errorInfo.custom')
+const { errorCodes } = require('../utils/customErrors/errorCodes.custom')
 
 class SessionsController {
   login = async (request, response) => {
@@ -8,7 +13,12 @@ class SessionsController {
       const { email, password } = request.body
 
       if (!email || !password)
-        throw new Error('Los campos E-mail y Password son obligatorios')
+        CustomError.createError({
+          name: 'Login failed',
+          cause: generateUserErrorInfo({ email, password }),
+          message: 'Error attempting to login',
+          code: errorCodes.INVALID_TYPE_ERROR,
+        }) //throw new Error('Los campos E-mail y Password son obligatorios')
 
       const userFromDB = await usersService.getByEmail(email)
 

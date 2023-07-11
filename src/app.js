@@ -14,6 +14,12 @@ const app = express()
 const cors = require('cors')
 app.use(cors())
 
+//Compression
+//const compression = require('express-compression')
+
+//app.use(compression()) //GZip Compression
+//app.use(compression({ brotli: { enable: true, zlib: {} } })) //Brotli Compression
+
 //Middlewares Nativos de Express
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -54,10 +60,12 @@ passport.use(passport.initialize())
 
 //Routers
 const appRouter = require('./routes/index.router')
+const { errorHandler } = require('./middlewares/error.middleware')
 app.use(appRouter)
 
 //Manejo de ERRORES
-app.use((error, request, response, next) => {
+app.use(errorHandler)
+/*app.use((error, request, response, next) => {
   console.log(error)
   response.status(500).send('Se produjo un error inesperado ' + error)
-})
+})*/
