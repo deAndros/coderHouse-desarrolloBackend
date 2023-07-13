@@ -196,10 +196,8 @@ POST http://localhost:8080/api/sessions/register
 Content-Type: application/json
 
 {
-    "userName": "ATRICINELLO",
     "firstName": "Alejandro",
     "lastName": "Tricinello",
-    "eMail": "atricci@gmail.com",
     "password": "pass"
 }
 ###
@@ -207,8 +205,7 @@ POST http://localhost:8080/api/sessions/restorePassword
 Content-Type: application/json
 
 {
-    "eMail": "hmatz@gmail.com",
-    "newPassword": "otrapassword"
+    "password": "otrapassword"
 }
 ###
 POST http://localhost:8080/api/sessions/login
