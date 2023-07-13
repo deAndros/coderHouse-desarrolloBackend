@@ -8,7 +8,7 @@ const {
 const { errorCodes } = require('../utils/customErrors/errorCodes.custom')
 
 class SessionsController {
-  login = async (request, response) => {
+  login = async (request, response, next) => {
     try {
       const { email, password } = request.body
 
@@ -16,9 +16,9 @@ class SessionsController {
         CustomError.createError({
           name: 'Login failed',
           cause: generateUserErrorInfo({ email, password }),
-          message: 'Error attempting to login',
+          message: 'Email and password are mandatory',
           code: errorCodes.INVALID_TYPE_ERROR,
-        }) //throw new Error('Los campos E-mail y Password son obligatorios')
+        })
 
       const userFromDB = await usersService.getByEmail(email)
 
@@ -44,7 +44,8 @@ class SessionsController {
         })
         .redirect('/products')
     } catch (error) {
-      response.send({ status: 'error', message: error.message })
+      //response.send({ status: 'error', message: error.message })
+      next(error)
     }
   }
 
