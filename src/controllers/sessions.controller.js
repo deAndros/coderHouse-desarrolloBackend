@@ -10,6 +10,7 @@ const { errorCodes } = require('../utils/customErrors/errorCodes.custom')
 class SessionsController {
   login = async (request, response, next) => {
     try {
+      console.log('ENTRÉ')
       const { email, password } = request.body
 
       if (!email || !password)
