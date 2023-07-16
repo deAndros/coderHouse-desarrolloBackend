@@ -24,7 +24,7 @@ const validateToken = (request, response, next) => {
         .status(401)
         .send({ status: error, message: 'No se encuentra autenticado' })
 
-    console.log('credentials', credentials)
+    request.logger.debug('credentials', credentials)
     request.user = credentials.user
     next()
   })

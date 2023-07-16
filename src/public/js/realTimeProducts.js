@@ -1,12 +1,13 @@
-console.log("Real Time Products");
-const socket = io();
+const { logger } = require('../../config/logger.config')
+
+const socket = io()
 
 const renderProducts = (data) => {
   let productsTable = document
-    .getElementById("productsTable")
-    .getElementsByTagName("tbody")[0];
+    .getElementById('productsTable')
+    .getElementsByTagName('tbody')[0]
 
-  let productRows = "";
+  let productRows = ''
 
   data.forEach((product) => {
     productRows += `<tr>
@@ -14,16 +15,16 @@ const renderProducts = (data) => {
         <td class="tg-0lax">${product.price}</td>
         <td class="tg-0lax">${product.code}</td>
         <td class="tg-0lax">${product.stock}</td>
-      </tr>`;
-  });
+      </tr>`
+  })
 
-  productsTable.innerHTML = productRows;
+  productsTable.innerHTML = productRows
 
-  return productsTable;
-};
+  return productsTable
+}
 
-socket.on("products", (data) => {
-  console.log("ESTOS SON MIS PRODUCTOS", data);
+socket.on('products', (data) => {
+  logger.debug(`ESTOS SON MIS PRODUCTOS ${data}`)
 
-  renderProducts(data);
-});
+  renderProducts(data)
+})

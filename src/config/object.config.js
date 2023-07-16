@@ -9,6 +9,7 @@ dotenv.config({
 
 //TODO: Pasar el resto de los parámetros seteados en mi .env a los demás archivos que los utilizan. Ahora solo estoy pasando el puerto.
 module.exports = {
+  app_mode: mode,
   persistance: process.env.PERSISTANCE,
   PORT: process.env.PORT,
   gmail_app_user: process.env.GMAIL_APP_USER,

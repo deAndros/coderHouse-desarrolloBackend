@@ -29,15 +29,19 @@ app.use('/static', express.static(__dirname + '/public')) //static es una carpet
 const cookieParser = require('cookie-parser')
 app.use(cookieParser('S3c123t'))
 
-const logger = require('morgan')
-app.use(logger('dev'))
+/*const logger = require('morgan')
+app.use(logger('dev'))*/
 
 //Socket IO
 const { Server } = require('socket.io')
 
+//Loging
+const { logger, addLogger } = require('./config/logger.config')
+app.use(addLogger)
+
 const httpServer = app.listen(PORT, (error) => {
-  if (error) console.log('Se produjo un error en el servidor: ', error)
-  console.log(`Escuchando en el puerto ${PORT}`)
+  if (error) logger.fatal('Se produjo un error en el servidor: ', error)
+  logger.info(`Escuchando en el puerto ${PORT}`)
 })
 
 const socketServer = new Server(httpServer)
@@ -60,11 +64,14 @@ passport.use(passport.initialize())
 
 //Routers
 const appRouter = require('./routes/index.router')
-const { errorHandler } = require('./middlewares/error.middleware')
 app.use(appRouter)
 
 //Manejo de ERRORES
+const { errorHandler } = require('./middlewares/error.middleware')
 app.use(errorHandler)
+
+//TODO: Notificarle al usuario cuando construye mal el JSON en un POST
+
 /*app.use((error, request, response, next) => {
   console.log(error)
   response.status(500).send('Se produjo un error inesperado ' + error)

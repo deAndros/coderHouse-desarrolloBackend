@@ -2,8 +2,8 @@ const { errorCodes } = require('../utils/customErrors/errorCodes.custom')
 
 exports.errorHandler = (error, request, response, next) => {
   error.cause
-    ? console.log({ message: error.message, details: error.cause })
-    : console.log({ message: error.message, details: error })
+    ? request.logger.error({ message: error.message, details: error.cause })
+    : request.logger.error({ message: error.message, details: error })
 
   switch (error.code) {
     case errorCodes.INVALID_TYPE_ERROR:

@@ -1,5 +1,6 @@
 const { Router } = require('express')
 const jwt = require('jsonwebtoken')
+const { logger } = require('../config/logger.config')
 require('dotenv').config()
 
 class CustomRouter {
@@ -19,7 +20,7 @@ class CustomRouter {
       try {
         await callback.apply(this, parameters)
       } catch (error) {
-        console.log(error.message)
+        logger.error(error.message)
         //parameters[0] es request, parameters[1] es response
         parameters[1]
           .status(500)

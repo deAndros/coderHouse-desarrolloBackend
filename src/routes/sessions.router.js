@@ -10,6 +10,7 @@ const { passportAuth } = require('../middlewares/passportAuthentication')
 const {
   passportAuthorization,
 } = require('../middlewares/passportAuthorization')
+const { logger } = require('../config/logger.config')
 
 const router = Router()
 
@@ -28,14 +29,14 @@ router
   )
 
 router.get('/loginFailed', async (request, response) => {
-  console.log('Falló la estrategia de login')
+  logger.error('Falló la estrategia de login')
   response
     .status(500)
     .send({ status: 'error', message: 'Se produjo un error al loguearse' })
 })
 
 router.get('/registrationFailed', async (request, response) => {
-  console.log('Falló la estrategia de registro')
+  logger.error('Falló la estrategia de registro')
   response
     .status(500)
     .send({ status: 'error', message: 'Se produjo un error al registrarse' })

@@ -3,6 +3,7 @@ const { userModel } = require('../daos/mongo/models/user.model')
 const GithubStrategy = require('passport-github2')
 const { Strategy, ExtractJwt } = require('passport-jwt')
 const { generateToken } = require('../utils/jwt')
+const { logger } = require('./logger.config')
 
 const JWTStrategy = Strategy
 const JWTExtractor = ExtractJwt
@@ -84,7 +85,7 @@ const initPassportGithub = () => {
           //Si existe, lo retorno
           return done(null, accessToken)
         } catch (error) {
-          console.log(error.message)
+          logger.error(error.message)
           return done(error)
         }
       }

@@ -286,7 +286,6 @@ class CartController {
       let totalPrice = 0
 
       for (const cartItem of cart.products) {
-        console.log(cartItem)
         if (cartItem.product.stock > cartItem.quantity) {
           let updatedProductQuantity =
             cartItem.product.stock - cartItem.quantity

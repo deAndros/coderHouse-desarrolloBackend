@@ -5,6 +5,7 @@ const productsRouter = require('./products.router')
 const cartsRouter = require('./carts.router')
 const sessionsRouter = require('./sessions.router')
 const mocksRouter = require('./mocks.router')
+const loggerTestRouter = require('./loggerTest.router')
 
 const router = Router()
 
@@ -26,6 +27,9 @@ router.use('/api/users', usersRouter.getRouter())
 
 //_________________Apartado de MOCKS_________________
 router.use('/api/mocks', mocksRouter.getRouter())
+
+//_________________Apartado de LOGGER TESTER_________________
+router.use('/api/loggerTest', loggerTestRouter.getRouter())
 
 /*//_________________Rutas Indefinidas_________________
 router.get('*', async (request, response) => {

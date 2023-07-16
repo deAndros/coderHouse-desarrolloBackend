@@ -13,7 +13,6 @@ const transport = nodemailer.createTransport({
 exports.sendEmail = async (receiver, subject, html) => {
   return await transport.sendMail({
     from: 'nightwingsg14@gmail.com',
-    // to: 'projectodigitalgen@gmail.com',
     to: receiver,
     // subject: 'Correo de prueba comsión 39750',
     subject,
