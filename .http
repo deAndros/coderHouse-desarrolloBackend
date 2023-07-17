@@ -227,3 +227,32 @@ Content-Type: application/json
 GET http://localhost:8080/api/sessions/current
 ###
 GET http://localhost:8080/api/sessions/githublogin
+
+//___________MOCK Endpoints___________
+###
+POST http://localhost:8080/api/sessions/login
+Content-Type: application/json
+
+{
+    "email": "andresgabriel.92@gmail.com",
+    "password": "123"
+}
+###
+GET http://localhost:8080/api/mocks/products/100
+content-type: application/json
+accessToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0X25hbWUiOiJBbmRyw6lzIiwibGFzdF9uYW1lIjoiUmFtb3MiLCJlbWFpbCI6ImFuZHJlc2dhYnJpZWwuOTJAZ21haWwuY29tIiwiYWdlIjozMSwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4OTYwNjMxMCwiZXhwIjoxNjg5NjA5MzEwfQ.PpEbJ0D1Gmrox-ZVRl7P02jFE3OH_hOoJnxlVLhdNdo
+
+
+//___________LoggerTest Endpoints___________
+###
+POST http://localhost:8080/api/sessions/login
+Content-Type: application/json
+
+{
+    "email": "andresgabriel.92@gmail.com",
+    "password": "123"
+}
+###
+GET http://localhost:8080/api/loggerTest
+content-type: application/json
+accessToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0X25hbWUiOiJBbmRyw6lzIiwibGFzdF9uYW1lIjoiUmFtb3MiLCJlbWFpbCI6ImFuZHJlc2dhYnJpZWwuOTJAZ21haWwuY29tIiwiYWdlIjozMSwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4OTYwNjMxMCwiZXhwIjoxNjg5NjA5MzEwfQ.PpEbJ0D1Gmrox-ZVRl7P02jFE3OH_hOoJnxlVLhdNdo
