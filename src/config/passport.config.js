@@ -75,12 +75,12 @@ const initPassportGithub = () => {
               ...userMetadata
             } = newUser.toObject()
 
-            const accessToken = generateToken(userMetadata)
+            const accessToken = generateToken(userMetadata, '50m')
 
             return done(null, accessToken)
           }
 
-          const accessToken = generateToken(user)
+          const accessToken = generateToken(user, '50m')
 
           //Si existe, lo retorno
           return done(null, accessToken)

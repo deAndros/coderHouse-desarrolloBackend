@@ -4,7 +4,8 @@ const {
   login,
   logout,
   register,
-  restorePassword,
+  enterNewPassword,
+  sendRestorationEmail,
 } = require('../controllers/sessions.controller')
 const { passportAuth } = require('../middlewares/passportAuthentication')
 const {
@@ -18,7 +19,8 @@ router
   .post('/login', login)
   .get('/logout', logout)
   .post('/register', register)
-  .post('/restorePassword', restorePassword)
+  .post('/restorePassword', sendRestorationEmail)
+  .post('/enterNewPassword', passportAuth('jwt'), enterNewPassword)
   .get(
     '/current',
     passportAuth('jwt'),

@@ -1,11 +1,12 @@
 const { generateToken } = require('../utils/jwt')
-const { createHash, isValidPassword } = require('../utils/bcryptHash')
+const { isValidPassword } = require('../utils/bcryptHash')
 const { usersService, cartsService } = require('../services')
 const { CustomError } = require('../utils/customErrors/Error.custom.class')
 const {
   generateUserErrorInfo,
 } = require('../utils/customErrors/errorInfo.custom')
 const { errorCodes } = require('../utils/customErrors/errorCodes.custom')
+const { sendEmail } = require('../utils/emailSender')
 
 class SessionsController {
   login = async (request, response, next) => {
@@ -45,7 +46,7 @@ class SessionsController {
         ...userMetadata
       } = userFromDB.toObject()
 
-      const accessToken = generateToken(userMetadata)
+      const accessToken = generateToken(userMetadata, '50m')
 
       response
         .cookie('accessToken', accessToken, {
@@ -71,6 +72,7 @@ class SessionsController {
 
   register = async (request, response, next) => {
     try {
+      //TODO: Agregar envío de mail cuando se registra un usuario
       const { firstName, lastName, email, age, password, isAdmin } =
         request.body
 
@@ -128,21 +130,20 @@ class SessionsController {
     }
   }
 
-  restorePassword = async (request, response, next) => {
+  sendRestorationEmail = async (request, response, next) => {
     try {
-      const { email, password } = request.body
+      const { email } = request.body
 
-      if (!email || !password)
+      if (!email)
         CustomError.createError({
           name: 'Password restoration failed',
           cause: generateUserErrorInfo(
             {
               email,
-              password,
             },
             'restorePassword'
           ),
-          message: 'El email y el password son obligatorios',
+          message: 'El email es obligatorio',
           code: errorCodes.INVALID_TYPE_ERROR,
         })
 
@@ -155,7 +156,6 @@ class SessionsController {
           cause: generateUserErrorInfo(
             {
               email,
-              password,
             },
             'restorePassword'
           ),
@@ -163,17 +163,118 @@ class SessionsController {
           code: errorCodes.INVALID_CREDENTIALS_ERROR,
         })
 
-      userFromDB.password = password
+      const {
+        _id,
+        password: dbPassword,
+        __v,
+        ...userMetadata
+      } = userFromDB.toObject()
 
+      const accessToken = generateToken(userMetadata, '1h')
+
+      const html = `<!DOCTYPE html>
+      <html>
+      <head>
+          <meta charset="UTF-8">
+          <title>Password Reset Request</title>
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+                  background-color: #f2f2f2;
+              }
+              .container {
+                  max-width: 400px;
+                  margin: 0 auto;
+                  padding: 20px;
+                  background-color: #000000;
+                  border: 2px solid #00CED1;
+                  border-radius: 5px;
+                  color: #FFFFFF;
+              }
+              h2 {
+                  text-align: center;
+              }
+              p {
+                  text-align: center;
+              }
+              .button {
+                  text-align: center;
+                  margin-top: 20px;
+              }
+              .button a {
+                  display: inline-block;
+                  background-color: #00CED1;
+                  color: #FFFFFF;
+                  padding: 10px 20px;
+                  text-decoration: none;
+                  border-radius: 5px;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <h2>Hello, ${userMetadata.email}</h2>
+              <p>Someone, hopefully you, has requested to reset the password for your account on our site.</p>
+              <p>If you did not perform this request, you can safely ignore this email.</p>
+              <p>Otherwise, click the link below to complete the process.</p>
+              <div class="button">
+                  <a href="http://localhost:8080/enterNewPassword">Reset Password</a>
+              </div>
+          </div>
+      </body>
+      </html>
+      `
+
+      await sendEmail(email, 'Restablecer contraseña', html)
+
+      response
+        .cookie('accessToken', accessToken, {
+          maxAge: 3.6e6,
+          httpOnly: true,
+        })
+        .redirect(`/emailSent`)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  enterNewPassword = async (request, response, next) => {
+    try {
+      const { email } = request.user.user
+
+      if (!email)
+        CustomError.createError({
+          name: 'Password restoration failed',
+          cause: generateUserErrorInfo(
+            {
+              email,
+            },
+            'enterNewPassword'
+          ),
+          message: 'El email es obligatorio',
+          code: errorCodes.INVALID_TYPE_ERROR,
+        })
+
+      const userFromDB = await usersService.getByEmail(email)
+
+      if (!userFromDB)
+        //TODO: Redireccionar a una página de error o arrojar un modal con un error
+        CustomError.createError({
+          name: 'Password restoration failed',
+          cause: generateUserErrorInfo(
+            {
+              email,
+            },
+            'enterNewPassword'
+          ),
+          message: 'No existe un usuario con el email ingresado',
+          code: errorCodes.INVALID_CREDENTIALS_ERROR,
+        })
+
+      userFromDB.password = request.body.password
       await usersService.update(userFromDB._id, userFromDB)
 
-      //TODO: Redireccionar a la página de login
-      response.status(200).send({
-        status: 'success',
-        message: 'Constaseña actualizada correctamente',
-      })
-      /*TODO: Hacer un redirect a la página de login y arrojar una alerta indicando que la contraseña se actualizó correctamente*/
-      //.redirect('/login')
+      response.redirect('/passwordRestored')
     } catch (error) {
       next(error)
     }

@@ -8,6 +8,7 @@
     "accepts": "^1.3.8",
     "append-field": "^1.0.0",
     "array-flatten": "^1.1.1",
+    "artillery": "^2.0.0-35",
     "balanced-match": "^1.0.2",
     "base64id": "^2.0.0",
     "bcrypt": "^5.1.0",

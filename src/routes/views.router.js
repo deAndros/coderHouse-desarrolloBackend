@@ -50,8 +50,25 @@ router.get('/register', (request, response) => {
   })
 })
 
-router.get('/restorePassword', (request, response) => {
-  response.render('restorePassword', { style: 'index.css' })
+router.get('/sendRestorationEmail', (request, response) => {
+  response.render('sendRestorationEmail', { style: 'index.css' })
+})
+
+router.get('/emailSent', passportAuth('jwt'), (request, response) => {
+  const { email } = request.user.user
+  response.render('emailSent', { style: 'index.css', email })
+})
+
+router.get('/enterNewPassword', passportAuth('jwt'), (request, response) => {
+  response.render('enterNewPassword', {
+    style: 'index.css',
+  })
+})
+
+router.get('/passwordRestored', passportAuth('jwt'), (request, response) => {
+  response.render('passwordrestored', {
+    style: 'index.css',
+  })
 })
 
 module.exports = router
