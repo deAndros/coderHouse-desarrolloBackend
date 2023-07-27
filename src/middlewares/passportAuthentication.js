@@ -4,13 +4,16 @@ const passport = require('passport')
 const passportAuth = (strategy) => {
   return async (request, response, next) => {
     passport.authenticate(strategy, function (error, user, info) {
-      if (error) return next(error)
-      if (!user)
+      if (error) {
+        return next(error)
+      }
+
+      if (!user) {
         return response.status(401).send({
           status: 'error',
           error: info.message ? info.message : info.toString(),
         })
-
+      }
       request.user = user
       next()
     })(request, response, next)

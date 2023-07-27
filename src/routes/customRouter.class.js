@@ -56,7 +56,6 @@ class CustomRouter {
     const accessToken = tokenHeader.split(' ')[1]
 
     try {
-      //TODO: Resolver por qué el token llega con "Invalid Signature"
       const { user } = jwt.verify(accessToken, process.env.JWT_PRIVATE_KEY)
 
       if (!policies.includes(user.role.toUpperCase()))

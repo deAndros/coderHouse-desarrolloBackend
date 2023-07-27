@@ -30,4 +30,31 @@ const validateToken = (request, response, next) => {
   })
 }
 
-module.exports = { generateToken, validateToken }
+const redirectToSendEmail = (request, response, next) => {
+  const token = request.cookies['accessToken']
+
+  console.log('authHeader', token)
+  if (!token) {
+    return response
+      .status(401)
+      .send({ status: error, message: 'No se encuentra autenticado' })
+  }
+
+  jwt.verify(token, process.env.JWT_PRIVATE_KEY, (error, credentials) => {
+    if (error) {
+      if (error.name === 'TokenExpiredError') {
+        // Si el token ha expirado, redirigir a /sendRestorationEmail o hacer otra acción según sea necesario.
+        return response.redirect('/sendRestorationEmail?warning=true')
+      }
+
+      return response
+        .status(401)
+        .send({ status: error, message: 'No se encuentra autenticado' })
+    }
+    request.logger.debug('credentials', credentials)
+    request.user = credentials.user
+    next()
+  })
+}
+
+module.exports = { generateToken, validateToken, redirectToSendEmail }

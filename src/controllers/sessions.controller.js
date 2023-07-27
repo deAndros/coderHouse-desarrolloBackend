@@ -171,7 +171,7 @@ class SessionsController {
         ...userMetadata
       } = userFromDB.toObject()
 
-      const accessToken = generateToken(userMetadata, '1h')
+      const accessToken = generateToken(userMetadata, '1m')
 
       const html = `<!DOCTYPE html>
       <html>
@@ -231,7 +231,7 @@ class SessionsController {
       response
         .cookie('accessToken', accessToken, {
           maxAge: 3.6e6,
-          httpOnly: true,
+          //httpOnly: true,
         })
         .redirect(`/emailSent`)
     } catch (error) {

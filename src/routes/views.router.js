@@ -5,6 +5,7 @@ const { passportAuth } = require('../middlewares/passportAuthentication')
 const {
   passportAuthorization,
 } = require('../middlewares/passportAuthorization')
+const { redirectToSendEmail } = require('../utils/jwt')
 
 //TODO: Aplicar CUSTOM ROUTER acá
 router.get(
@@ -13,6 +14,7 @@ router.get(
   passportAuthorization(['USER', 'ADMIN']),
   async (request, response) => {
     try {
+      console.log(request.user)
       const { docs } = await productsService.get()
       const products = docs
       const loggedUserData = request.user.user
@@ -51,9 +53,14 @@ router.get('/register', (request, response) => {
 })
 
 router.get('/sendRestorationEmail', (request, response) => {
-  response.render('sendRestorationEmail', {
+  let renderingConfig = {
     style: 'index.css',
-  })
+    message: request.query.warning
+      ? 'El link al que intentó acceder ha expirado'
+      : '',
+  }
+
+  response.render('sendRestorationEmail', renderingConfig)
 })
 
 router.get('/emailSent', passportAuth('jwt'), (request, response) => {
@@ -61,15 +68,20 @@ router.get('/emailSent', passportAuth('jwt'), (request, response) => {
   response.render('emailSent', { style: 'index.css', email })
 })
 
-router.get('/enterNewPassword', passportAuth('jwt'), (request, response) => {
-  let renderingConfig = {
-    style: 'index.css',
-    message: request.query.warning
-      ? 'La contraseña ingresada es idéntica a la contraseña actual, por favor ingrese una nueva'
-      : '',
+router.get(
+  '/enterNewPassword',
+  redirectToSendEmail,
+  passportAuth('jwt'),
+  (request, response) => {
+    let renderingConfig = {
+      style: 'index.css',
+      message: request.query.warning
+        ? 'La contraseña ingresada es idéntica a la contraseña actual, por favor ingrese una nueva'
+        : '',
+    }
+    response.render('enterNewPassword', renderingConfig)
   }
-  response.render('enterNewPassword', renderingConfig)
-})
+)
 
 router.get('/passwordRestored', passportAuth('jwt'), (request, response) => {
   response.render('passwordrestored', {
