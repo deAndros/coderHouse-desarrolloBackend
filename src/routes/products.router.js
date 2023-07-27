@@ -13,7 +13,7 @@ class ProductsRouter extends CustomRouter {
 
     this.get('/:pid([a-zA-Z0-9]+)', ['ADMIN'], getProductById)
 
-    this.post('/', ['ADMIN'], addProduct)
+    this.post('/', ['ADMIN', 'PREMIUM'], addProduct)
 
     this.put('/:id([a-zA-Z0-9]+)', ['ADMIN'], updateProduct)
 

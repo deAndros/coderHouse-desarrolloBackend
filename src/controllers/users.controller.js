@@ -117,6 +117,38 @@ class UsersController {
     }
   }
 
+  swapRole = async (request, response) => {
+    try {
+      const userFound = await usersService.getById(request.params.uid)
+
+      if (!userFound)
+        return response.sendUserError(
+          new Error(`No existe un usuario cuyo ID sea: ${request.params.uid}`)
+        )
+
+      let newRole
+
+      if (userFound.role === 'Premium') {
+        userFound.role = 'User'
+      } else if (userFound.role === 'User') {
+        userFound.role = 'Premium'
+      } else {
+        response.sendUserError(
+          new Error(
+            'No puede modificarse el rol de un usuario que no tenga el rol User o Premium'
+          )
+        )
+      }
+      const newUser = await usersService.update(request.params.uid, userFound)
+      response.sendSuccess({ message: 'ENTRÉ' })
+      /*response.sendSuccess({
+        message: 'El rol fue actualizado correctamente',
+      })*/
+    } catch (error) {
+      response.sendServerError(error)
+    }
+  }
+
   updateUser = async (request, response) => {
     try {
       if (request.body.id || request.body._id)

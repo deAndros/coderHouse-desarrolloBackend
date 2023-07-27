@@ -10,6 +10,7 @@ class ProductDto {
       ? product.code.toLowerCase()
       : product.codigo.toLowerCase()
     this.category = product.category ? product.category : product.categoria
+    this.owner = product.owner
   }
 }
 

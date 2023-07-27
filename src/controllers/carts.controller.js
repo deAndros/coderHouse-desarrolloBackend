@@ -89,11 +89,11 @@ class CartController {
       request.headers.internalRequest = true
 
       //Llamo a getProductById aclarandole al método que el pedido es de parte del server. De esta forma evito que mi api quiera enviar dos respuestas distintas al cliente.
-      const productFound = await getProductById(request, response)
+      const productFound = await productsService.getById(pid)
 
       if (!productFound)
         return response.sendUserError(
-          new Error(`No existe un producto cuyo ID sea: ${request.params.pid}`)
+          new Error(`No existe un producto cuyo ID sea: ${pid}`)
         )
 
       //Valido que la cantidad sea un número entero y positivo
@@ -102,6 +102,13 @@ class CartController {
           new Error(
             'La cantidad del producto a agregar debe ser un valor entero y positivo'
           )
+        )
+
+      const requestUser = await usersService.getByEmail(request.user.email)
+
+      if (productFound.owner === requestUser.email)
+        return response.sendUserError(
+          new Error('No puede agregar al carrito un producto creado por usted')
         )
 
       //Si ya existía el producto en el carrito

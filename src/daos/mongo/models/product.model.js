@@ -1,8 +1,8 @@
 //Product Schema & model
-const { Schema, model } = require('mongoose');
-const mongoosePaginate = require('mongoose-paginate-v2');
+const { Schema, model } = require('mongoose')
+const mongoosePaginate = require('mongoose-paginate-v2')
 
-const collection = 'products';
+const collection = 'products'
 
 const productSchema = new Schema({
   title: {
@@ -33,6 +33,11 @@ const productSchema = new Schema({
     type: Number,
     default: 1,
   },
+  owner: {
+    type: String,
+    default: 'Admin',
+    index: true,
+  },
   status: {
     type: Boolean,
     default: true,
@@ -41,9 +46,9 @@ const productSchema = new Schema({
     type: [String],
     default: [],
   },
-});
+})
 
-productSchema.plugin(mongoosePaginate);
-const productModel = new model(collection, productSchema);
+productSchema.plugin(mongoosePaginate)
+const productModel = new model(collection, productSchema)
 
-module.exports = { productModel, productSchema };
+module.exports = { productModel, productSchema }

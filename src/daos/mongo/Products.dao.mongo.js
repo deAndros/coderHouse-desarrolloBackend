@@ -25,12 +25,16 @@ class ProductsDaoMongo {
     return await productModel.findOneAndUpdate({ _id: id }, product)
   }
 
-  updateCustom = async (filter, operation) => {
+  customUpdate = async (filter, operation) => {
     return await productModel.findOneAndUpdate(filter, operation)
   }
 
   delete = async (id) => {
     return await productModel.findOneAndDelete({ _id: id })
+  }
+
+  deleteByCustomFilter = async (customFilter) => {
+    return await productModel.findOneAndDelete(customFilter, { new: true })
   }
 }
 

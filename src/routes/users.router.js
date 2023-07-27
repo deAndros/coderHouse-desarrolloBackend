@@ -4,6 +4,7 @@ const {
   getUserById,
   createUser,
   updateUser,
+  swapRole,
   deleteUser,
 } = require('../controllers/users.controller.js')
 
@@ -16,6 +17,8 @@ class UsersRouter extends CustomRouter {
     this.post('/', ['ADMIN'], createUser)
 
     this.put('/:uid([a-zA-Z0-9]+)', ['ADMIN'], updateUser)
+
+    this.put('/premium/:uid([a-zA-Z0-9]+)', ['ADMIN'], swapRole)
 
     this.delete('/:uid([a-zA-Z0-9]+)', ['ADMIN'], deleteUser)
   }

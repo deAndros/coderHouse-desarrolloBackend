@@ -9,7 +9,10 @@ class UserDto {
     this.password = createHash(user.password)
     this.cart = cart
 
-    if (
+    //TODO: Mejorar esta lógica
+    if (user.role) {
+      this.role = user.role
+    } else if (
       user.isAdmin === 'on' ||
       user.isAdmin === 'Admin' ||
       user.role === 'Admin'

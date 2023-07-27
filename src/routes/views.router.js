@@ -51,7 +51,9 @@ router.get('/register', (request, response) => {
 })
 
 router.get('/sendRestorationEmail', (request, response) => {
-  response.render('sendRestorationEmail', { style: 'index.css' })
+  response.render('sendRestorationEmail', {
+    style: 'index.css',
+  })
 })
 
 router.get('/emailSent', passportAuth('jwt'), (request, response) => {
@@ -60,9 +62,13 @@ router.get('/emailSent', passportAuth('jwt'), (request, response) => {
 })
 
 router.get('/enterNewPassword', passportAuth('jwt'), (request, response) => {
-  response.render('enterNewPassword', {
+  let renderingConfig = {
     style: 'index.css',
-  })
+    message: request.query.warning
+      ? 'La contraseña ingresada es idéntica a la contraseña actual, por favor ingrese una nueva'
+      : '',
+  }
+  response.render('enterNewPassword', renderingConfig)
 })
 
 router.get('/passwordRestored', passportAuth('jwt'), (request, response) => {

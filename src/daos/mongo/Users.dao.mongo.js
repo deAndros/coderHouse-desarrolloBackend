@@ -2,9 +2,8 @@ const { userModel } = require('./models/user.model')
 
 class UsersDaoMongo {
   get = async (sortOptions) => {
-    return await userModel
-      .paginate({}, { ...sortOptions, lean: true })
-      .populate('cart')
+    return await userModel.paginate({}, { ...sortOptions, lean: true })
+    //.populate('cart') TODO: Resolver por qué no funciona el populate
   }
 
   getById = async (id) => {
@@ -24,7 +23,8 @@ class UsersDaoMongo {
   }
 
   update = async (id, user) => {
-    return await userModel.findOneAndUpdate({ _id: id }, user)
+    console.log('USER', user)
+    return await userModel.findOneAndUpdate({ _id: id }, user, { new: true })
   }
 
   delete = async (id) => {

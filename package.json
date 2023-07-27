@@ -109,6 +109,8 @@
     "statuses": "^2.0.1",
     "streamsearch": "^1.1.0",
     "string_decoder": "^1.1.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
     "toidentifier": "^1.0.1",
     "twilio": "^4.13.0",
     "type-is": "^1.6.18",

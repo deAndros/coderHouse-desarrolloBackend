@@ -1,4 +1,4 @@
-const { productsService } = require('../services')
+const { productsService, usersService } = require('../services')
 
 class ProductsController {
   getProducts = async (request, response) => {
@@ -80,6 +80,9 @@ class ProductsController {
           )
         )
 
+      request.body.owner = request.user.email
+      console.log(request.body)
+
       const newProduct = await productsService.create(request.body)
 
       response.sendSuccess({ newProduct: newProduct })
@@ -124,6 +127,15 @@ class ProductsController {
   deleteProduct = async (request, response) => {
     try {
       const id = request.params.id
+      const requestUser = request.user.email
+
+      //TODO: Buscar la manera de no llamar dos veces a la base de datos para validar el owner
+      const productToDelete = await productsService.getById(id)
+
+      if (requestUser != productToDelete.owner)
+        return response.sendUserError(
+          new Error('El producto que desea eliminar no le pertenece')
+        )
 
       const deletedProduct = await productsService.delete(id)
 

@@ -7,6 +7,7 @@ const {
 } = require('../utils/customErrors/errorInfo.custom')
 const { errorCodes } = require('../utils/customErrors/errorCodes.custom')
 const { sendEmail } = require('../utils/emailSender')
+const { logger } = require('../config/logger.config')
 
 class SessionsController {
   login = async (request, response, next) => {
@@ -241,6 +242,7 @@ class SessionsController {
   enterNewPassword = async (request, response, next) => {
     try {
       const { email } = request.user.user
+      const newPassword = request.body.password
 
       if (!email)
         CustomError.createError({
@@ -271,7 +273,14 @@ class SessionsController {
           code: errorCodes.INVALID_CREDENTIALS_ERROR,
         })
 
-      userFromDB.password = request.body.password
+      if (isValidPassword(newPassword, userFromDB)) {
+        logger.warning(
+          'Contraseña repetida, redireccionando a /enterNewPassword?warning=true'
+        )
+        return response.redirect('/enterNewPassword?warning=true')
+      }
+
+      userFromDB.password = newPassword
       await usersService.update(userFromDB._id, userFromDB)
 
       response.redirect('/passwordRestored')

@@ -24,7 +24,7 @@ class CartsRouter extends CustomRouter {
 
     this.post(
       '/:cid([a-zA-Z0-9]+)/product/:pid([a-zA-Z0-9]+)',
-      ['USER'],
+      ['USER', 'PREMIUM'],
       addProductToCart
     )
 
