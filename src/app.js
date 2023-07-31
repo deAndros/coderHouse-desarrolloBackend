@@ -29,6 +29,25 @@ app.use('/static', express.static(__dirname + '/public')) //static es una carpet
 const cookieParser = require('cookie-parser')
 app.use(cookieParser('S3c123t'))
 
+//Configuración de SWAGGER
+const swaggerJsDoc = require('swagger-jsdoc')
+const swaggerUiExpress = require('swagger-ui-express')
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.1',
+    info: {
+      title: 'Documentación de Power Comics API',
+      description: 'Se incluyen: carts.yaml y products.yaml',
+    },
+  },
+  apis: [`${__dirname}/docs/**/*.yaml`],
+}
+
+const specs = swaggerJsDoc(swaggerOptions)
+
+app.use('/api/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
+
 /*const logger = require('morgan')
 app.use(logger('dev'))*/
 

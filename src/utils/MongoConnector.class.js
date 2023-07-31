@@ -1,5 +1,6 @@
 const { connect } = require('mongoose')
 
+//Singleton
 class MongoConnector {
   static #instance
   constructor() {

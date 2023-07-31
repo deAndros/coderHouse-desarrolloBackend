@@ -14,7 +14,6 @@ router.get(
   passportAuthorization(['USER', 'ADMIN']),
   async (request, response) => {
     try {
-      console.log(request.user)
       const { docs } = await productsService.get()
       const products = docs
       const loggedUserData = request.user.user

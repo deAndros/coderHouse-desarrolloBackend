@@ -50,7 +50,7 @@ class SessionsController {
       const accessToken = generateToken(userMetadata, '50m')
 
       response
-        .cookie('accessToken', accessToken, {
+        .cookie('Authorization', accessToken, {
           maxAge: 60 * 60 * 10000,
           httpOnly: true,
         })
@@ -62,7 +62,7 @@ class SessionsController {
 
   logout = async (request, response) => {
     try {
-      response.clearCookie('accessToken').redirect('/login')
+      response.clearCookie('Authorization').redirect('/login')
     } catch (error) {
       response.status(500).send({
         status: 'error',
@@ -229,7 +229,7 @@ class SessionsController {
       await sendEmail(email, 'Restablecer contraseña', html)
 
       response
-        .cookie('accessToken', accessToken, {
+        .cookie('Authorization', accessToken, {
           maxAge: 3.6e6,
           //httpOnly: true,
         })

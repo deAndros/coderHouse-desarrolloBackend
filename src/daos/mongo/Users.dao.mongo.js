@@ -23,7 +23,6 @@ class UsersDaoMongo {
   }
 
   update = async (id, user) => {
-    console.log('USER', user)
     return await userModel.findOneAndUpdate({ _id: id }, user, { new: true })
   }
 

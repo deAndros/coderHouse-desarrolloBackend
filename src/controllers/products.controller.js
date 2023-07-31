@@ -1,4 +1,4 @@
-const { productsService, usersService } = require('../services')
+const { productsService } = require('../services')
 
 class ProductsController {
   getProducts = async (request, response) => {
@@ -26,7 +26,7 @@ class ProductsController {
 
       !hasNextPage
         ? (nextLink = null)
-        : (prevLink = `/api/products?page=${nextPage}&limit=${limit}&sort=${sort}`)
+        : (nextLink = `/api/products?page=${nextPage}&limit=${limit}&sort=${sort}`)
 
       if (request.headers.internalRequest) return docs
 
@@ -81,7 +81,6 @@ class ProductsController {
         )
 
       request.body.owner = request.user.email
-      console.log(request.body)
 
       const newProduct = await productsService.create(request.body)
 
@@ -96,25 +95,23 @@ class ProductsController {
       if (Object.keys(request.body).length === 0)
         return response.sendUserError(new Error('No se encontró post-data'))
 
-      if (request.body.id || request.body._id)
-        return response.sendUserError(
-          new Error('El ID de un producto no puede ser actualizado')
-        )
+      const { id } = request.params
+      const { code } = request.body
 
       //Si el código ingresado es distinto al que tenía ese producto y a su vez existe otro producto con ese código arrojo un error.
       const hasRepeatedCode = await productsService.getByCustomFilter({
-        code: request.body.code.toLowerCase(),
-        _id: { $ne: request.params.id },
+        code: code.toLowerCase(),
+        _id: { $ne: id },
       })
 
       if (hasRepeatedCode.length != 0)
         return response.sendUserError(
           new Error(
-            `El código ${request.body.code} ya se encuentra utilizado por otro producto.`
+            `El código ${code} ya se encuentra utilizado por otro producto.`
           )
         )
 
-      await productsService.update(request.params.id, request.body)
+      await productsService.update(id, request.body)
 
       response.sendSuccess({
         message: 'El producto fue actualizado correctamente',
@@ -126,15 +123,17 @@ class ProductsController {
 
   deleteProduct = async (request, response) => {
     try {
-      const id = request.params.id
-      const requestUser = request.user.email
+      const { id } = request.params
+      const { user } = request
 
       //TODO: Buscar la manera de no llamar dos veces a la base de datos para validar el owner
       const productToDelete = await productsService.getById(id)
 
-      if (requestUser != productToDelete.owner)
+      if (user.email != productToDelete.owner)
         return response.sendUserError(
-          new Error('El producto que desea eliminar no le pertenece')
+          new Error(
+            `El producto que desea eliminar no le pertenece a ${user.email}`
+          )
         )
 
       const deletedProduct = await productsService.delete(id)

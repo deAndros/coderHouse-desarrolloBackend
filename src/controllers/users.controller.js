@@ -126,8 +126,6 @@ class UsersController {
           new Error(`No existe un usuario cuyo ID sea: ${request.params.uid}`)
         )
 
-      let newRole
-
       if (userFound.role === 'Premium') {
         userFound.role = 'User'
       } else if (userFound.role === 'User') {
@@ -139,11 +137,15 @@ class UsersController {
           )
         )
       }
-      const newUser = await usersService.update(request.params.uid, userFound)
-      response.sendSuccess({ message: 'ENTRÉ' })
-      /*response.sendSuccess({
-        message: 'El rol fue actualizado correctamente',
-      })*/
+
+      const modifiedUser = await usersService.update(
+        request.params.uid,
+        userFound
+      )
+
+      response.sendSuccess({
+        message: `El rol fue actualizado correctamente a ${modifiedUser.role}`,
+      })
     } catch (error) {
       response.sendServerError(error)
     }

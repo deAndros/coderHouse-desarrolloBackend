@@ -14,7 +14,7 @@ let cookieExtractor = (request) => {
   let accessToken = null
 
   if (request && request.cookies) {
-    accessToken = request.cookies['accessToken']
+    accessToken = request.cookies['Authorization']
   }
 
   return accessToken

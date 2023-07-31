@@ -31,7 +31,7 @@ const validateToken = (request, response, next) => {
 }
 
 const redirectToSendEmail = (request, response, next) => {
-  const token = request.cookies['accessToken']
+  const token = request.cookies['Authorization']
 
   console.log('authHeader', token)
   if (!token) {

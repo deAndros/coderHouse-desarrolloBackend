@@ -60,7 +60,7 @@ router.get(
   }),
   async (request, response) => {
     response
-      .cookie('accessToken', request.user, {
+      .cookie('Authorization', request.user, {
         maxAge: 60 * 60 * 10000,
         httpOnly: true,
       })

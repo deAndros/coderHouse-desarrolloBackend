@@ -1,0 +1,96 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtiene todos los productos existentes
+      tags:
+        - Productos
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Los productos fueron obtenidos correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Producto'
+        '500':
+          description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
+        '403':
+          description: El token de acceso recibido en la cabecera es inválido
+    post:
+      summary: Crea un nuevo producto
+      tags:
+        - Productos
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Producto'
+      responses:
+        '200':
+          description: Producto creado exitosamente
+        '500':
+          description: Producto creado exitosamente
+
+################################################################################################################
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Producto:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID del producto
+        title:
+          type: string
+          description: Nombre del producto
+        code:
+          type: string
+          description: Abreviatura que define unívocamente a cada producto
+        description:
+          type: string
+          description: Detalles adicionales del producto
+        category:
+          type: string
+          description: Clasificación que se le asigna al producto según su uso
+        price:
+          type: number
+          description: Valor del producto expresado en moneda local
+        stock:
+          type: number
+          description: Cantidad disponible para la venta
+        owner:
+          type: string
+          description: E-mail del usuario que es propietario del producto
+        status:
+          type: boolean
+          description: Indica si el producto se encuentra en venta (true para "sí", false para "no")
+        thumbnails:
+          type: array
+          description: Arreglo que contiene los hipervínculos correspondientes a todas las imágenes disponibles para el producto
+          items:
+            $ref: string
+    example:
+      _id: ObjectId('64550c96def1d16c4d481fb1')
+      title: Nightwing - Saltando a la luz
+      code: zxw1
+      description: Producto modificado nuevamente
+      category: Comicbook
+      price: 33
+      stock: 93
+      status: true
+      thumbnails:
+        [
+          https://d3ugyf2ht6aenh.cloudfront.net/stores/001/184/069/products/nightwing_cov11-74d2c8a8c0f545614c16635595218442-640-0.webp,
+        ]
