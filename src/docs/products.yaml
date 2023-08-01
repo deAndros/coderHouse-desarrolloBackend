@@ -34,9 +34,89 @@ paths:
       responses:
         '200':
           description: Producto creado exitosamente
+        '400':
+          description: Se produjo un error al crear el producto, la metadata del producto enviada no respeta las reglas de negocio establecidas
         '500':
-          description: Producto creado exitosamente
-
+          description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
+        '403':
+          description: El token de acceso recibido en la cabecera es inválido
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un producto según su ID
+      tags:
+        - Productos
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: El id del producto a solicitar.
+          schema:
+            $type: String
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: El producto fue obtenido correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '500':
+          description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
+        '403':
+          description: El token de acceso recibido en la cabecera es inválido
+    put:
+      summary: Modifica un producto existente
+      tags:
+        - Productos
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: El id del producto a solicitar.
+          schema:
+            $type: String
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Producto'
+      responses:
+        '200':
+          description: El producto fue modificado correctamente
+        '400':
+          description: Se produjo un error al crear el producto, la metadata del producto enviada no respeta las reglas de negocio establecidas
+        '500':
+          description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
+        '403':
+          description: El token de acceso recibido en la cabecera es inválido
+    delete:
+      summary: Elimina un producto según su ID
+      tags:
+        - Productos
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: El id del producto a eliminar.
+          schema:
+            $type: String
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: El producto fue eliminado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '500':
+          description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
+        '403':
+          description: El token de acceso recibido en la cabecera es inválido
 ################################################################################################################
 
 components:
@@ -79,18 +159,16 @@ components:
         thumbnails:
           type: array
           description: Arreglo que contiene los hipervínculos correspondientes a todas las imágenes disponibles para el producto
-          items:
-            $ref: string
-    example:
-      _id: ObjectId('64550c96def1d16c4d481fb1')
-      title: Nightwing - Saltando a la luz
-      code: zxw1
-      description: Producto modificado nuevamente
-      category: Comicbook
-      price: 33
-      stock: 93
-      status: true
-      thumbnails:
-        [
-          https://d3ugyf2ht6aenh.cloudfront.net/stores/001/184/069/products/nightwing_cov11-74d2c8a8c0f545614c16635595218442-640-0.webp,
-        ]
+      example:
+        _id: ObjectId('64550c96def1d16c4d481fb1')
+        title: Nightwing - Saltando a la luz
+        code: zxw1
+        description: Producto modificado nuevamente
+        category: Comicbook
+        price: 33
+        stock: 93
+        status: true
+        thumbnails:
+          [
+            https://d3ugyf2ht6aenh.cloudfront.net/stores/001/184/069/products/nightwing_cov11-74d2c8a8c0f545614c16635595218442-640-0.webp,
+          ]
