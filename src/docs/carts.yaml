@@ -1,0 +1,250 @@
+paths:
+  /api/carts/:
+    get:
+      summary: Obtiene todos los carritos existentes
+      tags:
+        - Carritos
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Los carritos fueron obtenidos correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Carrito"
+        "500":
+          description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
+        "403":
+          description: El token de acceso recibido en la cabecera es inválido
+    post:
+      summary: Crea un nuevo carrito con una estructura válida recibida por body
+      tags:
+        - Carritos
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Carrito"
+      responses:
+        "200":
+          description: Carrito creado exitosamente
+        "400":
+          description: Se produjo un error al crear el carrito, la metadata del carrito enviada no respeta las reglas de negocio establecidas
+        "500":
+          description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
+        "403":
+          description: El token de acceso recibido en la cabecera es inválido
+
+  /api/carts/{cid}:
+    get:
+      summary: Obtiene un carrito según su ID
+      tags:
+        - Carritos
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: El id del carrito a solicitar.
+          schema:
+            $type: String
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: El carrito fue obtenido correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Carrito"
+        "500":
+          description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
+        "403":
+          description: El token de acceso recibido en la cabecera es inválido
+    put:
+      summary: Modifica un carrito existente reemplazando los productos y sus cantidades por una estructura de carrito válida recibida por body
+      tags:
+        - Carritos
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: El id del carrito a solicitar.
+          schema:
+            $type: String
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Carrito"
+      responses:
+        "200":
+          description: El carrito fue modificado correctamente
+        "400":
+          description: Se produjo un error al crear el carrito, la metadata del carrito enviada no respeta las reglas de negocio establecidas
+        "500":
+          description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
+        "403":
+          description: El token de acceso recibido en la cabecera es inválido
+    delete:
+      summary: Elimina un carrito según su ID
+      tags:
+        - Carritos
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: El id del carrito a eliminar.
+          schema:
+            $type: String
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: El carrito fue eliminado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Carrito"
+        "500":
+          description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
+        "403":
+          description: El token de acceso recibido en la cabecera es inválido
+
+  /api/carts/purchase/:
+    post:
+      summary: Compra el carrito del usuario que se encuentra autenticado y genera el ticket correspondiente
+      tags:
+        - Carritos
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: false
+      responses:
+        "200":
+          description: Compra exitosa y devuelve el ticket generado
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Ticket"
+        "400":
+          description: Se produjo un error al realizar la compra, el carrito está vacío.
+        "500":
+          description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
+        "403":
+          description: El token de acceso recibido en la cabecera es inválido
+################################################################################################################
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Producto:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID del producto
+        title:
+          type: string
+          description: Nombre del producto
+        code:
+          type: string
+          description: Abreviatura que define unívocamente a cada producto
+        description:
+          type: string
+          description: Detalles adicionales del producto
+        category:
+          type: string
+          description: Clasificación que se le asigna al producto según su uso
+        price:
+          type: number
+          description: Valor del producto expresado en moneda local
+        stock:
+          type: number
+          description: Cantidad disponible para la venta
+        owner:
+          type: string
+          description: E-mail del usuario que es propietario del producto
+        status:
+          type: boolean
+          description: Indica si el producto se encuentra en venta (true para "sí", false para "no")
+        thumbnails:
+          type: array
+          description: Arreglo que contiene los hipervínculos correspondientes a todas las imágenes disponibles para el producto
+      example:
+        _id: ObjectId('64550c96def1d16c4d481fb1')
+        title: Nightwing - Saltando a la luz
+        code: zxw1
+        description: Producto modificado nuevamente
+        category: Comicbook
+        price: 33
+        stock: 93
+        status: true
+        thumbnails:
+          [
+            https://d3ugyf2ht6aenh.cloudfront.net/stores/001/184/069/products/nightwing_cov11-74d2c8a8c0f545614c16635595218442-640-0.webp,
+          ]
+
+    ProductoEnCarrito:
+      type: object
+      properties:
+        product:
+          type: string
+          example: 64a42d595245ec9e3bee5ffd
+        quantity:
+          type: integer
+          example: 2
+
+    Carrito:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductoEnCarrito"
+      example:
+        {
+          "products":
+            [{ "product": "64a42d595245ec9e3bee5ffd", "quantity": 10 }],
+        }
+      required:
+        - products
+        - quantity
+
+    Ticket:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Identificador único del ticket
+        code:
+          type: string
+          description: Código de identificación del ticket
+        purchase_datetime:
+          type: date
+          description: fecha en la que se produjo la compra
+        amount:
+          type: integer
+          description: Valor total de los productos comprados expresados en moneda local
+        purchaser:
+          type: string
+          description: Correo electrónico del usuario autenticado que llevó adelante la compra
+        purchased_products:
+          type: array
+          description: Arreglo de PIDs (products ID) correspondiente a los productos que se compraron.
