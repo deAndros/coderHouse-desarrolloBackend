@@ -197,6 +197,7 @@ class CartController {
       const quantity = request.body.quantity
 
       request.headers.internalRequest = true
+      //TODO: Modificar, usar el service en su lugar
       //Llamo a getProductById aclarandole al método que el pedido es de parte del server. De esta forma evito que mi api quiera enviar dos respuestas distintas al cliente.
       const productFound = await getProductById(request, response)
 

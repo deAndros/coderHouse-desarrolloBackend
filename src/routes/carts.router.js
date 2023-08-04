@@ -18,9 +18,9 @@ class CartsRouter extends CustomRouter {
 
     this.get('/:cid([a-zA-Z0-9]+)', ['ADMIN'], getCartById)
 
-    this.post('/', ['USER', 'ADMIN'], createCart)
+    this.post('/', ['ADMIN'], createCart)
 
-    this.post('/purchase/', ['USER'], generateTicket)
+    this.post('/purchase/', ['USER', 'PREMIUM'], generateTicket)
 
     this.post(
       '/:cid([a-zA-Z0-9]+)/product/:pid([a-zA-Z0-9]+)',
@@ -32,13 +32,13 @@ class CartsRouter extends CustomRouter {
 
     this.put(
       '/:cid([a-zA-Z0-9]+)/product/:pid([a-zA-Z0-9]+)',
-      ['USER'],
+      ['USER', 'PREMIUM'],
       updateProductQuantity
     )
 
     this.delete(
       '/:cid([a-zA-Z0-9]+)/product/:pid([a-zA-Z0-9]+)',
-      ['USER'],
+      ['USER', 'PREMIUM'],
       deleteProductFromCart
     )
 

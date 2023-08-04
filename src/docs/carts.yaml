@@ -7,17 +7,17 @@ paths:
       security:
         - BearerAuth: []
       responses:
-        "200":
+        '200':
           description: Los carritos fueron obtenidos correctamente
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Carrito"
-        "500":
+                  $ref: '#/components/schemas/Carrito'
+        '500':
           description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
-        "403":
+        '403':
           description: El token de acceso recibido en la cabecera es inválido
     post:
       summary: Crea un nuevo carrito con una estructura válida recibida por body
@@ -30,15 +30,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Carrito"
+              $ref: '#/components/schemas/Carrito'
       responses:
-        "200":
+        '200':
           description: Carrito creado exitosamente
-        "400":
+        '400':
           description: Se produjo un error al crear el carrito, la metadata del carrito enviada no respeta las reglas de negocio establecidas
-        "500":
+        '500':
           description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
-        "403":
+        '403':
           description: El token de acceso recibido en la cabecera es inválido
 
   /api/carts/{cid}:
@@ -56,17 +56,17 @@ paths:
       security:
         - BearerAuth: []
       responses:
-        "200":
+        '200':
           description: El carrito fue obtenido correctamente
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Carrito"
-        "500":
+                  $ref: '#/components/schemas/Carrito'
+        '500':
           description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
-        "403":
+        '403':
           description: El token de acceso recibido en la cabecera es inválido
     put:
       summary: Modifica un carrito existente reemplazando los productos y sus cantidades por una estructura de carrito válida recibida por body
@@ -86,15 +86,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Carrito"
+              $ref: '#/components/schemas/Carrito'
       responses:
-        "200":
+        '200':
           description: El carrito fue modificado correctamente
-        "400":
+        '400':
           description: Se produjo un error al crear el carrito, la metadata del carrito enviada no respeta las reglas de negocio establecidas
-        "500":
+        '500':
           description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
-        "403":
+        '403':
           description: El token de acceso recibido en la cabecera es inválido
     delete:
       summary: Elimina un carrito según su ID
@@ -110,15 +110,15 @@ paths:
       security:
         - BearerAuth: []
       responses:
-        "200":
+        '200':
           description: El carrito fue eliminado correctamente
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Carrito"
-        "500":
+                $ref: '#/components/schemas/Carrito'
+        '500':
           description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
-        "403":
+        '403':
           description: El token de acceso recibido en la cabecera es inválido
 
   /api/carts/purchase/:
@@ -131,19 +131,66 @@ paths:
       requestBody:
         required: false
       responses:
-        "200":
+        '200':
           description: Compra exitosa y devuelve el ticket generado
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Ticket"
-        "400":
+                  $ref: '#/components/schemas/Ticket'
+        '400':
           description: Se produjo un error al realizar la compra, el carrito está vacío.
-        "500":
+        '500':
           description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
-        "403":
+        '403':
+          description: El token de acceso recibido en la cabecera es inválido
+
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Agrega un producto al carrito. Si este producto no tenía existencias previas en el carrito, lo agrega con la cantidad indicada. Si ya existía, suma los stocks.
+      tags:
+        - Carritos
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Objeto con la propiedad 'quantity' en donde se indica la cantidad exacta del producto a agregar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuantityInput'
+      responses:
+        '200':
+          description: Producto agregado exitosamente al carrito
+        '400':
+          description: Se produjo un error al agregar el producto al carrito, puede deberse a varios factores, como por ejemplo el agregar un valor decimal o negativo en la cantidad o bien intentar agregar un producto inexistente
+        '500':
+          description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
+        '403':
+          description: El token de acceso recibido en la cabecera es inválido
+
+    put:
+      summary: A diferencia de PUT /api/carts/{cid}, este método únicamente permite actualizar la cantidad de un producto que ya exista en el carrito
+      tags:
+        - Carritos
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Objeto con la propiedad 'quantity' en donde se indica la cantidad exacta del producto a agregar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuantityInput'
+      responses:
+        '200':
+          description: Cantidad del producto en el carrito actualizada exitosamente
+        '400':
+          description: Se produjo un error al actualizar la cantidad del producto, puede deberse a varios factores, como por ejemplo el agregar un valor decimal o negativo en la cantidad o bien intentar agregar un producto inexistente
+        '500':
+          description: Error interno del servidor, usualmente obtenido por una consulta defectuosa
+        '403':
           description: El token de acceso recibido en la cabecera es inválido
 ################################################################################################################
 
@@ -217,11 +264,11 @@ components:
         products:
           type: array
           items:
-            $ref: "#/components/schemas/ProductoEnCarrito"
+            $ref: '#/components/schemas/ProductoEnCarrito'
       example:
         {
-          "products":
-            [{ "product": "64a42d595245ec9e3bee5ffd", "quantity": 10 }],
+          'products':
+            [{ 'product': '64a42d595245ec9e3bee5ffd', 'quantity': 10 }],
         }
       required:
         - products
@@ -248,3 +295,12 @@ components:
         purchased_products:
           type: array
           description: Arreglo de PIDs (products ID) correspondiente a los productos que se compraron.
+
+    QuantityInput:
+      type: object
+      properties:
+        quantity:
+          type: integer
+          description: Cantidad (entero) recibida en la solicitud
+      required:
+        - quantity
