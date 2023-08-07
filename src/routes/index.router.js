@@ -10,7 +10,7 @@ const loggerTestRouter = require('./loggerTest.router')
 const router = Router()
 
 //_________________Apartado de VISTAS_________________
-router.use('/', viewsRouter)
+router.use('/', viewsRouter.getRouter())
 
 //_________________Apartado de PRODUCTOS_________________
 router.use('/api/products', productsRouter.getRouter())

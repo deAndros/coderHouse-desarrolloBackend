@@ -5,25 +5,29 @@ const expect = chai.expect
 const requester = supertest('http://localhost:8080')
 
 describe('Ciclo de testing de Power Comics', () => {
+  let cookie
   describe('Apartado de Sessions', () => {
-    it('El endpoint POST /api/login debe autenticar a un usuario con credenciales correctas y otorgarle un token de acceso', async () => {
-      let cookie
+    it('El endpoint POST /api/login debe autenticar a un usuario con credenciales correctas, settear una cookie de nombre authorization con un JWT para ese usuario y redireccionar con un código 302 a la vista de productos', async () => {
       let adminCredentials = {
         email: 'andresgabriel.92@gmail.com',
         password: '123',
       }
 
-      const response = await requester
+      const loginResponse = await requester
         .post('/api/sessions/login')
         .send(adminCredentials)
 
-      cookie = response.headers['set-cookie'][0].split('=')[1]
-      console.log('COOKIE', cookie)
-      console.log('RESPONSE', response)
+      const cookieResult = loginResponse.headers['set-cookie'][0]
+      expect(cookieResult).to.be.ok
 
-      //const {statusCode, _body, ok} = await requester.get('/api/products')
+      cookie = {
+        name: cookieResult.split('=')[0],
+        value: cookieResult.split('=')[1],
+      }
 
-      //expect(statusCode).to.be.equal(200)
+      expect(cookie.name).to.be.ok.and.equal('Authorization')
+      expect(loginResponse.statusCode).to.be.equal(302)
+      expect(loginResponse.text).to.be.equal('Found. Redirecting to /products')
     })
   })
 })

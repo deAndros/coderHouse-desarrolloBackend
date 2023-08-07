@@ -45,6 +45,7 @@ class CustomRouter {
 
   handlePolicies = (policies) => (request, response, next) => {
     if (policies[0] === 'PUBLIC') return next()
+    if (policies[0] === 'IGNORE') return next()
 
     const tokenHeader = request.headers.authorization
 
