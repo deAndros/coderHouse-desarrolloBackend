@@ -48,7 +48,7 @@ router.get(
   '/githublogin',
   passport.authenticate('githublogin', { scope: ['user:email'] }),
   async (request, response) => {
-    response.send('Entré')
+    response.status(200).send('Entré')
   }
 )
 
