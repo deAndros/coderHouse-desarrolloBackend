@@ -1,5 +1,6 @@
 const chai = require('chai')
 const supertest = require('supertest')
+const { faker } = require('@faker-js/faker')
 
 const expect = chai.expect
 const requester = supertest('http://localhost:8080')
@@ -54,9 +55,35 @@ describe('Ciclo de testing de Power Comics', () => {
       expect(logoutResponse.headers.location).to.equal('/login')
     })
 
-    it('El endpoint GET /api/sessions/githublogin autenticará a un usuario en la aplicación presentando este sus credenciales de github, también debe settear una cookie de nombre authorization con un JWT para ese usuario y redireccionar con un código 302 a la vista de productos', async () => {
-      const result = requester.get('/api/sessions/githublogin')
-      console.log('RESULT', result)
+    it('El endpoint GET /api/sessions/register deberá registrar a un usuario correctamente y guardarlo en la base de datos', async () => {
+      const fakeUser = {
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        email: faker.internet.email(),
+        age: faker.number.int({ min: 18, max: 99 }), // Genera un número aleatorio entre 18 y 99
+        password: faker.internet.password(),
+        isAdmin: 'on',
+      }
+
+      const regiserResponse = await requester
+        .post('/api/sessions/register')
+        .send(fakeUser)
+
+      console.log('fakeUser', fakeUser)
+      console.log('result.body', regiserResponse.body)
+
+      expect(regiserResponse.statusCode).to.be.equal(200)
+      expect(regiserResponse.body.status).to.be.ok.and.equal('success')
+      expect(regiserResponse.body.newUser.first_name).to.be.ok.and.equal(
+        fakeUser.firstName
+      )
+      expect(regiserResponse.body.newUser.last_name).to.be.ok.and.equal(
+        fakeUser.lastName
+      )
+      expect(regiserResponse.body.newUser.email).to.be.ok.and.equal(
+        fakeUser.email
+      )
+      expect(regiserResponse.body.newUser.age).to.be.ok.and.equal(fakeUser.age)
     })
   })
 })
