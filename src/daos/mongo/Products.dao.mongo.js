@@ -2,7 +2,11 @@ const { productModel } = require('./models/product.model')
 
 class ProductsDaoMongo {
   get = async (sortOptions) => {
-    return await productModel.paginate({}, { ...sortOptions, lean: true })
+    return await productModel.paginate(
+      {},
+      { limit: 1000, lean: true, new: true }
+    )
+    //TODO: El limit está hardcodeado, buscar la manera de recibirlo dinámicamente en sortOptions
   }
 
   getById = async (id) => {
@@ -22,11 +26,13 @@ class ProductsDaoMongo {
   }
 
   update = async (id, product) => {
-    return await productModel.findOneAndUpdate({ _id: id }, product)
+    return await productModel.findOneAndUpdate({ _id: id }, product, {
+      new: true,
+    })
   }
 
   customUpdate = async (filter, operation) => {
-    return await productModel.findOneAndUpdate(filter, operation)
+    return await productModel.findOneAndUpdate(filter, operation, { new: true })
   }
 
   delete = async (id) => {

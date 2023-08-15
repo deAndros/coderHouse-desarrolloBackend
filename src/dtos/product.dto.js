@@ -6,11 +6,16 @@ class ProductDto {
       : product.descripcion
     this.price = product.price ? product.price : product.precio
     this.thumbnails = product.thumbnails ? product.thumbnails : product.fotos
-    this.code = product.code
-      ? product.code.toLowerCase()
-      : product.codigo.toLowerCase()
+
+    if (product.code) {
+      this.code = product.code.toLowerCase()
+    } else if (product.codigo) {
+      this.code = product.codigo.toLowerCase()
+    }
+
     this.category = product.category ? product.category : product.categoria
     this.owner = product.owner
+    this.stock = product.stock
   }
 }
 

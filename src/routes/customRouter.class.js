@@ -50,9 +50,10 @@ class CustomRouter {
     const tokenHeader = request.headers.authorization
 
     if (!tokenHeader)
-      return response
-        .status(403)
-        .send({ status: 'error', error: 'No se encontró token de acceso' })
+      return response.status(403).send({
+        status: 'error',
+        error: 'No se encontró token de acceso',
+      })
 
     const accessToken = tokenHeader.split(' ')[1]
 

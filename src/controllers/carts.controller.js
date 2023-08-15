@@ -138,7 +138,7 @@ class CartController {
 
   updateCartProducts = async (request, response) => {
     try {
-      const { cid, pid } = request.params
+      const cid = request.params.cid
       const products = request.body.products
 
       request.headers.internalRequest = true

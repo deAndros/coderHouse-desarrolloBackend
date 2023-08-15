@@ -3,16 +3,16 @@ const { productsService } = require('../services')
 class ProductsController {
   getProducts = async (request, response) => {
     try {
-      let { limit = 5, page = 1, sort = 'asc' } = request.query
+      let { limit = 1000, page = 1, sort = 'asc' } = request.query
 
       //TODO: Trabajar para mejorar las sort Options y dar posibilidades de ordenamiento
       const sortOptions = {
-        page: page,
-        limit: limit,
+        //page: page,
+        //limit: limit,
         //sort: sort === 'asc' ? 1 : -1,
       }
 
-      const result = await productsService.get(sortOptions)
+      const result = await productsService.get()
 
       let { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } =
         result
@@ -99,22 +99,25 @@ class ProductsController {
       const { code } = request.body
 
       //Si el código ingresado es distinto al que tenía ese producto y a su vez existe otro producto con ese código arrojo un error.
-      const hasRepeatedCode = await productsService.getByCustomFilter({
-        code: code.toLowerCase(),
-        _id: { $ne: id },
-      })
+      if (code) {
+        const hasRepeatedCode = await productsService.getByCustomFilter({
+          code: code.toLowerCase(),
+          _id: { $ne: id },
+        })
 
-      if (hasRepeatedCode.length != 0)
-        return response.sendUserError(
-          new Error(
-            `El código ${code} ya se encuentra utilizado por otro producto.`
+        if (hasRepeatedCode.length != 0)
+          return response.sendUserError(
+            new Error(
+              `El código ${code} ya se encuentra utilizado por otro producto.`
+            )
           )
-        )
+      }
 
-      await productsService.update(id, request.body)
+      const updatedProduct = await productsService.update(id, request.body)
 
       response.sendSuccess({
         message: 'El producto fue actualizado correctamente',
+        updatedProduct: updatedProduct,
       })
     } catch (error) {
       response.sendServerError(error)
