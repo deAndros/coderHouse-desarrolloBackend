@@ -2,7 +2,11 @@ const cartModel = require('./models/cart.model')
 
 class CartsDaoMongo {
   get = async () => {
-    return await cartModel.find({}).populate('products.product')
+    return await cartModel.paginate(
+      {},
+      { populate: 'products.product', lean: true, new: true, limit: 1000 }
+    )
+    //TODO: El limit está hardcodeado, buscar la manera de recibirlo dinámicamente en sortOptions
   }
 
   getById = async (cid) => {

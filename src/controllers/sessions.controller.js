@@ -74,8 +74,7 @@ class SessionsController {
   register = async (request, response, next) => {
     try {
       //TODO: Agregar envío de mail cuando se registra un usuario
-      const { firstName, lastName, email, age, password, isAdmin } =
-        request.body
+      const { firstName, lastName, email, password } = request.body
 
       if (!firstName || !lastName || !email || !password)
         CustomError.createError({
@@ -113,10 +112,10 @@ class SessionsController {
         })
 
       const newUserCart = await cartsService.create()
+      console.log('NUEVO CARRITO', newUserCart)
       let newUser = await usersService.create(request.body, newUserCart)
 
       const {
-        _id,
         password: dbPassword,
         __v,
         ...newUserMetadata

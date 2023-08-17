@@ -1,4 +1,4 @@
-const { usersService } = require('../services')
+const { usersService, cartsService } = require('../services')
 
 class UsersController {
   getUsers = async (request, response) => {
@@ -87,7 +87,7 @@ class UsersController {
           )
         )
 
-      const userFound = await usersService.getByEmail(request.body)
+      const userFound = await usersService.getByEmail(email)
 
       if (userFound)
         return response.sendUserError(
@@ -100,7 +100,6 @@ class UsersController {
       const newUser = await usersService.create(request.body, newUserCart)
 
       const {
-        _id,
         password: dbPassword,
         __v,
         ...newUserMetadata
@@ -184,15 +183,24 @@ class UsersController {
   deleteUser = async (request, response) => {
     try {
       const deletedUser = await usersService.delete(request.params.uid)
+      const deletedCart = await cartsService.delete(deletedUser.cart)
 
       if (!deletedUser)
         return response.sendUserError(
           new Error(`No existe un usuario con ID igual a ${request.params.uid}`)
         )
 
+      if (!deletedCart) {
+        return response.sendServerError(
+          new Error(
+            `Se produjo un error al eliminar el carrito del usuario ${request.params.uid}`
+          )
+        )
+      }
+
       response.sendSuccess({
-        message: 'El producto se eliminó correctamente',
-        deletedProduct: deletedUser,
+        message: 'El usuario se eliminó correctamente',
+        deletedUser: deletedUser,
       })
     } catch (error) {
       response.sendServerError(error.message)

@@ -11,8 +11,34 @@ const { sendSms, sendWhatsapp } = require('../utils/smsSender')
 class CartController {
   getCarts = async (request, response) => {
     try {
-      const carts = await cartsService.get()
-      response.sendSuccess({ carts: carts })
+      let { limit = 1000, page = 1, sort = 'asc' } = request.query
+      const result = await cartsService.get()
+
+      let { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } =
+        result
+
+      let prevLink
+      let nextLink
+
+      !hasPrevPage
+        ? (prevLink = null)
+        : (prevLink = `/api/carts?page=${prevPage}&limit=${limit}&sort=${sort}`)
+
+      !hasNextPage
+        ? (nextLink = null)
+        : (nextLink = `/api/carts?page=${nextPage}&limit=${limit}&sort=${sort}`)
+
+      response.sendSuccess({
+        carts: docs,
+        totalPages,
+        prevPage,
+        nextPage,
+        page,
+        hasPrevPage,
+        hasNextPage,
+        prevLink,
+        nextLink,
+      })
     } catch (error) {
       response.sendServerError(error)
     }
