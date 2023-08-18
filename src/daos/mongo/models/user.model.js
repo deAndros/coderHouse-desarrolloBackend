@@ -22,6 +22,13 @@ const userSchema = new Schema({
   },
   password: { type: String, required: true },
   role: { type: String, default: 'User' },
+  documents: [
+    {
+      name: String,
+      reference: String,
+    },
+  ],
+  last_connection: { type: Date, default: Date.now() },
 })
 
 userSchema.plugin(mongoosePaginate)

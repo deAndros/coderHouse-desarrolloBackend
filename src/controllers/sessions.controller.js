@@ -14,6 +14,8 @@ class SessionsController {
     try {
       const { email, password } = request.body
 
+      console.log('ENTRÉ')
+
       if (!email || !password)
         CustomError.createError({
           name: 'Login failed',
@@ -40,12 +42,16 @@ class SessionsController {
           code: errorCodes.INVALID_CREDENTIALS_ERROR,
         })
 
+      userFromDB.last_connection = Date.now()
+
       const {
         _id,
         password: dbPassword,
         __v,
         ...userMetadata
       } = userFromDB.toObject()
+
+      await usersService.update(userFromDB._id, userMetadata)
 
       const accessToken = generateToken(userMetadata, '50m')
 

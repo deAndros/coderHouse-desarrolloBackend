@@ -211,6 +211,10 @@ class UsersController {
     try {
     } catch (error) {}
   }
+
+  uploadDocument = async (request, response) => {
+    response.sendSuccess('Archivos subidos correctamente')
+  }
 }
 
 module.exports = new UsersController()
