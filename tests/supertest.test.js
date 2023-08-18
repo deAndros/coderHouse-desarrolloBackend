@@ -3,13 +3,21 @@ const supertest = require('supertest')
 const { faker } = require('@faker-js/faker')
 
 const expect = chai.expect
-const requester = supertest('http://localhost:8080')
+const requester = supertest('http://localhost:8080', { timeout: 10000 })
 
-describe('Ciclo de testing de Power Comics', () => {
+describe('Ciclo de testing de Power Comics', async () => {
   let adminAuthorizationCookie
   let userAuthorizationCookie
-  let userPass
-  let fakeUser
+  const fakeUserPass = faker.internet.password()
+  let fakeUser = {
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
+    email: faker.internet.email(),
+    age: faker.number.int({ min: 18, max: 99 }),
+    password: fakeUserPass,
+    role: 'User',
+  }
+
   describe('Apartado de Sessions', () => {
     it('POST /api/sessions/login debe autenticar a un usuario con credenciales correctas, settear una cookie de nombre authorization con un JWT para ese usuario y redireccionar con un código 302 a la vista de productos', async () => {
       let adminCredentials = {
@@ -59,21 +67,9 @@ describe('Ciclo de testing de Power Comics', () => {
     })
 
     it('GET /api/sessions/register deberá registrar a un usuario correctamente y guardarlo en la base de datos', async () => {
-      userPass = faker.internet.password()
-      fakeUser = {
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        email: faker.internet.email(),
-        age: faker.number.int({ min: 18, max: 99 }), // Genera un número aleatorio entre 18 y 99
-        password: userPass,
-        role: 'User',
-      }
-
       const regiserResponse = await requester
         .post('/api/sessions/register')
         .send(fakeUser)
-
-      console.log('result.body', regiserResponse.body)
 
       expect(regiserResponse.statusCode).to.be.equal(200)
       expect(regiserResponse.body.status).to.be.ok.and.equal('success')
@@ -259,14 +255,9 @@ describe('Ciclo de testing de Power Comics', () => {
 
     it('POST /api/carts/:cid/product/:pid debe agregar la cantidad indicada en el body de la petición al carrito de compras, si no había unidades existentes del producto, deberá agregarlo con la cantidad indicada', async () => {
       //Me autentico con el usuario propietario del carrito
-      const userCredentials = {
-        email: fakeUser.email,
-        password: userPass,
-      }
-
       const loginResponse = await requester
         .post('/api/sessions/login')
-        .send(userCredentials)
+        .send({ email: fakeUser.email, password: fakeUserPass })
 
       const cookies = loginResponse.headers['set-cookie']
       expect(cookies).to.be.ok
@@ -301,7 +292,5 @@ describe('Ciclo de testing de Power Comics', () => {
         .delete(`/api/users/${fakeUser._id}`)
         .set('Authorization', `Bearer ${adminAuthorizationCookie.value}`)
     })
-
-    fakeProducts = []
   })
 })

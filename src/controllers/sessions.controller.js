@@ -112,7 +112,6 @@ class SessionsController {
         })
 
       const newUserCart = await cartsService.create()
-      console.log('NUEVO CARRITO', newUserCart)
       let newUser = await usersService.create(request.body, newUserCart)
 
       const {
