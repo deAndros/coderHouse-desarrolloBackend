@@ -13,7 +13,7 @@ class ViewsRouter extends CustomRouter {
       '/products',
       ['IGNORE'],
       passportAuth('jwt'),
-      passportAuthorization(['USER', 'ADMIN']),
+      passportAuthorization(['USER', 'ADMIN', 'PREMIUM']),
       async (request, response) => {
         try {
           const { docs } = await productsService.get()

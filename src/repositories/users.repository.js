@@ -34,7 +34,6 @@ class UsersRepository {
 
   update = async (id, user) => {
     let userToUpdate = new UserDto(user)
-    console.log('userToUpdate', userToUpdate)
     return await this.dao.update(id, userToUpdate)
   }
 

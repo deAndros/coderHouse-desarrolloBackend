@@ -31,7 +31,7 @@ class UsersRouter extends CustomRouter {
 
     this.put('/:uid([a-zA-Z0-9]+)', ['ADMIN'], updateUser)
 
-    this.put('/premium/:uid([a-zA-Z0-9]+)', ['ADMIN'], swapRole)
+    this.put('/premium/:uid([a-zA-Z0-9]+)', ['PUBLIC'], swapRole)
 
     this.delete('/:uid([a-zA-Z0-9]+)', ['ADMIN'], deleteUser)
   }

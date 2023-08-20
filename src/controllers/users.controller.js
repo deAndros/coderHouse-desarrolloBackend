@@ -1,4 +1,7 @@
 const { usersService, cartsService } = require('../services')
+const fs = require('fs/promises')
+const path = require('path')
+const fs2 = require('fs')
 
 class UsersController {
   getUsers = async (request, response) => {
@@ -128,18 +131,65 @@ class UsersController {
       if (userFound.role === 'Premium') {
         userFound.role = 'User'
       } else if (userFound.role === 'User') {
+        // Verificar si el usuario ha subido los documentos requeridos
+        const documentsPath = path.join(
+          __dirname,
+          '..',
+          'uploads',
+          'documents',
+          userFound.email
+        )
+
+        if (!fs2.existsSync(documentsPath)) {
+          return response.sendUserError(
+            new Error(`El usuario no ha subido ningún documento aún`)
+          )
+        }
+
+        const files = await fs.readdir(documentsPath)
+        const requiredDocuments = [
+          'Identificación',
+          'Comprobante de domicilio',
+          'Comprobante de estado de cuenta',
+        ]
+
+        const missingDocuments = requiredDocuments.filter(
+          (doc) =>
+            !files.some((file) => {
+              const decodedFileName = decodeURIComponent(file)
+              return decodedFileName.endsWith(`-${doc}.txt`)
+            })
+        )
+
+        if (missingDocuments.length > 0) {
+          return response.sendUserError(
+            new Error(
+              `El usuario no ha subido todos los documentos requeridos: ${missingDocuments.join(
+                ', '
+              )}`
+            )
+          )
+        }
+
         userFound.role = 'Premium'
       } else {
-        response.sendUserError(
+        return response.sendUserError(
           new Error(
             'No puede modificarse el rol de un usuario que no tenga el rol User o Premium'
           )
         )
       }
 
+      const {
+        _id,
+        password: dbPassword,
+        __v,
+        ...userMetadata
+      } = userFound.toObject()
+
       const modifiedUser = await usersService.update(
         request.params.uid,
-        userFound
+        userMetadata
       )
 
       response.sendSuccess({

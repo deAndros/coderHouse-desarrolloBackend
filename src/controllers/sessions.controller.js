@@ -14,8 +14,6 @@ class SessionsController {
     try {
       const { email, password } = request.body
 
-      console.log('ENTRÉ')
-
       if (!email || !password)
         CustomError.createError({
           name: 'Login failed',

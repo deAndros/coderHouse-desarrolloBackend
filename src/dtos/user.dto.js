@@ -2,7 +2,6 @@ const { createHash } = require('../utils/bcryptHash')
 
 class UserDto {
   constructor(user, cart) {
-    console.log('DTO', user)
     this.first_name = user.firstName ? user.firstName : user.first_name
     this.last_name = user.lastName ? user.lastName : user.last_name
     this.email = user.email
