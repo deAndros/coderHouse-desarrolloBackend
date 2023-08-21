@@ -1,33 +1,22 @@
-<div>
+<div class="products-container">
   {{#if loggedUserData}}
-    <h1>Bienvenido/a
-      {{loggedUserData.first_name}}
-      {{loggedUserData.last_name}}
-      - Rol:
-      {{loggedUserData.role}}</h1>
+    <h1>Bienvenido/a {{loggedUserData.first_name}} {{loggedUserData.last_name}} - Rol: {{loggedUserData.role}}</h1>
   {{/if}}
   {{#if products}}
     <h2>Listado de Productos</h2>
-    <table class='tg'>
-      <thead>
-        <tr>
-          <th class='tg-tk2y'><span style='font-weight:bold'>Nombre</span></th>
-          <th class='tg-tk2y'><span style='font-weight:bold'>Precio</span></th>
-          <th class='tg-tk2y'><span style='font-weight:bold'>Código</span></th>
-          <th class='tg-tk2y'><span style='font-weight:bold'>Stock</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each products}}
-          <tr>
-            <td class='tg-0lax'>{{title}}</td>
-            <td class='tg-0lax'>{{price}}</td>
-            <td class='tg-0lax'>{{code}}</td>
-            <td class='tg-0lax'>{{stock}}</td>
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
+    <div class="product-cards">
+      {{#each products}}
+        <div class="product-card">
+          <div class="product-image">
+            <img src="{{thumbnails.[0]}}" alt="{{title}}">
+          </div>
+          <h3 class="product-title">{{title}}</h3>
+          <p class="product-price">{{price}} USD</p>
+          <p class="product-code">Código: {{code}}</p>
+          <p class="product-stock">Stock: {{stock}}</p>
+        </div>
+      {{/each}}
+    </div>
   {{else}}
     <h2>No hay productos para mostrar</h2>
   {{/if}}

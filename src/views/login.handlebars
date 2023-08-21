@@ -1,20 +1,14 @@
-<div>
-  <h1>LOGIN</h1>
-  <form id='loginForm' action='/api/sessions/login' method='POST'>
-    <label>Email</label>
-    <input name='email' />
-    <br />
-    <label>Password</label>
-    <input name='password' />
-    <br />
-    <br />
-    <input type='submit' />
+<div class="login-container">
+  <h1 class="login-title">Log In</h1>
+  <form id='loginForm' action='/api/sessions/login' method='POST' class="login-form">
+    <label for="email">Email</label>
+    <input type="email" name='email' id="email" class="login-input" required />
+    <label for="password">Password</label>
+    <input type="password" name='password' id="password" class="login-input" required />
+    <input type='submit' value="Login" class="login-button" />
   </form>
-  <a href='/sendRestorationEmail'>¿Olvidaste tu contraseña?</a>
-  <br />
-  <br />
-  <a href='/api/sessions/githublogin'>Ingresar con Github</a>
-  <br />
-  <p>¿No estás registrado aún? </p>
-  <a href='/register'>Registrate aquí!</a>
+  <a href='/sendRestorationEmail' class="forgot-password-link">¿Olvidaste tu contraseña?</a>
+  <a href='/api/sessions/githublogin' class="github-login-link">Ingresar con Github</a>
+  <p class="register-text">¿No estás registrado aún?</p>
+  <a href='/register' class="register-link">Registrate aquí!</a>
 </div>
