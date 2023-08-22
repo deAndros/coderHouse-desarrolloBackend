@@ -23,7 +23,7 @@ class ViewsRouter extends CustomRouter {
           response.render('products', {
             products,
             loggedUserData,
-            style: 'index.css',
+            style: 'products.css',
           })
         } catch (error) {
           response.render('products', error.message)
@@ -37,24 +37,24 @@ class ViewsRouter extends CustomRouter {
 
     this.get('/login', ['IGNORE'], (request, response) => {
       response.render('login', {
-        style: 'index.css',
+        style: 'login.css',
       })
     })
     this.get('/', ['IGNORE'], (request, response) => {
       response.render('login', {
-        style: 'index.css',
+        style: 'login.css',
       })
     })
 
     this.get('/register', ['IGNORE'], (request, response) => {
       response.render('register', {
-        style: 'index.css',
+        style: 'register.css',
       })
     })
 
     this.get('/sendRestorationEmail', ['IGNORE'], (request, response) => {
       let renderingConfig = {
-        style: 'index.css',
+        style: 'send-restoration-email.css',
         message: request.query.warning
           ? 'El link al que intentó acceder ha expirado'
           : '',
@@ -69,7 +69,7 @@ class ViewsRouter extends CustomRouter {
       passportAuth('jwt'),
       (request, response) => {
         const { email } = request.user.user
-        response.render('emailSent', { style: 'index.css', email })
+        response.render('emailSent', { style: 'email-sent.css', email })
       }
     )
 
@@ -80,7 +80,7 @@ class ViewsRouter extends CustomRouter {
       passportAuth('jwt'),
       (request, response) => {
         let renderingConfig = {
-          style: 'index.css',
+          style: 'enter-new-password.css',
           message: request.query.warning
             ? 'La contraseña ingresada es idéntica a la contraseña actual, por favor ingrese una nueva'
             : '',
@@ -95,7 +95,7 @@ class ViewsRouter extends CustomRouter {
       passportAuth('jwt'),
       (request, response) => {
         response.render('passwordrestored', {
-          style: 'index.css',
+          style: 'password-restored.css',
         })
       }
     )

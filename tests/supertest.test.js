@@ -22,7 +22,7 @@ describe('Ciclo de testing de Power Comics', async () => {
     it('POST /api/sessions/login debe autenticar a un usuario con credenciales correctas, settear una cookie de nombre authorization con un JWT para ese usuario y redireccionar con un código 302 a la vista de productos', async () => {
       let adminCredentials = {
         email: 'andresgabriel.92@gmail.com',
-        password: '123',
+        password: 'asd',
       }
 
       const loginResponse = await requester

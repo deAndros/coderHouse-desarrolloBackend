@@ -1,9 +1,9 @@
-<div>
+<div class="restore-password-container">
   <h1>Restablecer Contraseña</h1>
-  <h4>{{message}}</h4>
-  <form id='loginForm' action='/api/sessions/restorePassword' method='POST'>
-    <label>Email</label>
-    <input name='email' />
-    <input type='submit' />
+  <h4 class="message">{{message}}</h4>
+  <form id='loginForm' action='/api/sessions/restorePassword' method='POST' class="restore-password-form">
+    <label for="email">Email</label>
+    <input type="email" name='email' id="email" class="restore-password-input" />
+    <input type='submit' value="Restablecer" class="restore-password-button" />
   </form>
 </div>

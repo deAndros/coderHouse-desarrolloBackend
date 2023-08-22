@@ -1,0 +1,16 @@
+.confirmation-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    overflow: hidden; /* Evita que el contenedor se expanda en exceso */
+  }
+  
+  .email {
+    color: #00bcd4;
+    word-wrap: break-word; /* Rompe las palabras largas */
+  }
+  

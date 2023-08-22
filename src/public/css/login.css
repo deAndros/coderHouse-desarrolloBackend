@@ -1,0 +1,51 @@
+.login-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    text-align: center;
+  }
+  
+  .login-title {
+    color: #00bcd4;
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .login-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #00bcd4;
+    border-radius: 5px;
+  }
+  
+  .login-button {
+    background-color: #00bcd4;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .login-button:hover {
+    background-color: #0097a7;
+  }
+  
+  .forgot-password-link, .github-login-link, .register-link {
+    color: #00bcd4;
+    text-decoration: none;
+    margin: 5px;
+    display: block;
+  }
+  
+  .forgot-password-link:hover, .github-login-link:hover, .register-link:hover {
+    text-decoration: underline;
+  }

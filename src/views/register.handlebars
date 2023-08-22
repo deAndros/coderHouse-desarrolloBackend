@@ -1,24 +1,17 @@
-<h1>Register</h1>
-<form action='/api/sessions/register' method='POST'>
-  <input type='text' name='firstName' placeholder='Nombre' />
-  <br />
-  <input type='text' name='lastName' placeholder='Apellido' />
-  <br />
-  <input type='text' name='email' placeholder='E-mail' />
-  <br />
-  <input
-    type='text'
-    name='age'
-    placeholder='Edad'
-    type='number'
-    min='1'
-    max='119'
-  /><br />
-  <input type='text' name='password' placeholder='Password' />
-  <br />
-  <input type='checkbox' id='isAdmin' name='isAdmin'/>
-  <label for='isAdmin'>¿Es ADMIN?</label>
-  <button>Registrar</button>
-</form>
-<p>¿Ya te encuentras registrado? </p>
-<a href='/login'>Ingresa aquí!</a>
+<div class="register-container">
+  <h1 class="register-title">Registro</h1>
+  <form action='/api/sessions/register' method='POST' class="register-form">
+    <input type='text' name='firstName' placeholder='Nombre' class="register-input" />
+    <input type='text' name='lastName' placeholder='Apellido' class="register-input" />
+    <input type='text' name='email' placeholder='E-mail' class="register-input" />
+    <input type='number' name='age' placeholder='Edad' class="register-input" min='1' max='119' />
+    <input type='password' name='password' placeholder='Password' class="register-input" />
+    <div class="admin-checkbox">
+      <input type='checkbox' id='isAdmin' name='isAdmin' />
+      <label for='isAdmin'>¿Es ADMIN?</label>
+    </div>
+    <button class="register-button">Registrar</button>
+  </form>
+  <p class="login-text">¿Ya te encuentras registrado?</p>
+  <a href='/login' class="login-link">Ingresa aquí!</a>
+</div>
