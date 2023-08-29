@@ -7,76 +7,48 @@ const {
   enterNewPassword,
   sendRestorationEmail,
 } = require('../controllers/sessions.controller')
-const { passportAuth } = require('../middlewares/passportAuthentication')
-const {
-  passportAuthorization,
-} = require('../middlewares/passportAuthorization')
-const { logger } = require('../config/logger.config')
+
+const CustomRouter = require('./customRouter.class')
 
 const router = Router()
+class SessionsRouter extends CustomRouter {
+  init() {
+    this.post('/login', ['PUBLIC'], login)
+    this.get('/logout', ['PUBLIC'], logout)
+    this.post('/register', ['PUBLIC'], register)
+    this.post('/restorePassword', ['PUBLIC'], sendRestorationEmail)
+    this.post(
+      '/enterNewPassword',
+      ['USER', 'ADMIN', 'PREMIUM'],
+      enterNewPassword
+    )
+    this.get(
+      '/githublogin',
+      ['PUBLIC'],
+      passport.authenticate('githublogin', { scope: ['user:email'] }),
+      async (request, response) => {
+        response.status(200).send('Entré')
+      }
+    )
 
-router
-  .post('/login', login)
-  .get('/logout', logout)
-  .post('/register', register)
-  .post('/restorePassword', sendRestorationEmail)
-  .post('/enterNewPassword', passportAuth('jwt'), enterNewPassword)
-  .get(
-    '/current',
-    passportAuth('jwt'),
-    passportAuthorization(['ADMIN']),
-    async (request, response) => {
-      response.send('LLEGASTE A CURRENT')
-    }
-  )
-
-router.get('/loginFailed', async (request, response) => {
-  logger.error('Falló la estrategia de login')
-  response
-    .status(500)
-    .send({ status: 'error', message: 'Se produjo un error al loguearse' })
-})
-
-router.get('/registrationFailed', async (request, response) => {
-  logger.error('Falló la estrategia de registro')
-  response
-    .status(500)
-    .send({ status: 'error', message: 'Se produjo un error al registrarse' })
-})
-
-router.get(
-  '/githublogin',
-  passport.authenticate('githublogin', { scope: ['user:email'] }),
-  async (request, response) => {
-    response.status(200).send('Entré')
+    this.get(
+      '/githubcallback',
+      ['PUBLIC'],
+      passport.authenticate('githublogin', {
+        session: false,
+        failureRedirect: '/login',
+      }),
+      async (request, response) => {
+        response
+          .cookie('Authorization', request.user, {
+            maxAge: 60 * 60 * 10000,
+            httpOnly: true,
+          })
+          .redirect('/products')
+      }
+    )
   }
-)
-
-router.get(
-  '/githubcallback',
-  passport.authenticate('githublogin', {
-    session: false,
-    failureRedirect: '/login',
-  }),
-  async (request, response) => {
-    response
-      .cookie('Authorization', request.user, {
-        maxAge: 60 * 60 * 10000,
-        httpOnly: true,
-      })
-      .redirect('/products')
-  }
-)
-
-router.get('/counter', (request, response) => {
-  if (request.session.counter) {
-    request.session.counter++
-    response.send(`se ha visitado el sitio ${req.session.counter} veces.`)
-  } else {
-    request.session.counter = 1
-    response.send('Bienvenido')
-  }
-})
+}
 
 //TODO: Incorporar el uso de esta función a mis estratégias de passport y moverla a un archivo en utils
 isValidString = (string, pattern) => {
@@ -107,4 +79,4 @@ router
     response.status(404).send('404 Not Found')
   })
 
-module.exports = router
+module.exports = new SessionsRouter()

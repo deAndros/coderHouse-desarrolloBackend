@@ -51,6 +51,7 @@ const redirectToSendEmail = (request, response, next) => {
         .send({ status: error, message: 'No se encuentra autenticado' })
     }
     request.logger.debug('credentials', credentials)
+    request.logger.debug('credentials', credentials.user)
     request.user = credentials.user
     next()
   })

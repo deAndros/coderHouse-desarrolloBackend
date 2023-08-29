@@ -40,7 +40,7 @@ class CartController {
         nextLink,
       })
     } catch (error) {
-      response.sendServerError(error)
+      response.sendInternalServerError(error)
     }
   }
 
@@ -49,13 +49,13 @@ class CartController {
       const cart = await cartsService.getById(request.params.cid)
 
       if (!cart)
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error(`No existe un carrito con el id ${request.params.cid}`)
         )
 
       response.sendSuccess({ cart: cart })
     } catch (error) {
-      response.sendServerError(error)
+      response.sendInternalServerError(error)
     }
   }
 
@@ -90,7 +90,7 @@ class CartController {
       }
 
       if (missingProducts.length > 0)
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error(
             `Los siguientes productos no existen en la base de datos o bien fueron ingresados con cantidades negativas/decimales: ${missingProducts.join(
               ', '
@@ -118,13 +118,13 @@ class CartController {
       const productFound = await productsService.getById(pid)
 
       if (!productFound)
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error(`No existe un producto cuyo ID sea: ${pid}`)
         )
 
       //Valido que la cantidad sea un número entero y positivo
       if (!Number.isInteger(quantity) || quantity < 0)
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error(
             'La cantidad del producto a agregar debe ser un valor entero y positivo'
           )
@@ -133,7 +133,7 @@ class CartController {
       const requestUser = await usersService.getByEmail(request.user.email)
 
       if (productFound.owner === requestUser.email)
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error('No puede agregar al carrito un producto creado por usted')
         )
 
@@ -158,7 +158,7 @@ class CartController {
 
       response.sendSuccess({ cart: updatedCart })
     } catch (error) {
-      response.sendServerError(error)
+      response.sendInternalServerError(error)
     }
   }
 
@@ -193,7 +193,7 @@ class CartController {
       }
 
       if (missingProducts.length > 0)
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error(
             `Los siguientes productos no existen en la base de datos o bien fueron ingresados con cantidades negativas/decimales: ${missingProducts.join(
               ', '
@@ -207,13 +207,13 @@ class CartController {
       )
 
       if (!updatedCart)
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error('No existe un carrito con el ID proporcionado')
         )
 
       response.sendSuccess({ updatedCart: updatedCart })
     } catch (error) {
-      response.sendServerError(error)
+      response.sendInternalServerError(error)
     }
   }
 
@@ -228,13 +228,13 @@ class CartController {
       const productFound = await getProductById(request, response)
 
       if (!productFound)
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error(`No existe un producto cuyo ID sea: ${request.params.pid}`)
         )
 
       //Valido que la cantidad sea un número entero y positivo
       if (!Number.isInteger(quantity) || quantity < 0)
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error(
             'La cantidad del producto a agregar debe ser un valor entero y positivo'
           )
@@ -246,13 +246,13 @@ class CartController {
       )
 
       if (!updatedCart)
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error('No existe un carrito con el ID proporcionado')
         )
 
       response.sendSuccess({ updatedCart: updatedCart })
     } catch (error) {
-      response.sendServerError(error)
+      response.sendInternalServerError(error)
     }
   }
 
@@ -266,7 +266,7 @@ class CartController {
       )
 
       if (!updatedCart)
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error(
             `No existe un carrito cuyo ID sea ${cid} y que contenga el producto cuyo ID es ${pid}`
           )
@@ -274,7 +274,7 @@ class CartController {
 
       response.sendSuccess({ updatedCart: updatedCart })
     } catch (error) {
-      response.sendServerError(error)
+      response.sendInternalServerError(error)
     }
   }
 
@@ -284,7 +284,7 @@ class CartController {
     const deletedCart = await cartsService.delete(cid)
 
     if (!deletedCart) {
-      return response.sendUserError(
+      return response.sendBadRequest(
         new Error('No existe un carrito con el ID proporcionado')
       )
     }
@@ -302,13 +302,13 @@ class CartController {
       const cart = await cartsService.getById(request.user.cart._id)
 
       if (cart.products.length === 0) {
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error('El carrito del usuario se encuentra vacío')
         )
       }
 
       if (!cart._id) {
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error(
             'El usuario autenticado no posee un carrito inicializado. Contáctese con el administrador.'
           )
@@ -406,12 +406,12 @@ class CartController {
           //producstOutOfStock: `La compra de los siguientes productos no pudo llevarse a cabo por falta de stock: ${productsOutOfStock}`,
         })
       } else {
-        return response.sendUserError({
+        return response.sendBadRequest({
           message: `La compra no pudo llevarse a cabo porque no había stock de los productos: ${productsOutOfStock}`,
         })
       }
     } catch (error) {
-      response.sendServerError(error)
+      response.sendInternalServerError(error)
     }
   }
 }

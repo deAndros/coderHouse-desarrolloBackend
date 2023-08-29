@@ -53,12 +53,15 @@ class SessionsController {
 
       const accessToken = generateToken(userMetadata, '50m')
 
-      response
-        .cookie('Authorization', accessToken, {
+      response.setCookieAndRedirect(
+        'Authorization',
+        accessToken,
+        {
           maxAge: 60 * 60 * 10000,
           httpOnly: true,
-        })
-        .redirect('/products')
+        },
+        '/products'
+      )
     } catch (error) {
       next(error)
     }
@@ -66,12 +69,14 @@ class SessionsController {
 
   logout = async (request, response) => {
     try {
-      response.clearCookie('Authorization').redirect('/login')
+      //response.clearCookie('Authorization').redirect('/login')
+      response.destroyCookieAndRedirect('Authorization', '/login')
     } catch (error) {
-      response.status(500).send({
+      next(error)
+      /*response.status(500).send({
         status: 'error',
         message: 'Se produjo un error al desloguearse',
-      })
+      })*/
     }
   }
 
@@ -124,10 +129,12 @@ class SessionsController {
         ...newUserMetadata
       } = newUser.toObject()
 
-      response.send({
+      /*response.send({
         status: 'success',
         newUser: newUserMetadata,
-      })
+      })*/
+      //TODO: Cambiar a una redirección con un mensaje de confirmación de login exitoso
+      response.sendCreated(newUserMetadata)
     } catch (error) {
       next(error)
     }
@@ -230,12 +237,15 @@ class SessionsController {
 
       await sendEmail(email, 'Restablecer contraseña', html)
 
-      response
-        .cookie('Authorization', accessToken, {
+      response.setCookieAndRedirect(
+        'Authorization',
+        accessToken,
+        {
           maxAge: 3.6e6,
           //httpOnly: true,
-        })
-        .redirect(`/emailSent`)
+        },
+        '/emailSent'
+      )
     } catch (error) {
       next(error)
     }
@@ -243,7 +253,7 @@ class SessionsController {
 
   enterNewPassword = async (request, response, next) => {
     try {
-      const { email } = request.user.user
+      const { email } = request.user
       const newPassword = request.body.password
 
       if (!email)

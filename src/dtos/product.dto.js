@@ -8,9 +8,9 @@ class ProductDto {
     this.thumbnails = product.thumbnails ? product.thumbnails : product.fotos
 
     if (product.code) {
-      this.code = product.code.toLowerCase()
+      this.code = product.code.toUpperCase()
     } else if (product.codigo) {
-      this.code = product.codigo.toLowerCase()
+      this.code = product.codigo.toUpperCase()
     }
 
     this.category = product.category ? product.category : product.categoria

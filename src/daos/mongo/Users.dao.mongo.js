@@ -1,8 +1,8 @@
 const { userModel } = require('./models/user.model')
 
 class UsersDaoMongo {
-  get = async (sortOptions) => {
-    return await userModel.paginate({}, { ...sortOptions, lean: true })
+  get = async (paginationOptions) => {
+    return await userModel.paginate({}, { ...paginationOptions, lean: true })
     //.populate('cart') TODO: Resolver por qué no funciona el populate
   }
 

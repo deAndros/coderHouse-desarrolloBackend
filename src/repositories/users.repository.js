@@ -5,8 +5,8 @@ class UsersRepository {
     this.dao = dao
   }
 
-  get = async () => {
-    return await this.dao.get()
+  get = async (paginationOptions) => {
+    return await this.dao.get(paginationOptions)
   }
 
   getById = async (id) => {

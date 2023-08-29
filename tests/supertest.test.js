@@ -1,7 +1,6 @@
 const chai = require('chai')
 const supertest = require('supertest')
 const { faker } = require('@faker-js/faker')
-
 const expect = chai.expect
 const requester = supertest('http://localhost:8080', { timeout: 10000 })
 
@@ -22,7 +21,7 @@ describe('Ciclo de testing de Power Comics', async () => {
     it('POST /api/sessions/login debe autenticar a un usuario con credenciales correctas, settear una cookie de nombre authorization con un JWT para ese usuario y redireccionar con un código 302 a la vista de productos', async () => {
       let adminCredentials = {
         email: 'andresgabriel.92@gmail.com',
-        password: 'asd',
+        password: '123',
       }
 
       const loginResponse = await requester
@@ -71,20 +70,20 @@ describe('Ciclo de testing de Power Comics', async () => {
         .post('/api/sessions/register')
         .send(fakeUser)
 
-      expect(regiserResponse.statusCode).to.be.equal(200)
-      expect(regiserResponse.body.status).to.be.ok.and.equal('success')
-      expect(regiserResponse.body.newUser.first_name).to.be.ok.and.equal(
+      expect(regiserResponse.statusCode).to.be.equal(201)
+      expect(regiserResponse.body.status).to.be.ok.and.equal('CREATED')
+      expect(regiserResponse.body.payload.first_name).to.be.ok.and.equal(
         fakeUser.firstName
       )
-      expect(regiserResponse.body.newUser.last_name).to.be.ok.and.equal(
+      expect(regiserResponse.body.payload.last_name).to.be.ok.and.equal(
         fakeUser.lastName
       )
-      expect(regiserResponse.body.newUser.email).to.be.ok.and.equal(
+      expect(regiserResponse.body.payload.email).to.be.ok.and.equal(
         fakeUser.email
       )
-      expect(regiserResponse.body.newUser.age).to.be.ok.and.equal(fakeUser.age)
+      expect(regiserResponse.body.payload.age).to.be.ok.and.equal(fakeUser.age)
 
-      fakeUser = regiserResponse.body.newUser
+      fakeUser = regiserResponse.body.payload
     })
   })
 
@@ -92,7 +91,7 @@ describe('Ciclo de testing de Power Comics', async () => {
     let fakeProduct = {
       title: faker.commerce.productName(),
       code:
-        faker.string.alpha({ count: 3 }).toLowerCase() +
+        faker.string.alpha({ count: 3 }).toUpperCase() +
         faker.number.int({ min: 1, max: 100 }),
       description: faker.commerce.productDescription(),
       category: faker.commerce.department(),
@@ -215,7 +214,7 @@ describe('Ciclo de testing de Power Comics', async () => {
         let fakeProduct = {
           title: faker.commerce.productName(),
           code:
-            faker.string.alpha({ count: 3 }).toLowerCase() +
+            faker.string.alpha({ count: 3 }).toUpperCase() +
             faker.number.int({ min: 1, max: 100 }),
           description: faker.commerce.productDescription(),
           category: faker.commerce.department(),
@@ -281,7 +280,9 @@ describe('Ciclo de testing de Power Comics', async () => {
       expect(body.payload.cart.products[0].quantity).to.be.equal(15)
       expect(body.payload.cart.products[1].quantity).to.be.equal(10)
       expect(body.payload.cart.products[2].quantity).to.be.equal(10)
+    })
 
+    it('DELETE /api/products/:pid/product/:pid y DELETE /api/users/:uid deben eliminar los usuarios y los productos de prueba que intervinieron en el testing', async () => {
       for (let i = 0; i < 3; i++) {
         await requester
           .delete(`/api/products/${fakeProducts[i].product}`)

@@ -31,31 +31,79 @@ class CustomRouter {
 
   //TODO: Customizar y definir bien todos los tipos de errores y aplicarlos en los controladores que usan c/u de mis routers
   generateCustomResponse = (request, response, next) => {
-    response.sendSuccess = (payload) =>
-      response.status(200).send({ status: 'success', payload })
+    response.sendSuccess = (payload) => {
+      request.logger.http(`Response 200 to ${request.method}: ${request.path}`)
 
-    response.sendServerError = (error) =>
-      response.status(500).send({ status: 'error', error: error.message })
+      response.status(200).send({ status: 'SUCCESS', payload })
+    }
 
-    response.sendUserError = (error) =>
-      response.status(400).send({ status: 'error', error: error.message })
+    response.sendCreated = (payload) => {
+      request.logger.http(`Response 201 to ${request.method}: ${request.path}`)
+
+      response.status(201).send({ status: 'CREATED', payload })
+    }
+
+    response.sendInternalServerError = (error) => {
+      request.logger.http(`Response 500 to ${request.method}: ${request.path}`)
+
+      response.status(500).send({ status: 'ERROR', error: error.message })
+    }
+
+    response.sendBadRequest = (error) => {
+      request.logger.http(`Response 400 to ${request.method}: ${request.path}`)
+
+      response.status(400).send({ status: 'ERROR', error: error.message })
+    }
+
+    response.sendNotAuthenticated = (error) => {
+      request.logger.http(`Response 401 to ${request.method}: ${request.path}`)
+
+      response.status(401).send({ status: 'ERROR', error: error.message })
+    }
+
+    response.sendUnauthorized = (error) => {
+      request.logger.http(`Response 403 to ${request.method}: ${request.path}`)
+
+      response.status(403).send({ status: 'ERROR', error: error.message })
+    }
+
+    response.setCookieAndRedirect = (
+      cookieName,
+      cookieValue,
+      cookieConfig,
+      redirectUrl
+    ) => {
+      request.logger.http(`Response 301 to ${request.method}: ${request.path}`)
+
+      response
+        .cookie(cookieName, cookieValue, cookieConfig)
+        .redirect(redirectUrl)
+    }
+
+    response.destroyCookieAndRedirect = (cookieName, redirectUrl) => {
+      request.logger.http(`Response 301 to ${request.method}: ${request.path}`)
+
+      response.clearCookie(cookieName).redirect(redirectUrl)
+    }
 
     next()
   }
 
   handlePolicies = (policies) => (request, response, next) => {
     if (policies[0] === 'PUBLIC') return next()
-    if (policies[0] === 'IGNORE') return next()
 
-    const tokenHeader = request.headers.authorization
+    let accessToken = request.cookies['Authorization']
 
-    if (!tokenHeader)
+    if (!accessToken) {
+      let tokenHeader = request.headers.authorization
+      accessToken = tokenHeader.split(' ')[1]
+    }
+
+    if (!accessToken)
       return response.status(403).send({
         status: 'error',
         error: 'No se encontró token de acceso',
       })
-
-    const accessToken = tokenHeader.split(' ')[1]
 
     try {
       const { user } = jwt.verify(accessToken, process.env.JWT_PRIVATE_KEY)

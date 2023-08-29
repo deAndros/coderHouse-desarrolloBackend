@@ -3,7 +3,7 @@ const viewsRouter = require('./views.router')
 const usersRouter = require('./users.router')
 const productsRouter = require('./products.router')
 const cartsRouter = require('./carts.router')
-const sessionsRouter = require('./sessions.router')
+const SessionsRouter = require('./sessions.router')
 const mocksRouter = require('./mocks.router')
 const loggerTestRouter = require('./loggerTest.router')
 
@@ -20,7 +20,7 @@ router.use('/api/products', productsRouter.getRouter())
 router.use('/api/carts', cartsRouter.getRouter())
 
 //_________________Apartado de SESIONES_________________
-router.use('/api/sessions', sessionsRouter)
+router.use('/api/sessions', SessionsRouter.getRouter())
 
 //_________________Apartado de USUARIOS_________________
 router.use('/api/users', usersRouter.getRouter())

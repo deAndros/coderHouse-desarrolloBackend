@@ -1,0 +1,40 @@
+body {
+    background-color: black;
+  }
+  
+  .admin-users-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    color: white;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #2a2a2a;
+    border: 1px solid black;
+  }
+  
+  .table-header {
+    color: #00bcd4;
+    background-color: #212529;
+    border: 1px solid black;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .table th, .table td {
+    padding: 10px;
+    border: 1px solid black;
+    text-align: center;
+    color: black;
+  }
+  
+  .btn {
+    margin: 5px;
+  }
+  

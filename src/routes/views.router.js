@@ -1,24 +1,17 @@
-const { Router } = require('express')
 const CustomRouter = require('./customRouter.class.js')
-const { productsService } = require('../services/index')
-const { passportAuth } = require('../middlewares/passportAuthentication')
-const {
-  passportAuthorization,
-} = require('../middlewares/passportAuthorization')
+const { productsService, usersService } = require('../services/index')
 const { redirectToSendEmail } = require('../utils/jwt')
 
 class ViewsRouter extends CustomRouter {
   init() {
     this.get(
       '/products',
-      ['IGNORE'],
-      passportAuth('jwt'),
-      passportAuthorization(['USER', 'ADMIN', 'PREMIUM']),
+      ['USER', 'ADMIN', 'PREMIUM'],
       async (request, response) => {
         try {
           const { docs } = await productsService.get()
           const products = docs
-          const loggedUserData = request.user.user
+          const loggedUserData = request.user
 
           response.render('products', {
             products,
@@ -31,28 +24,71 @@ class ViewsRouter extends CustomRouter {
       }
     )
 
+    this.get('/users', ['ADMIN'], async (request, response) => {
+      try {
+        let page = parseInt(request.query.page) || 1
+        const limit = parseInt(request.query.limit) || 10
+        const sortField = request.query.sortField || 'email'
+        const sortOrder = request.query.sortOrder || 'asc'
+        const token = request.cookies.Authorization
+        const sortOptions = { [sortField]: sortOrder }
+        const paginationOptions = { page, limit, sort: sortOptions }
+
+        const {
+          docs,
+          totalPages,
+          prevPage,
+          nextPage,
+          //page,
+          hasPrevPage,
+          hasNextPage,
+          prevLink,
+          nextLink,
+        } = await usersService.get(paginationOptions)
+        const users = docs
+
+        const loggedUserData = request.user
+        response.render('users', {
+          users,
+          loggedUserData,
+          totalPages,
+          prevPage,
+          nextPage,
+          //page,
+          hasPrevPage,
+          hasNextPage,
+          prevLink,
+          nextLink,
+          token,
+          style: 'users.css',
+        })
+      } catch (error) {
+        response.render('users', error.message)
+      }
+    })
+
     this.get('/realtimeproducts', (request, response) => {
       response.render('realTimeProducts', { style: 'index.css' })
     })
 
-    this.get('/login', ['IGNORE'], (request, response) => {
+    this.get('/login', ['PUBLIC'], (request, response) => {
       response.render('login', {
         style: 'login.css',
       })
     })
-    this.get('/', ['IGNORE'], (request, response) => {
+    this.get('/', ['PUBLIC'], (request, response) => {
       response.render('login', {
         style: 'login.css',
       })
     })
 
-    this.get('/register', ['IGNORE'], (request, response) => {
+    this.get('/register', ['PUBLIC'], (request, response) => {
       response.render('register', {
         style: 'register.css',
       })
     })
 
-    this.get('/sendRestorationEmail', ['IGNORE'], (request, response) => {
+    this.get('/sendRestorationEmail', ['PUBLIC'], (request, response) => {
       let renderingConfig = {
         style: 'send-restoration-email.css',
         message: request.query.warning
@@ -65,19 +101,17 @@ class ViewsRouter extends CustomRouter {
 
     this.get(
       '/emailSent',
-      ['IGNORE'],
-      passportAuth('jwt'),
+      ['USER', 'PREMIUM', 'ADMIN'],
       (request, response) => {
-        const { email } = request.user.user
+        const { email } = request.user
         response.render('emailSent', { style: 'email-sent.css', email })
       }
     )
 
     this.get(
       '/enterNewPassword',
-      ['IGNORE'],
+      ['USER', 'PREMIUM', 'ADMIN'],
       redirectToSendEmail,
-      passportAuth('jwt'),
       (request, response) => {
         let renderingConfig = {
           style: 'enter-new-password.css',
@@ -91,8 +125,7 @@ class ViewsRouter extends CustomRouter {
 
     this.get(
       '/passwordRestored',
-      ['IGNORE'],
-      passportAuth('jwt'),
+      ['USER', 'PREMIUM', 'ADMIN'],
       (request, response) => {
         response.render('passwordrestored', {
           style: 'password-restored.css',

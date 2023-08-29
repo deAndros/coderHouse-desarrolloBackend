@@ -42,7 +42,7 @@ class ProductsController {
         nextLink,
       })
     } catch (error) {
-      response.sendServerError(error)
+      response.sendInternalServerError(error)
     }
   }
 
@@ -51,7 +51,7 @@ class ProductsController {
       const productFound = await productsService.getById(request.params.pid)
 
       if (!productFound && !request.headers.internalRequest) {
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error(`No existe un producto cuyo ID sea: ${request.params.pid}`)
         )
       } else if (!productFound && request.headers.internalRequest) {
@@ -62,19 +62,19 @@ class ProductsController {
 
       response.sendSuccess({ product: productFound })
     } catch (error) {
-      response.sendServerError(error)
+      response.sendInternalServerError(error)
     }
   }
 
   addProduct = async (request, response) => {
     try {
       if (Object.keys(request.body).length === 0)
-        return response.sendUserError(new Error('No se encontró post-data'))
+        return response.sendBadRequest(new Error('No se encontró post-data'))
 
       const productFound = await productsService.getByCode(request.body)
 
       if (productFound)
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error(
             `El código ${productFound.code} ya se encuentra utilizado por otro producto.`
           )
@@ -86,14 +86,14 @@ class ProductsController {
 
       response.sendSuccess({ newProduct: newProduct })
     } catch (error) {
-      response.sendServerError(error)
+      response.sendInternalServerError(error)
     }
   }
 
   updateProduct = async (request, response) => {
     try {
       if (Object.keys(request.body).length === 0)
-        return response.sendUserError(new Error('No se encontró post-data'))
+        return response.sendBadRequest(new Error('No se encontró post-data'))
 
       const { id } = request.params
       const { code } = request.body
@@ -101,12 +101,12 @@ class ProductsController {
       //Si el código ingresado es distinto al que tenía ese producto y a su vez existe otro producto con ese código arrojo un error.
       if (code) {
         const hasRepeatedCode = await productsService.getByCustomFilter({
-          code: code.toLowerCase(),
+          code: code.toUpperCase(),
           _id: { $ne: id },
         })
 
         if (hasRepeatedCode.length != 0)
-          return response.sendUserError(
+          return response.sendBadRequest(
             new Error(
               `El código ${code} ya se encuentra utilizado por otro producto.`
             )
@@ -120,7 +120,7 @@ class ProductsController {
         updatedProduct: updatedProduct,
       })
     } catch (error) {
-      response.sendServerError(error)
+      response.sendInternalServerError(error)
     }
   }
 
@@ -133,7 +133,7 @@ class ProductsController {
       const productToDelete = await productsService.getById(id)
 
       if (user.email != productToDelete.owner)
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error(
             `El producto que desea eliminar no le pertenece a ${user.email}`
           )
@@ -142,7 +142,7 @@ class ProductsController {
       const deletedProduct = await productsService.delete(id)
 
       if (!deletedProduct)
-        return response.sendUserError(
+        return response.sendBadRequest(
           new Error(`No existe un producto con ID igual a ${id}`)
         )
 
@@ -151,7 +151,7 @@ class ProductsController {
         deletedProduct: deletedProduct,
       })
     } catch (error) {
-      response.sendServerError(error.message)
+      response.sendInternalServerError(error.message)
     }
   }
 }
