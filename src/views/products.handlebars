@@ -1,24 +1,24 @@
 <div class="products-container">
-  {{#if loggedUserData}}
+  <!--{{#if loggedUserData}}
     <h1>Bienvenido/a {{loggedUserData.first_name}} {{loggedUserData.last_name}} - Rol: {{loggedUserData.role}}</h1>
-  {{/if}}
+  {{/if}}-->
   {{#if products}}
-    <h2>Listado de Productos</h2>
-    <div class="product-cards">
-      {{#each products}}
-        <div class="product-card">
-          <div class="product-image">
-            <img src="{{thumbnails.[0]}}" alt="{{title}}">
-          </div>
-          <h3 class="product-title">{{title}}</h3>
-          <p class="product-price">{{price}} USD</p>
-          <p class="product-code">Código: {{code}}</p>
-          <p class="product-stock">Stock: {{stock}}</p>
-        </div>
-      {{/each}}
+  <!--<h2>Listado de Productos</h2>-->
+  <div class="product-cards">
+    {{#each products}}
+    <div class="product-card">
+      <div class="product-image">
+        <img src="{{thumbnails.[0]}}" alt="{{title}}">
+      </div>
+      <h3 class="product-title">{{title}}</h3>
+      <p class="product-price">{{price}} USD</p>
+      <p class="product-code">Código: {{code}}</p>
+      <p class="product-stock">Stock: {{stock}}</p>
     </div>
+    {{/each}}
+  </div>
   {{else}}
-    <h2>No hay productos para mostrar</h2>
+  <h2>No hay productos para mostrar</h2>
   {{/if}}
 </div>
 <br />

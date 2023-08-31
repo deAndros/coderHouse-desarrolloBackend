@@ -1,0 +1,82 @@
+/* Estilos para el contenedor del carrito */
+.cart-container {
+    background-color: #1f1f1f;
+    border: 1px solid #00bcd4;
+    border-radius: 10px;
+    box-sizing: border-box;
+  }
+  
+  /* Estilos para el contenido de las tarjetas */
+  .cart-item .card-body {
+    padding: 10px; /* Ajusta el padding */
+  }
+  
+  /* Estilos para el título del producto en el carrito */
+  .cart-product-title {
+    color: #00bcd4;
+  }
+  
+  /* Estilos para los botones en el carrito */
+  .btn-primary {
+    background-color: #0097a7;
+    border-color: #0097a7;
+  }
+
+  .btn-primary:hover {
+    background-color: #007d8a;
+    border-color: #007d8a;
+  }
+  
+  /* Estilos para el botón de proceder al pago */
+  .btn-success {
+    background-color: #0097a7;
+    border-color: #0097a7;
+  }
+  .btn-success:hover {
+    background-color: #007d8a;
+    border-color: #007d8a;
+  }
+  
+  /* Estilos para el encabezado de la tarjeta de los productos en el carrito */
+.cart-header {
+    background-color: #0097a7;
+    color: white;
+    font-weight: bold;
+    padding: 10px; /* Agregado para espaciado interno */
+    border-top-left-radius: 10px; /* Estilos anteriores para border-radius */
+    border-top-right-radius: 10px; /* Estilos anteriores para border-radius */
+  }
+
+  /* Estilos para el cuerpo de la tarjeta de los productos en el carrito */
+.cart-body {
+    padding: 10px; /* Agregado para espaciado interno */
+    padding-top: 25px; /* Espaciado superior mínimo de 25px */
+  }
+  
+
+/* Estilos para la tarjeta de los productos en el carrito */
+.cart-item {
+    background-color: black;
+    border: 1px solid #00bcd4;
+    border-radius: 10px;
+    box-sizing: border-box;
+    transition: max-height 0.3s ease, width 0.3s ease; /* Agregado para animación de altura y ancho */
+    overflow: hidden; /* Oculta el contenido que exceda la altura máxima */
+    margin-bottom: 20px; /* Espaciado inferior entre las tarjetas */
+    max-width: calc(100% - 20px); /* Ajusta el ancho de la tarjeta restando el espaciado horizontal */
+    margin-left: auto; /* Centra la tarjeta horizontalmente */
+    margin-right: auto; /* Centra la tarjeta horizontalmente */
+  }
+  
+  
+  /* Estilos para la imagen de producto en el carrito */
+  .cart-product-image {
+    max-width: 100%;
+    max-height: 175px; /* Limita la altura de la imagen */
+    padding: 10px; /* Agregado para espaciado interno */
+    transition: max-height 0.3s ease; /* Agregado para animación de altura */
+  }
+  
+.cart-product-stock, .cart-product-price{
+    color:white
+  }

@@ -71,6 +71,12 @@ body {
   background-repeat: no-repeat;
   background-position: center center;
   width: 100%;
-  height: 190px; /* Ajusta la altura del contenedor según lo necesites */
+  height: 180px; /* Ajusta la altura del contenedor según lo necesites */
+}
+
+.cart-icon {
+  max-width: 5%; /* Ajusta este valor según tu preferencia */
+  height: auto; /* Asegura que la altura se ajuste automáticamente */
+  vertical-align: middle; /* Alineación vertical en el centro */
 }
 

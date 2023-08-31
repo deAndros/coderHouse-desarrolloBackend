@@ -29,6 +29,10 @@ class UsersDaoMongo {
   delete = async (id) => {
     return await userModel.findOneAndDelete({ _id: id })
   }
+
+  deleteMany = async (customFilter) => {
+    return await userModel.deleteMany(customFilter)
+  }
 }
 
 module.exports = UsersDaoMongo

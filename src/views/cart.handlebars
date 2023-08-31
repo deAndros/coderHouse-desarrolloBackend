@@ -1,0 +1,48 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8">
+      {{#if loggedUserData}}
+      <div class="card mb-3 cart-container">
+        <div class="card-header cart-header">Productos en el Carrito</div>
+        <div class="card-body">
+          {{#each cartProducts.products}}
+          <div class="cart-item card mb-3">
+            <div class="row g-0">
+              <div class="col-md-3">
+                <img src="{{product.thumbnails.[0]}}" alt="{{product.title}}" class="cart-product-image">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="cart-product-title">{{product.title}}</h5>
+                  <p class="cart-product-stock">Stock: {{this.product.stock}}</p>
+                  <p class="cart-product-price">Precio: {{this.product.price}}</p>
+                  <div class="d-flex align-items-center">
+                    <button class="btn btn-danger me-2">X</button>
+                    <div class="input-group" style="width:55%">
+                      <span class="input-group-text">Cantidad</span>
+                      <input type="number" class="form-control" value="{{this.quantity}}">
+                      <button class="btn btn-primary">Actualizar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      {{else}}
+      <p>No hay productos en el carrito.</p>
+      {{/if}}
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">Resumen del Carrito</div>
+        <div class="card-body">
+          <p>Total: ${{totalPrice}}</p>
+          <button class="btn btn-success btn-block">Proceder al Pago</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

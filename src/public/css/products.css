@@ -1,23 +1,25 @@
 .products-container {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
   }
   
-  .product-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
+/* Ajustes para mostrar 4 tarjetas de productos por fila */
+.product-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
 
+/* Cambiar el ancho de las tarjetas para mostrar 4 por fila */
 .product-card {
-    background-color: #1f1f1f; 
-    border: 1px solid #00bcd4;
-    border-radius: 10px;
-    padding: 20px;
-    width: calc(33.33% - 20px);
-    box-sizing: border-box;
-  }
+  background-color: #1f1f1f; 
+  border: 1px solid #00bcd4;
+  border-radius: 10px;
+  padding: 20px;
+  width: calc(25% - 20px); /* Cambio del 33.33% al 25% para mostrar 4 por fila */
+  box-sizing: border-box;
+}
   
   .product-image img {
     max-width: 100%;

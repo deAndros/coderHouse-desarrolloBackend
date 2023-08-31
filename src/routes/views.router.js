@@ -1,5 +1,9 @@
 const CustomRouter = require('./customRouter.class.js')
-const { productsService, usersService } = require('../services/index')
+const {
+  productsService,
+  usersService,
+  cartsService,
+} = require('../services/index')
 const { redirectToSendEmail } = require('../utils/jwt')
 
 class ViewsRouter extends CustomRouter {
@@ -20,6 +24,25 @@ class ViewsRouter extends CustomRouter {
           })
         } catch (error) {
           response.render('products', error.message)
+        }
+      }
+    )
+
+    this.get(
+      '/cart',
+      ['USER', 'ADMIN', 'PREMIUM'],
+      async (request, response) => {
+        try {
+          const loggedUserData = request.user
+          const cart = await cartsService.getById(loggedUserData.cart)
+          const cartProducts = cart
+          response.render('cart', {
+            cartProducts,
+            loggedUserData,
+            style: 'cart.css',
+          })
+        } catch (error) {
+          response.render('cart', error.message)
         }
       }
     )

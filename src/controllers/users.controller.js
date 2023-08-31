@@ -241,6 +241,25 @@ class UsersController {
     }
   }
 
+  deleteIdleUsers = async (request, response) => {
+    try {
+      //Creo un objeto Date y le resto 3 meses
+      const idleThreshold = new Date()
+      idleThreshold.setMonth(idleThreshold.getMonth() - 3)
+
+      const result = await usersService.deleteMany({
+        last_connection: { $lt: idleThreshold },
+      })
+
+      response.sendSuccess({
+        message: 'Los usuarios se eliminaron correctamente',
+        deletedUser: result,
+      })
+    } catch (error) {
+      response.sendInternalServerError(error.message)
+    }
+  }
+
   retorePassword = async (request, response) => {
     try {
     } catch (error) {}

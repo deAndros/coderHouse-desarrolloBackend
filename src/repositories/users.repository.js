@@ -41,6 +41,11 @@ class UsersRepository {
     //TODO: Agregar una validación para que se eliminen todos los productos cuyo ID coincidan con el que se recibió por parámetro de los carritos
     return await this.dao.delete(id)
   }
+
+  deleteMany = async (customFilter) => {
+    //TODO: Agregar una validación para que se eliminen todos los productos cuyo ID coincidan con el que se recibió por parámetro de los carritos
+    return await this.dao.deleteMany(customFilter)
+  }
 }
 
 module.exports = UsersRepository

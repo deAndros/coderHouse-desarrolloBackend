@@ -10,7 +10,10 @@ class CartsDaoMongo {
   }
 
   getById = async (cid) => {
-    return await cartModel.findOne({ _id: cid }).populate('products.product')
+    return await cartModel
+      .findOne({ _id: cid })
+      .populate('products.product')
+      .lean()
   }
 
   update = async (filter, operation, upsert = false) => {

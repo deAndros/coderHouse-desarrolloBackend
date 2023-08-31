@@ -45,8 +45,7 @@ class CustomRouter {
 
     response.sendInternalServerError = (error) => {
       request.logger.http(`Response 500 to ${request.method}: ${request.path}`)
-
-      response.status(500).send({ status: 'ERROR', error: error.message })
+      response.status(500).send({ status: 'ERROR', error: error })
     }
 
     response.sendBadRequest = (error) => {
@@ -90,22 +89,22 @@ class CustomRouter {
   }
 
   handlePolicies = (policies) => (request, response, next) => {
-    if (policies[0] === 'PUBLIC') return next()
-
-    let accessToken = request.cookies['Authorization']
-
-    if (!accessToken) {
-      let tokenHeader = request.headers.authorization
-      accessToken = tokenHeader.split(' ')[1]
-    }
-
-    if (!accessToken)
-      return response.status(403).send({
-        status: 'error',
-        error: 'No se encontró token de acceso',
-      })
-
     try {
+      if (policies[0] === 'PUBLIC') return next()
+
+      let accessToken = request.cookies['Authorization']
+      let tokenHeader = request.headers.authorization
+
+      if (!accessToken && !tokenHeader)
+        return response.status(403).send({
+          status: 'error',
+          error: 'No se encontró token de acceso',
+        })
+
+      if (!accessToken) {
+        accessToken = tokenHeader.split(' ')[1]
+      }
+
       const { user } = jwt.verify(accessToken, process.env.JWT_PRIVATE_KEY)
 
       if (!policies.includes(user.role.toUpperCase()))
