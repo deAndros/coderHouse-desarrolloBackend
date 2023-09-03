@@ -1,3 +1,63 @@
+.product-card {
+  background-color: #1f1f1f;
+  background-image: url('/static/images/Background.jpg');
+  background-repeat: no-repeat;
+  border: 1px solid #00bcd4;
+  border-radius: 10px;
+  padding: 20px;
+  width: calc(25% - 20px);
+  box-sizing: border-box;
+  position: relative; /* Añade posición relativa */
+}
+
+.product-title {
+  font-size: 1.1rem;
+  text-align: center;
+  margin: 0 0 10px;
+  color: white;
+  height: 60px; /* Altura máxima para el título */
+  overflow: hidden; /* Oculta el exceso de texto */
+}
+
+.product-details {
+  margin: 5px 0;
+  color: #a0a0a0;
+}
+
+/* Estilos para el botón "Agregar al carrito" */
+.add-to-cart-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 4px 7px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  bottom: 10px; /* Alinea el botón en la parte inferior */
+  left: 50%; /* Centra horizontalmente */
+  margin-top: 5%;
+}
+
+.btn-add-to-cart:hover {
+  background-color: #1e4420;
+}
+
+.add-to-cart-button-container {
+  display: flex;
+  justify-content: center;
+}
+
+/* Estilos para la imagen */
+.product-image img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+  width: 100%;
+  max-height: 240px;
+  object-fit: cover; /* Mantiene la relación de aspecto y cubre el contenedor */
+  object-position: center;
+}
+
 .products-container {
     max-width: 1000px;
     margin: 0 auto;
@@ -10,36 +70,41 @@
   flex-wrap: wrap;
   gap: 20px;
 }
-
-/* Cambiar el ancho de las tarjetas para mostrar 4 por fila */
-.product-card {
-  background-color: #1f1f1f; 
-  border: 1px solid #00bcd4;
-  border-radius: 10px;
-  padding: 20px;
-  width: calc(25% - 20px); /* Cambio del 33.33% al 25% para mostrar 4 por fila */
-  box-sizing: border-box;
-}
-  
-  .product-image img {
+ 
+.product-image img {
     max-width: 100%;
     height: auto;
     margin-bottom: 10px;
+    width: 100%; /* Ajusta la imagen al 100% del espacio disponible */
+    max-height: 240px; /* Altura fija para todas las imágenes */
+    object-fit: fill; /* Ajusta la imagen dentro del contenedor manteniendo su proporción */
+    object-position: center; /* Centra la imagen vertical y horizontalmente */
   }
   
-  .product-title {
-    font-size: 1.2rem;
-    margin: 0 0 10px;
-    color: white;
-  }
-  
-  .product-price {
+.product-price {
     font-weight: bold;
     color: #00bcd4;
   }
   
-  .product-code,
-  .product-stock {
+.product-code,
+.product-stock {
     margin: 5px 0;
     color: #a0a0a0;
   }
+
+.btn-add-to-cart:hover {
+  background-color: #1e4420;
+}
+
+.add-to-cart-button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.hr {  
+  margin: 1rem 0;
+  color: #00bcd4;
+  border: 1;
+  border-top: var(--bs-border-width) solid;
+  opacity: 1.25;
+} 

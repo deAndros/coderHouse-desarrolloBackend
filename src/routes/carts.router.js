@@ -38,7 +38,7 @@ class CartsRouter extends CustomRouter {
 
     this.delete(
       '/:cid([a-zA-Z0-9]+)/product/:pid([a-zA-Z0-9]+)',
-      ['USER', 'PREMIUM'],
+      ['USER', 'ADMIN', 'PREMIUM'],
       deleteProductFromCart
     )
 

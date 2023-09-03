@@ -4,6 +4,11 @@
     border: 1px solid #00bcd4;
     border-radius: 10px;
     box-sizing: border-box;
+    transition: height 0.3s ease, width 0.3s ease; /* Agregado para animación de altura y ancho */
+  overflow: hidden; /* Oculta el contenido que exceda la altura máxima */
+  max-width: calc(100% - 20px); /* Ajusta el ancho de la tarjeta restando el espaciado horizontal */
+  margin-left: auto; /* Centra la tarjeta horizontalmente */
+  margin-right: auto; /* Centra la tarjeta horizontalmente */
   }
   
   /* Estilos para el contenido de las tarjetas */
@@ -80,3 +85,128 @@
 .cart-product-stock, .cart-product-price{
     color:white
   }
+
+  /* Estilos para los botones - y + */
+.minus-btn,
+.plus-btn {
+  height: 38px; /* Ajusta la altura según tu preferencia */
+  width: 38px; /* Ajusta el ancho según tu preferencia */
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  border: none;
+  border-radius: 50%;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.minus-btn:hover,
+.plus-btn:hover {
+  background-color: #0097a7;
+}
+
+/* Estilos para el input de cantidad en el carrito */
+.cart-quantity-input-group {
+  display: flex;
+  align-items: center;
+}
+
+/* Estilos para la línea vertical */
+.vertical-line {
+  border-left: 1px solid #00bcd4;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+}
+
+/* Estilos para los botones de cantidad */
+.cart-quantity-button {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+
+
+/* Estilos para el contenedor de cantidad */
+.cart-quantity-container {
+  display: flex;
+  align-items: center;
+}
+
+/* Estilos para el input de cantidad */
+.cart-quantity-input {
+  text-align: center;
+  background-color: #adb5bd;
+  border: none;
+  border-radius: 0;
+  max-width: 40px;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Estilos para el botón "x" */
+.btn-remove {
+  background-color: #dc3545;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* Estilos para el botón de decrementar cantidad */
+.btn-quantity-minus {
+  background-color: #2778c4;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px 0 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+/* Estilos para el botón de incrementar cantidad */
+.btn-quantity-plus {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border-radius: 0 5px 5px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-left: 5px;
+  margin-right: 5px;
+}

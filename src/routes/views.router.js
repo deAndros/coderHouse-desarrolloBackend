@@ -34,8 +34,8 @@ class ViewsRouter extends CustomRouter {
       async (request, response) => {
         try {
           const loggedUserData = request.user
-          const cart = await cartsService.getById(loggedUserData.cart)
-          const cartProducts = cart
+          const cartProducts = await cartsService.getById(loggedUserData.cart)
+
           response.render('cart', {
             cartProducts,
             loggedUserData,

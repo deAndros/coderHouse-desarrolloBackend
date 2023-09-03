@@ -1,9 +1,5 @@
 <div class="products-container">
-  <!--{{#if loggedUserData}}
-    <h1>Bienvenido/a {{loggedUserData.first_name}} {{loggedUserData.last_name}} - Rol: {{loggedUserData.role}}</h1>
-  {{/if}}-->
   {{#if products}}
-  <!--<h2>Listado de Productos</h2>-->
   <div class="product-cards">
     {{#each products}}
     <div class="product-card">
@@ -11,9 +7,15 @@
         <img src="{{thumbnails.[0]}}" alt="{{title}}">
       </div>
       <h3 class="product-title">{{title}}</h3>
-      <p class="product-price">{{price}} USD</p>
-      <p class="product-code">Código: {{code}}</p>
-      <p class="product-stock">Stock: {{stock}}</p>
+      <div class="product-details">
+        <hr class="vertical-line" style="color: #00bcd4; opacity: 1.25; border: 1;">
+        <p class="product-price">{{price}} USD</p>
+        <p class="product-stock">Stock: {{stock}}</p>
+        <hr class="vertical-line" style="color: #00bcd4; opacity: 1.25; border: 1;">
+      </div>
+      <div class="add-to-cart-button-container">
+        <button class="add-to-cart-button">Agregar al carrito</button>
+      </div>
     </div>
     {{/each}}
   </div>
@@ -21,10 +23,3 @@
   <h2>No hay productos para mostrar</h2>
   {{/if}}
 </div>
-<br />
-
-<form id='logoutForm' action='/api/sessions/logout' method='GET'>
-  <input name='Logout' type='submit' value='Logout' />
-</form>
-
-<script src='/static/js/index.js'></script>
