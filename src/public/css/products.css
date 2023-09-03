@@ -15,7 +15,7 @@
   text-align: center;
   margin: 0 0 10px;
   color: white;
-  height: 60px; /* Altura máxima para el título */
+  height: 45px; /* Altura máxima para el título */
   overflow: hidden; /* Oculta el exceso de texto */
 }
 
