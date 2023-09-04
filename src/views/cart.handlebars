@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-6">
       {{#if loggedUserData}}
-      <div class="card mb-3 cart-container" cid="{{loggedUserData.cart}}">
+      <div id="cidHolder" class="card mb-3 cart-container" cid="{{loggedUserData.cart}}">
         <div class="card-header cart-header">Productos en el carrito</div>
         <div class="card-body">
           {{#each cartProducts.products}}
@@ -20,7 +20,8 @@
                   <div class="d-flex align-items-center cart-quantity-container">
                     <button class="btn btn-quantity-minus" type="button"
                       onclick="decrementQuantity(this.nextElementSibling)">-</button>
-                    <input type="text" class="cart-quantity-input" value="{{this.quantity}}" maxlength="2"
+                    <input pid="{{product._id}}" type="text" class="cart-quantity-input" value="{{this.quantity}}"
+                      maxlength="2"
                       oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '') this.value = '1'; if(parseInt(this.value) < 1) this.value = '1'; if(parseInt(this.value) > 99) this.value = '99';">
                     <button class="btn btn-quantity-plus" type="button"
                       onclick="incrementQuantity(this.previousElementSibling)">+</button>
@@ -42,7 +43,7 @@
         <div class="card-header">Resumen del Carrito</div>
         <div class="card-body">
           <p>Total: ${{totalPrice}}</p>
-          <button class="btn btn-success btn-block">Proceder al Pago</button>
+          <button class="btn btn-success btn-block" id="purchaseCartButton">Comprar carrito</button>
         </div>
       </div>
     </div>

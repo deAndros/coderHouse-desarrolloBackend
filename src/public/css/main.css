@@ -66,7 +66,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url('/static/images/Banner.jpg');
   background-size: 100% 100%; /* Ajusta el tamaño de la imagen al tamaño del contenedor */
   background-repeat: no-repeat;
   background-position: center center;

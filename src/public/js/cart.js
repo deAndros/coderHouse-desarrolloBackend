@@ -62,3 +62,51 @@ document.querySelectorAll('.btn-remove').forEach((button) => {
     })
   })
 })
+
+document
+  .getElementById('purchaseCartButton')
+  .addEventListener('click', async (event) => {
+    const cartContainer = document.getElementById('cidHolder')
+
+    const cid = cartContainer.getAttribute('cid')
+    console.log(cid)
+
+    document.querySelectorAll('.cart-quantity-input').forEach(async (input) => {
+      const productId = input.getAttribute('pid')
+      const productQuantity = input.value
+
+      await fetch(`/api/carts/${cid}/product/${productId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ quantity: productQuantity }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Error al actualizar los productos del carrito')
+          }
+          console.log(response)
+        })
+        .catch((error) => {
+          console.error(error)
+          // Aquí puedes manejar errores de la llamada a la API
+        })
+    })
+    await fetch(`/api/carts/purchase`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error al generar el ticket')
+        }
+        console.log(response)
+      })
+      .catch((error) => {
+        console.error(error)
+        // Aquí puedes manejar errores de la llamada a la API
+      })
+  })

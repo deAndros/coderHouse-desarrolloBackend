@@ -220,13 +220,14 @@ class CartController {
   updateProductQuantity = async (request, response) => {
     try {
       const { cid, pid } = request.params
-      const quantity = request.body.quantity
+      const quantity = parseInt(request.body.quantity)
 
       request.headers.internalRequest = true
       //TODO: Modificar, usar el service en su lugar
       //Llamo a getProductById aclarandole al método que el pedido es de parte del server. De esta forma evito que mi api quiera enviar dos respuestas distintas al cliente.
       const productFound = await getProductById(request, response)
 
+      console.log(productFound)
       if (!productFound)
         return response.sendBadRequest(
           new Error(`No existe un producto cuyo ID sea: ${request.params.pid}`)
@@ -299,15 +300,10 @@ class CartController {
     //Este método toma directamente el carrito del usuario que se encuentra autenticado. No necesita recibirlo como parámetro
     try {
       //Necesito traer el cart aún teniendolo en el JWT para que este se popule y por ende pueda manipular la propiedad "stock"
-      const cart = await cartsService.getById(request.user.cart._id)
+      const cart = await cartsService.getById(request.user.cart)
 
-      if (cart.products.length === 0) {
-        return response.sendBadRequest(
-          new Error('El carrito del usuario se encuentra vacío')
-        )
-      }
-
-      if (!cart._id) {
+      console.log(cart)
+      if (!cart) {
         return response.sendBadRequest(
           new Error(
             'El usuario autenticado no posee un carrito inicializado. Contáctese con el administrador.'
@@ -315,14 +311,22 @@ class CartController {
         )
       }
 
+      if (cart.products.length === 0) {
+        return response.sendBadRequest(
+          new Error('El carrito del usuario se encuentra vacío')
+        )
+      }
+
       let purchasedProducts = []
       let productsOutOfStock = []
       let totalPrice = 0
 
+      //TODO: Revisar, no se actualizan bien los stocks
       for (const cartItem of cart.products) {
-        if (cartItem.product.stock > cartItem.quantity) {
-          let updatedProductQuantity =
-            cartItem.product.stock - cartItem.quantity
+        let updatedProductQuantity = 0
+
+        if (cartItem.product.stock >= cartItem.quantity) {
+          updatedProductQuantity = cartItem.product.stock - cartItem.quantity
 
           if (updatedProductQuantity === 0) {
             await productsService.delete(cartItem.product._id)
