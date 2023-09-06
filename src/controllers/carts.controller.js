@@ -299,13 +299,12 @@ class CartController {
     })
   }
 
-  generateTicket = async (request, response) => {
+  generateTicket = async (request, response, next) => {
     //Este método toma directamente el carrito del usuario que se encuentra autenticado. No necesita recibirlo como parámetro
     try {
       //Necesito traer el cart aún teniendolo en el JWT para que este se popule y por ende pueda manipular la propiedad "stock"
       const cart = await cartsService.getById(request.user.cart)
 
-      request.debug(`Carrito con el que voy a generar el ticket, ${cart}`)
       if (!cart) {
         return response.sendBadRequest(
           new Error(
@@ -327,12 +326,12 @@ class CartController {
       for (const cartItem of cart.products) {
         let updatedProductQuantity = 0
 
-        if (request.user.email === cartItem.product.owner)
+        /*if (request.user.email === cartItem.product.owner)
           return response.sendBadRequest(
             new Error(
               `El producto ${cartItem.product.title} fue creado por usted y por ende no puede avanzar con la compra`
             )
-          )
+          )*/
 
         if (
           cartItem.product.stock > 0 &&
@@ -407,16 +406,16 @@ class CartController {
                     background-color: #000;
                     color: white;
                     padding: 20px;
-                    border: 2px solid #2b1f9b; /* Agregado: Contorno del correo */
+                    border: 2px solid #2b1f9b;
                 }
         
                 h1 {
-                    color: black; /* Cambiado: Color del encabezado */
+                    color: black;
                 }
         
                 p {
                     margin: 10px 0;
-                    color: #4d90fe; /* Cambiado: Color del texto "Productos Comprados:" */
+                    color: #4d90fe;
                 }
         
                 table {
@@ -487,14 +486,14 @@ class CartController {
         <body>
             <div class="email-container">
                 <div class="email-header">
-                    <h1>Ticket de Compra</h1> <!-- Cambiado: Encabezado -->
+                    <h1>Ticket de Compra</h1>
                 </div>
                 <div class="email-content">
                     <p>¡Gracias por tu compra!</p>
                     <p>Fecha de Compra: ${new Date().toLocaleDateString(
                       'es-ES'
-                    )}</p> <!-- Cambiado: Formato de fecha -->
-                    <p style="color: #4d90fe;">Productos Comprados:</p> <!-- Cambiado: Color del texto -->
+                    )}</p>
+                    <p style="color: #4d90fe;">Productos Comprados:</p>
                     <table>
                         <tr>
                             <th class="th">Título</th>
@@ -509,9 +508,7 @@ class CartController {
                 </div>
             </div>
         </body>
-        </html>
-        
-`
+        </html>`
 
         //TODO: Buscar formas de utilizar los emails y los sms en otras partes del código, por ejemplo en el registro exitoso
         await sendEmail(request.user.email, '!Compra exitosa!', html)
@@ -530,7 +527,8 @@ class CartController {
         })
       }
     } catch (error) {
-      response.sendInternalServerError(error)
+      console.log(error.message)
+      response.sendInternalServerError(error.message)
     }
   }
 }

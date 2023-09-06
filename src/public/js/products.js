@@ -1,4 +1,7 @@
+const cartElement = document.getElementById('cidHolder')
 const cartId = document.getElementById('cidHolder').getAttribute('cid')
+console.log('cartElement', cartElement)
+console.log('cartId', cartId)
 
 // Función asincrónica para manejar el clic en "Agregar al carrito"
 async function addToCart(button) {

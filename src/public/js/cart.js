@@ -177,8 +177,6 @@ document
             })),
           })
 
-          console.log('updateCartRes', updateCartRes)
-
           if (!updateCartRes.ok) {
             throw new Error(response.statusText)
           }

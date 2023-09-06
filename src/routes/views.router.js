@@ -16,6 +16,7 @@ class ViewsRouter extends CustomRouter {
           const { docs } = await productsService.get()
           const products = docs
           const loggedUserData = request.user
+          console.log(loggedUserData.cart)
 
           response.render('products', {
             products,
