@@ -4,7 +4,7 @@ const { MongoConnector } = require('../utils/MongoConnector.class')
 const { mode } = commander.opts()
 
 dotenv.config({
-  path: mode === 'development' ? './.env.development' : './.env.production',
+  path: mode === 'development' ? './.env.development' : './.env',
 })
 
 //TODO: Pasar el resto de los parámetros seteados en mi .env a los demás archivos que los utilizan. Ahora solo estoy pasando el puerto.
