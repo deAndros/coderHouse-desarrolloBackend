@@ -10,18 +10,16 @@ body {
   min-height: 100vh;
 }
 
-/* Estilos para el contenedor del logo */
 .logo-container {
   display: flex;
-  align-items: center; /* Alinea verticalmente el contenido */
-  margin-right: 10px; /* Margen derecho para separar del texto "Home" */
+  align-items: center;
+  margin-right: 10px; 
 }
 
-/* Estilos para el logo */
 .power-comics-logo {
   border-radius: 50%; /* Convierte la imagen en un círculo */
-  margin-top: -40px; /* Ajusta la posición vertical */
-  margin-bottom: -40px; /* Ajusta la posición vertical */
+  margin-top: -40px;
+  margin-bottom: -40px;
   width: 135px;
 }
 
@@ -66,19 +64,19 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-size: 100% 100%; /* Ajusta el tamaño de la imagen al tamaño del contenedor */
+  background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center center;
   width: 100%;
-  height: 170px; /* Ajusta la altura del contenedor según lo necesites */
+  height: 170px;
 }
 
 .icon {
   width: 29px;
   height: 29px;
-  max-width: 29px; /* Asegura que no superen el tamaño máximo */
-  max-height: 29px; /* Asegura que no superen el tamaño máximo */
-  vertical-align: middle; /* Alineación vertical en el centro */
+  max-width: 29px;
+  max-height: 29px;
+  vertical-align: middle;
 }
 
 
