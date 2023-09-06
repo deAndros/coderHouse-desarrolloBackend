@@ -95,11 +95,16 @@ class CustomRouter {
       let accessToken = request.cookies['Authorization']
       let tokenHeader = request.headers.authorization
 
-      if (!accessToken && !tokenHeader)
-        return response.status(403).send({
-          status: 'error',
-          error: 'No se encontró token de acceso',
-        })
+      if (!accessToken && !tokenHeader) {
+        if (request.originalUrl.includes('/api')) {
+          return response.status(403).send({
+            status: 'error',
+            error: 'No se encontró token de acceso',
+          })
+        }
+
+        return response.redirect('/login')
+      }
 
       if (!accessToken) {
         accessToken = tokenHeader.split(' ')[1]

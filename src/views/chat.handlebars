@@ -1,0 +1,25 @@
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card chat-container">
+                <div class="card-header chat-header">
+                    Chat en Vivo
+                </div>
+                <div class="card-body chat-body">
+                    <div class="chat-messages" id="messageLogs">
+                        <!-- Aquí se mostrarán los mensajes -->
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" class="form-control chat-box" placeholder="Escribe tu mensaje...">
+                        <button class="send-button"><img src="/static/images/Send.png" alt="Enviar"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{{!-- Para frontends externos configurar el socket con CDN --}}
+<script src="/socket.io/socket.io.js"></script>
+<script src="/static/js/chat.js"></script>

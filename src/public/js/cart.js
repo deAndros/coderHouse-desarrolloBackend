@@ -1,6 +1,6 @@
 /*const successToast = Swal.mixin({
   toast: true,
-  position: 'top-end',
+  
   showConfirmButton: false,
   timer: 3000,
   timerProgressBar: true,
@@ -18,7 +18,7 @@ const fireSuccessToast = (message) =>
 
 const errorToast = Swal.mixin({
   toast: true,
-  position: 'top-end',
+  
 })
 
 const fireErrorToast = (message) =>
@@ -26,9 +26,9 @@ const fireErrorToast = (message) =>
     icon: 'error',
     title: message,
   })*/
+let total = 0
 
 //TODO: Llevar toasts y métodos purchaseCart y updateCart a otros archivos e importarlos
-
 const purchaseCart = () =>
   fetch(`/api/carts/purchase`, {
     method: 'POST',
@@ -74,7 +74,7 @@ function decrementQuantity(input) {
 
 // Función para actualizar el monto total del carrito
 function updateTotalPrice() {
-  let total = 0
+  total = 0
 
   // Itera sobre todos los elementos que contienen los precios y cantidades
   document.querySelectorAll('.cart-item').forEach((cartItem) => {
@@ -138,7 +138,6 @@ document.querySelectorAll('.btn-remove').forEach((button) => {
           }
         } catch {
           Swal.fire({
-            position: 'top-end',
             icon: 'error',
             title: 'Error!',
             text: `Error al eliminar el producto ${error}}`,
@@ -155,12 +154,11 @@ document
   .getElementById('purchaseCartButton')
   .addEventListener('click', async (event) => {
     const cartContainer = document.getElementById('cidHolder')
-
     const cid = cartContainer.getAttribute('cid')
 
     Swal.fire({
       title: '¿Estás seguro?',
-      text: 'Deberás abonar un total de 450 USD',
+      text: `Deberá abonar un total de $${total}`,
       inputAttributes: {
         autocapitalize: 'off',
       },
@@ -190,7 +188,6 @@ document
             throw new Error(response.statusText)
           }
           Swal.fire({
-            position: 'top-end',
             icon: 'success',
             title: '¡Su compra fue exitosa!',
             showConfirmButton: false,
@@ -199,7 +196,6 @@ document
           //fireSuccessToast('Compra exitosa!')
         } catch (error) {
           Swal.fire({
-            position: 'top-end',
             icon: 'error',
             title: 'Error!',
             text: `Error al realizar la compra ${error}}`,

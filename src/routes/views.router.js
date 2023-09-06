@@ -90,6 +90,22 @@ class ViewsRouter extends CustomRouter {
       }
     })
 
+    this.get(
+      '/chat',
+      ['USER', 'PREMIUM', 'ADMIN'],
+      async (request, response) => {
+        try {
+          const loggedUserData = request.user
+          response.render('chat', {
+            loggedUserData,
+            style: 'chat.css',
+          })
+        } catch (error) {
+          response.render('chat', error.message)
+        }
+      }
+    )
+
     this.get('/realtimeproducts', (request, response) => {
       response.render('realTimeProducts', { style: 'index.css' })
     })

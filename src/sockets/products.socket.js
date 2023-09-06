@@ -5,7 +5,7 @@ const productsSocket = async (io) => {
   const products = await productManager.getProducts()
 
   io.on('connection', (socket) => {
-    console.log('Cliente conectado en Real Time Products')
+    console.log('Products socket conectado')
 
     socket.emit('products', products)
   })

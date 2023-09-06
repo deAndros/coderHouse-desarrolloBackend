@@ -1,6 +1,6 @@
 const successToast = Swal.mixin({
   toast: true,
-  position: 'top-end',
+
   showConfirmButton: false,
   timer: 3000,
   timerProgressBar: true,
@@ -18,7 +18,6 @@ const fireSuccessToast = (message) =>
 
 const errorToast = Swal.mixin({
   toast: true,
-  position: 'top-end',
 })
 
 const fireErrorToast = (message) =>

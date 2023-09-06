@@ -29,7 +29,6 @@ async function addToCart(button) {
       const errorMessage = await response.text()
 
       Swal.fire({
-        position: 'top-end',
         icon: 'error',
         title: 'Error!',
         text: JSON.parse(errorMessage).error,

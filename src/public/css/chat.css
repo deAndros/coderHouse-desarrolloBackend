@@ -1,0 +1,76 @@
+/* Estilos para el contenedor del chat */
+.chat-container {
+    background-color: #1f1f1f;
+    border: 1px solid #00bcd4;
+    border-radius: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+    max-width: calc(100% - 20px);
+    margin: 0 auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Estilos para el encabezado del chat */
+.chat-header {
+    background-color: #0097a7;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+/* Estilos para el cuerpo del chat */
+.chat-body {
+    padding: 0;
+}
+
+/* Estilos para los mensajes en el chat */
+.message {
+    padding: 10px;
+    border-bottom: 1px solid #00bcd4;
+}
+
+.message-text {
+    color: white;
+    font-size: smaller;
+}
+
+/* Estilos para el nombre del usuario */
+.user-name {
+    color: #d256ff;
+    font-weight: bold;
+}
+
+/* Estilos para el campo de entrada y el botón de envío */
+.chat-input {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+/* Estilos para el campo de entrada de texto */
+.form-control {
+    flex: 1;
+    border-color: #00bcd4;
+}
+
+/* Estilos para el botón de enviar */
+.send-button {
+    background: none; /* Elimina el fondo del botón */
+    border: none;
+    padding: 0; /* Elimina el relleno del botón */
+    margin-left: 10px;
+}
+
+/* Estilos para la imagen del botón */
+.send-button img {
+    width: 50px; /* Ajusta el ancho de la imagen */
+    height: 50px; /* Ajusta la altura de la imagen */
+}
+
+.send-button:hover {
+    /*background-color: #007d8a;
+    border-color: #007d8a;*/
+}

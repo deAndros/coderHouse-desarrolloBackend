@@ -305,7 +305,7 @@ class CartController {
       //Necesito traer el cart aún teniendolo en el JWT para que este se popule y por ende pueda manipular la propiedad "stock"
       const cart = await cartsService.getById(request.user.cart)
 
-      console.log('CARRITO CON EL QUE VOY A GENERAR EL TICKET', cart)
+      request.debug(`Carrito con el que voy a generar el ticket, ${cart}`)
       if (!cart) {
         return response.sendBadRequest(
           new Error(
@@ -324,23 +324,22 @@ class CartController {
       let productsOutOfStock = []
       let totalPrice = 0
 
-      //TODO: Revisar, no se actualizan bien los stocks
       for (const cartItem of cart.products) {
         let updatedProductQuantity = 0
-        /*if (request.user.email === cartItem.product.owner)
+
+        if (request.user.email === cartItem.product.owner)
           return response.sendBadRequest(
             new Error(
               `El producto ${cartItem.product.title} fue creado por usted y por ende no puede avanzar con la compra`
             )
-          )*/
+          )
+
         if (
           cartItem.product.stock > 0 &&
           cartItem.product.stock >= cartItem.quantity
         ) {
           updatedProductQuantity = cartItem.product.stock - cartItem.quantity
-          console.log('cartItem.product.stock', cartItem.product.stock)
-          console.log('cartItem.quantity', cartItem.quantity)
-          console.log('updatedProductQuantity', updatedProductQuantity)
+
           if (updatedProductQuantity === 0) {
             await productsService.delete(cartItem.product._id)
           } else {
@@ -377,42 +376,142 @@ class CartController {
 
         const ticket = await ticketModel.create(ticketTocreate)
 
-        const html = `<div>
-        //     <h1>¡${request.user.email} tu compra fue exitosa!</h1>
-        // </div>`
+        let ticketDetail = ''
+        purchasedProducts.forEach((item) => {
+          ticketDetail += `<tr class="product-info">
+                            <td>${item.product.title}</td>
+                            <td>${item.product.code}</td>
+                            <td>${item.quantity}</td>
+                            <td>${item.product.price}</td>
+                          </tr>`
+        })
 
-        //TODO: Implementar rendering para el correo que se envía al realizar la compra
-        /*const html = `<html>
+        const html = `<!DOCTYPE html>
+        <html lang="en">
         <head>
-          <title>Productos Comprados</title>
-          <style>
-            .product {
-              display: flex;
-              align-items: center;
-              margin-bottom: 10px;
-            }
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Ticket de Compra</title>
+            <style>
+                /* Estilos generales para el correo */
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: black;
+                    margin: 0;
+                    padding: 0;
+                }
         
-            .product-image {
-              width: 50px;
-              height: 50px;
-              margin-right: 10px;
-            }
-          </style>
+                .container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    background-color: #000;
+                    color: white;
+                    padding: 20px;
+                    border: 2px solid #2b1f9b; /* Agregado: Contorno del correo */
+                }
+        
+                h1 {
+                    color: black; /* Cambiado: Color del encabezado */
+                }
+        
+                p {
+                    margin: 10px 0;
+                    color: #4d90fe; /* Cambiado: Color del texto "Productos Comprados:" */
+                }
+        
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+        
+                table, th, td {
+                    border: 1px solid #ccc;
+                }
+        
+                th, td {
+                    padding: 10px;
+                    text-align: center;
+                }
+        
+                .th {
+                    background-color: #2778c4;
+                    color: white;
+                }
+        
+                /* Estilos para el encabezado del ticket */
+                .ticket-header {
+                    background-color: #0097a7;
+                    color: white;
+                    padding: 10px;
+                    text-align: center;
+                }
+        
+                /* Estilos para los productos */
+                .product-info {
+                    background-color: white;
+                    padding: 10px;
+                    margin-bottom: 10px;
+                    color: black;
+                }
+        
+                /* Estilos para el total */
+                .total {
+                    font-weight: bold;
+                }
+        
+                /* Estilos específicos para el correo */
+                .email-container {
+                    background-color: #f4f4f4;
+                    padding: 20px;
+                    border: 2px solid #2b1f9b; /* Agregado: Contorno del correo */
+                }
+        
+                .email-header {
+                    background-color: #00bcd4;
+                    color: black; /* Cambiado: Color del texto del encabezado */
+                    padding: 10px;
+                    text-align: center;
+                }
+        
+                .email-content {
+                    background-color: #000;
+                    padding: 20px;
+                }
+        
+                .email-logo {
+                    display: block;
+                    margin: 0 auto;
+                }
+            </style>
         </head>
         <body>
-          <h1>Productos Comprados</h1>
+            <div class="email-container">
+                <div class="email-header">
+                    <h1>Ticket de Compra</h1> <!-- Cambiado: Encabezado -->
+                </div>
+                <div class="email-content">
+                    <p>¡Gracias por tu compra!</p>
+                    <p>Fecha de Compra: ${new Date().toLocaleDateString(
+                      'es-ES'
+                    )}</p> <!-- Cambiado: Formato de fecha -->
+                    <p style="color: #4d90fe;">Productos Comprados:</p> <!-- Cambiado: Color del texto -->
+                    <table>
+                        <tr>
+                            <th class="th">Título</th>
+                            <th class="th">Código del Producto</th>
+                            <th class="th">Cantidad</th>
+                            <th class="th">Precio Unitario</th>
+                        </tr>
+                        ${ticketDetail}
+                    </table>
         
-          <h2>Lista de Productos:</h2>
-          <ul>
-            <!-- Aquí debes repetir estos bloques para cada producto -->
-            <li class="product">
-              <img src="ruta_imagen1.jpg" alt="Producto 1" class="product-image">
-              <span>${purchasedProducts[i].title}</span>
-            </li>
-            <!-- Fin del bloque del producto -->
-          </ul>
+                    <p class="total">Total Abonado: $${totalPrice}</p>
+                </div>
+            </div>
         </body>
-        </html>`*/
+        </html>
+        
+`
 
         //TODO: Buscar formas de utilizar los emails y los sms en otras partes del código, por ejemplo en el registro exitoso
         await sendEmail(request.user.email, '!Compra exitosa!', html)

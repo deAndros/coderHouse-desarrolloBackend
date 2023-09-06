@@ -63,11 +63,16 @@ const httpServer = app.listen(PORT, (error) => {
   logger.info(`Escuchando en el puerto ${PORT}`)
 })
 
+//Inicializo el socket server del lado del servidor
 const socketServer = new Server(httpServer)
 
 //Real Time Products
-const productsSocket = require('./utils/products.socket.js')
+const productsSocket = require('./sockets/products.socket.js')
 productsSocket(socketServer)
+
+//Chat
+const chatSocket = require('./sockets/chat.socket.js')
+chatSocket(socketServer)
 
 //Handlebars
 const handlebars = require('express-handlebars')
