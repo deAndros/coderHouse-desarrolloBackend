@@ -132,10 +132,12 @@ class CartController {
 
       const requestUser = await usersService.getByEmail(request.user.email)
 
-      if (productFound.owner === requestUser.email)
+      if (productFound.owner === requestUser.email) {
+        console.log('No puede agregar al carrito un producto creado por usted')
         return response.sendBadRequest(
           new Error('No puede agregar al carrito un producto creado por usted')
         )
+      }
 
       //Si ya existía el producto en el carrito
       //Con upsert le indico que si no se encontró un documento que cumpla con el criterio de búsqueda, que inserte uno nuevo que cumpla con los parámetros indicados en el update
@@ -213,7 +215,7 @@ class CartController {
 
       response.sendSuccess({ updatedCart: updatedCart })
     } catch (error) {
-      response.sendInternalServerError(error)
+      next()
     }
   }
 
@@ -246,6 +248,7 @@ class CartController {
         { $set: { 'products.$.quantity': quantity } }
       )
 
+      console.log('CARRITO ACTUALIZADO', updatedCart)
       if (!updatedCart)
         return response.sendBadRequest(
           new Error('No existe un carrito con el ID proporcionado')
@@ -302,7 +305,7 @@ class CartController {
       //Necesito traer el cart aún teniendolo en el JWT para que este se popule y por ende pueda manipular la propiedad "stock"
       const cart = await cartsService.getById(request.user.cart)
 
-      console.log(cart)
+      console.log('CARRITO CON EL QUE VOY A GENERAR EL TICKET', cart)
       if (!cart) {
         return response.sendBadRequest(
           new Error(
@@ -324,10 +327,20 @@ class CartController {
       //TODO: Revisar, no se actualizan bien los stocks
       for (const cartItem of cart.products) {
         let updatedProductQuantity = 0
-
-        if (cartItem.product.stock >= cartItem.quantity) {
+        /*if (request.user.email === cartItem.product.owner)
+          return response.sendBadRequest(
+            new Error(
+              `El producto ${cartItem.product.title} fue creado por usted y por ende no puede avanzar con la compra`
+            )
+          )*/
+        if (
+          cartItem.product.stock > 0 &&
+          cartItem.product.stock >= cartItem.quantity
+        ) {
           updatedProductQuantity = cartItem.product.stock - cartItem.quantity
-
+          console.log('cartItem.product.stock', cartItem.product.stock)
+          console.log('cartItem.quantity', cartItem.quantity)
+          console.log('updatedProductQuantity', updatedProductQuantity)
           if (updatedProductQuantity === 0) {
             await productsService.delete(cartItem.product._id)
           } else {
@@ -337,8 +350,11 @@ class CartController {
             )
           }
 
-          totalPrice += cartItem.product.price
-          purchasedProducts.push(cartItem.product)
+          totalPrice += cartItem.product.price * cartItem.quantity
+          purchasedProducts.push({
+            product: cartItem.product,
+            quantity: cartItem.quantity,
+          })
         } else {
           productsOutOfStock.push({
             product: cartItem.product._id,

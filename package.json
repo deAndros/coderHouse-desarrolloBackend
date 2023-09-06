@@ -130,7 +130,8 @@
   "scripts": {
     "start:dev": "nodemon src/app.js",
     "start:prd": "node src/app.js --mode production",
-    "test": "mocha tests/supertest.test.js"
+    "test": "mocha tests/supertest.test.js",
+    "debug": "nodemon --inspect src/app.js"
   },
   "keywords": [],
   "author": "",

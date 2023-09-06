@@ -54,7 +54,7 @@ app.use(logger('dev'))*/
 //Socket IO
 const { Server } = require('socket.io')
 
-//Loging
+//Logging
 const { logger, addLogger } = require('./config/logger.config')
 app.use(addLogger)
 
@@ -70,11 +70,39 @@ const productsSocket = require('./utils/products.socket.js')
 productsSocket(socketServer)
 
 //Handlebars
-//TODO: No funciona la vista de productos. Arreglarla
 const handlebars = require('express-handlebars')
+const Handlebars = require('handlebars')
 app.engine('handlebars', handlebars.engine()) //Inicializo el engine de handlebars
 app.set('views', __dirname + '/views') //Le digo a mi app donde están mis vistas
 app.set('view engine', 'handlebars') //Le digo a mi app que lo use
+
+//Declaro un helper de handlebars para que me permita manejar lógica utilizando la sentencia custom "ifCond"
+Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
+  switch (operator) {
+    case '==':
+      return v1 == v2 ? options.fn(this) : options.inverse(this)
+    case '===':
+      return v1 === v2 ? options.fn(this) : options.inverse(this)
+    case '!=':
+      return v1 != v2 ? options.fn(this) : options.inverse(this)
+    case '!==':
+      return v1 !== v2 ? options.fn(this) : options.inverse(this)
+    case '<':
+      return v1 < v2 ? options.fn(this) : options.inverse(this)
+    case '<=':
+      return v1 <= v2 ? options.fn(this) : options.inverse(this)
+    case '>':
+      return v1 > v2 ? options.fn(this) : options.inverse(this)
+    case '>=':
+      return v1 >= v2 ? options.fn(this) : options.inverse(this)
+    case '&&':
+      return v1 && v2 ? options.fn(this) : options.inverse(this)
+    case '||':
+      return v1 || v2 ? options.fn(this) : options.inverse(this)
+    default:
+      return options.inverse(this)
+  }
+})
 
 //Uso de Passport
 initPassport()

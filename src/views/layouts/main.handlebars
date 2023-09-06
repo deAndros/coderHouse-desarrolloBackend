@@ -15,7 +15,6 @@
 
 <body>
   <header class="top-bar banner-header">
-    <!-- Contenido del top-bar aquí -->
     <img src="/static/images/Banner2.png" style="height: inherit; width: inherit"></img>
   </header>
 
@@ -32,17 +31,30 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
+          {{#ifCond loggedUserData.role '==' 'Admin'}}
           <li class="nav-item">
-            <a class="nav-link" href="/users">Users</a>
+            <a class="nav-link" href="/users"><img src="/static/images/USer.png" alt="User icon" class="icon"></a>
           </li>
+          {{/ifCond}}
           <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/cart">
-              <img src="/static/images/CartLogo.png" alt="Cart icon" class="cart-icon">
+            <a class="nav-link" href="https://github.com/deAndros">
+              <img src="/static/images/Github.png" alt="Github icon" class="icon">
             </a>
           </li>
+          {{#if loggedUserData}}
+          <li class="nav-item ms-auto">
+            <a class="nav-link" href="/cart">
+              <img src="/static/images/Cart.png" alt="Cart icon" class="icon">
+            </a>
+          </li>
+          <li class="nav-item ms-auto">
+            <a class="nav-link" href="#"><img src="/static/images/Chat.png" alt="Chat icon" class="icon"></a>
+          </li>
+          <li class="nav-item ms-auto">
+            <a class="nav-link" href="/api/sessions/logout"><img src="/static/images/Logout.png" alt="Logout icon"
+                class="icon"></a>
+          </li>
+          {{/if}}
         </ul>
       </div>
     </div>
@@ -54,7 +66,7 @@
 
   <footer class="footer">
     <div class="container">
-      <p>&copy; 2023 Power Comics. All rights reserved.</p>
+      <p>&copy; 2023 Power Comics by deAndros. All rights reserved.</p>
     </div>
   </footer>
 

@@ -63,7 +63,6 @@ const initPassportGithub = () => {
                 : profile.name.split(' ')[0],
               email: profile._json.email,
               password: '-',
-              role: 'Admin', //TODO: Modificar esto, solo está así para que el usuario que se registre pueda ver la ruta de productos
             }
 
             let newUser = await userModel.create(userData)

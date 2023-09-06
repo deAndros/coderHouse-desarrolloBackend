@@ -16,7 +16,6 @@ router.use('/', viewsRouter.getRouter())
 router.use('/api/products', productsRouter.getRouter())
 
 //_________________Apartado de CARRITOS_________________
-//TODO: Exponer las rutas para los endpoints que faltan
 router.use('/api/carts', cartsRouter.getRouter())
 
 //_________________Apartado de SESIONES_________________

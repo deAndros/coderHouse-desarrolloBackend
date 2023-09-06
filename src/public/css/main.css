@@ -73,9 +73,12 @@ body {
   height: 180px; /* Ajusta la altura del contenedor según lo necesites */
 }
 
-.cart-icon {
-  max-width: 5%; /* Ajusta este valor según tu preferencia */
-  height: auto; /* Asegura que la altura se ajuste automáticamente */
+.icon {
+  width: 29px;
+  height: 29px;
+  max-width: 29px; /* Asegura que no superen el tamaño máximo */
+  max-height: 29px; /* Asegura que no superen el tamaño máximo */
   vertical-align: middle; /* Alineación vertical en el centro */
 }
+
 

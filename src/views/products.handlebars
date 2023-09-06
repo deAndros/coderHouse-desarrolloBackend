@@ -1,8 +1,8 @@
-<div class="products-container">
+<div id="cidHolder" class="products-container" cid="{{loggedUserData.cart}}">
   {{#if products}}
   <div class="product-cards">
     {{#each products}}
-    <div class="product-card">
+    <div class="product-card" pid="{{_id}}">
       <div class="product-image">
         <img src="{{thumbnails.[0]}}" alt="{{title}}">
       </div>
@@ -23,3 +23,5 @@
   <h2>No hay productos para mostrar</h2>
   {{/if}}
 </div>
+
+<script src='/static/js/products.js'></script>

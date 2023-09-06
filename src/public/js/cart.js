@@ -1,8 +1,65 @@
+/*const successToast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+  },
+})
+
+const fireSuccessToast = (message) =>
+  successToast.fire({
+    icon: 'success',
+    title: message,
+  })
+
+const errorToast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+})
+
+const fireErrorToast = (message) =>
+  errorToast.fire({
+    icon: 'error',
+    title: message,
+  })*/
+
+//TODO: Llevar toasts y métodos purchaseCart y updateCart a otros archivos e importarlos
+
+const purchaseCart = () =>
+  fetch(`/api/carts/purchase`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+
+const updateCart = (cid, products) =>
+  fetch(`/api/carts/${cid}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(products),
+  })
+
+const deleteProductFromCart = (cid, pid) =>
+  fetch(`/api/carts/${cid}/product/${pid}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+
 // Función para incrementar la cantidad
 function incrementQuantity(input) {
   let currentValue = parseInt(input.value)
   if (!isNaN(currentValue) && currentValue < 99) {
     input.value = currentValue + 1
+    updateTotalPrice()
   }
 }
 
@@ -11,12 +68,39 @@ function decrementQuantity(input) {
   let currentValue = parseInt(input.value)
   if (!isNaN(currentValue) && currentValue > 1) {
     input.value = currentValue - 1
+    updateTotalPrice()
   }
 }
 
+// Función para actualizar el monto total del carrito
+function updateTotalPrice() {
+  let total = 0
+
+  // Itera sobre todos los elementos que contienen los precios y cantidades
+  document.querySelectorAll('.cart-item').forEach((cartItem) => {
+    const priceElement = cartItem.querySelector('.cart-product-price')
+    const quantityInput = cartItem.querySelector('.cart-quantity-input')
+
+    // Obtiene el precio y la cantidad como números
+
+    const price = parseFloat(priceElement.textContent.replace('Precio: $', ''))
+    const quantity = parseInt(quantityInput.value)
+
+    // Calcula el subtotal del producto y lo agrega al total
+    const subtotal = price * quantity
+    total += subtotal
+  })
+
+  // Actualiza el elemento que muestra el monto total
+  const totalPriceElement = document.getElementById('totalPrice')
+  totalPriceElement.textContent = `Total: $${total.toFixed(2)}`
+}
+
+updateTotalPrice()
+
 // Agrego un event listener para el botón "x" dentro de cada tarjeta del carrito
 document.querySelectorAll('.btn-remove').forEach((button) => {
-  button.addEventListener('click', (event) => {
+  button.addEventListener('click', async (event) => {
     // Obtengo el ID del producto desde el atributo "pid" propio del botón x
     const productId = event.currentTarget.getAttribute('pid')
 
@@ -37,27 +121,31 @@ document.querySelectorAll('.btn-remove').forEach((button) => {
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'No, cancelar',
-    }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
+    }).then(async (result) => {
       if (result.isConfirmed) {
         if (cartItem) {
           cartItem.remove()
         }
 
-        // Realiza una llamada a la API para eliminar el producto del carrito
-        fetch(`/api/carts/${cartId}/product/${productId}`, {
-          method: 'DELETE',
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error('Error al eliminar el producto del carrito')
-            }
-            console.log(response)
+        try {
+          const deleteProductFromCartRes = await deleteProductFromCart(
+            cartId,
+            productId
+          )
+
+          if (!deleteProductFromCartRes.ok) {
+            throw new Error(response.statusText)
+          }
+        } catch {
+          Swal.fire({
+            position: 'top-end',
+            icon: 'error',
+            title: 'Error!',
+            text: `Error al eliminar el producto ${error}}`,
+            showConfirmButton: false,
+            timer: 1500,
           })
-          .catch((error) => {
-            console.error(error)
-            // Aquí puedes manejar errores de la llamada a la API
-          })
+        }
       }
     })
   })
@@ -69,44 +157,58 @@ document
     const cartContainer = document.getElementById('cidHolder')
 
     const cid = cartContainer.getAttribute('cid')
-    console.log(cid)
 
-    document.querySelectorAll('.cart-quantity-input').forEach(async (input) => {
-      const productId = input.getAttribute('pid')
-      const productQuantity = input.value
-
-      await fetch(`/api/carts/${cid}/product/${productId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ quantity: productQuantity }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Error al actualizar los productos del carrito')
-          }
-          console.log(response)
-        })
-        .catch((error) => {
-          console.error(error)
-          // Aquí puedes manejar errores de la llamada a la API
-        })
-    })
-    await fetch(`/api/carts/purchase`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Deberás abonar un total de 450 USD',
+      inputAttributes: {
+        autocapitalize: 'off',
       },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Error al generar el ticket')
+      showCancelButton: true,
+      confirmButtonText: '¡Comprar!',
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        const cartQuantityInputs = Array.from(
+          document.querySelectorAll('.cart-quantity-input')
+        )
+        try {
+          const updateCartRes = await updateCart(cid, {
+            products: cartQuantityInputs.map((c) => ({
+              product: c.getAttribute('pid'),
+              quantity: parseInt(c.value),
+            })),
+          })
+
+          console.log('updateCartRes', updateCartRes)
+
+          if (!updateCartRes.ok) {
+            throw new Error(response.statusText)
+          }
+
+          const purchaseCartRes = await purchaseCart()
+          if (!purchaseCartRes.ok) {
+            throw new Error(response.statusText)
+          }
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: '¡Su compra fue exitosa!',
+            showConfirmButton: false,
+            timer: 1500,
+          })
+          //fireSuccessToast('Compra exitosa!')
+        } catch (error) {
+          Swal.fire({
+            position: 'top-end',
+            icon: 'error',
+            title: 'Error!',
+            text: `Error al realizar la compra ${error}}`,
+            showConfirmButton: false,
+            //timer: 1500,
+          })
+          //fireErrorToast(`Error al realizar la compra ${error}}`)
         }
-        console.log(response)
-      })
-      .catch((error) => {
-        console.error(error)
-        // Aquí puedes manejar errores de la llamada a la API
-      })
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    })
   })

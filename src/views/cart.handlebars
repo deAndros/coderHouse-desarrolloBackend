@@ -16,7 +16,7 @@
                 <div class="card-body">
                   <h5 class="cart-product-title">{{product.title}}</h5>
                   <p class="cart-product-stock">Stock: {{this.product.stock}}</p>
-                  <p class="cart-product-price">Precio: {{this.product.price}}</p>
+                  <p class="cart-product-price">Precio: ${{this.product.price}}</p>
                   <div class="d-flex align-items-center cart-quantity-container">
                     <button class="btn btn-quantity-minus" type="button"
                       onclick="decrementQuantity(this.nextElementSibling)">-</button>
@@ -42,7 +42,7 @@
       <div class="card">
         <div class="card-header">Resumen del Carrito</div>
         <div class="card-body">
-          <p>Total: ${{totalPrice}}</p>
+          <p id="totalPrice">Total: $</p>
           <button class="btn btn-success btn-block" id="purchaseCartButton">Comprar carrito</button>
         </div>
       </div>
