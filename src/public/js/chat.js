@@ -2,7 +2,6 @@ const socket = io()
 const chatBox = document.querySelector('.chat-box')
 const sendButton = document.querySelector('.send-button')
 const messageLogs = document.getElementById('messageLogs')
-console.log(chatBox)
 let nickname
 
 Swal.fire({

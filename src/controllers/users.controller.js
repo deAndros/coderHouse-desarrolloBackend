@@ -29,7 +29,7 @@ class UsersController {
         nextLink: result.nextLink,
       })
     } catch (error) {
-      response.sendInternalServerError(error)
+      response.sendInternalServerError(error.message)
     }
   }
 
@@ -56,7 +56,7 @@ class UsersController {
 
       response.sendSuccess({ user: userMetadata })
     } catch (error) {
-      response.sendInternalServerError(error)
+      response.sendInternalServerError(error.message)
     }
   }
 
@@ -99,7 +99,7 @@ class UsersController {
           error: true,
           message: error.message,
         }
-      response.sendInternalServerError(error)
+      response.sendInternalServerError(error.message)
     }
   }
 
@@ -181,7 +181,7 @@ class UsersController {
         message: `El rol fue actualizado correctamente a ${modifiedUser.role}`,
       })
     } catch (error) {
-      response.sendInternalServerError(error)
+      response.sendInternalServerError(error.message)
     }
   }
 
@@ -211,7 +211,7 @@ class UsersController {
         message: 'El usuario fue actualizado correctamente',
       })
     } catch (error) {
-      response.sendInternalServerError(error)
+      response.sendInternalServerError(error.message)
     }
   }
 

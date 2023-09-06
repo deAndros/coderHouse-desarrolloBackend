@@ -20,7 +20,7 @@ class CartsRouter extends CustomRouter {
 
     this.post('/', ['ADMIN'], createCart)
 
-    this.post('/purchase/', ['USER', 'ADMIN', 'PREMIUM'], generateTicket)
+    this.post('/purchase/', ['USER', 'PREMIUM'], generateTicket)
 
     this.post(
       '/:cid([a-zA-Z0-9]+)/product/:pid([a-zA-Z0-9]+)',

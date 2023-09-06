@@ -42,7 +42,7 @@ class ProductsController {
         nextLink,
       })
     } catch (error) {
-      response.sendInternalServerError(error)
+      response.sendInternalServerError(error.message)
     }
   }
 
@@ -62,7 +62,7 @@ class ProductsController {
 
       response.sendSuccess({ product: productFound })
     } catch (error) {
-      response.sendInternalServerError(error)
+      response.sendInternalServerError(error.message)
     }
   }
 
@@ -86,7 +86,7 @@ class ProductsController {
 
       response.sendSuccess({ newProduct: newProduct })
     } catch (error) {
-      response.sendInternalServerError(error)
+      response.sendInternalServerError(error.message)
     }
   }
 
@@ -120,7 +120,7 @@ class ProductsController {
         updatedProduct: updatedProduct,
       })
     } catch (error) {
-      response.sendInternalServerError(error)
+      response.sendInternalServerError(error.message)
     }
   }
 

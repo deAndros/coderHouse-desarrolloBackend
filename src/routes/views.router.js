@@ -16,7 +16,6 @@ class ViewsRouter extends CustomRouter {
           const { docs } = await productsService.get()
           const products = docs
           const loggedUserData = request.user
-          console.log(loggedUserData.cart)
 
           response.render('products', {
             products,
@@ -29,24 +28,20 @@ class ViewsRouter extends CustomRouter {
       }
     )
 
-    this.get(
-      '/cart',
-      ['USER', 'ADMIN', 'PREMIUM'],
-      async (request, response) => {
-        try {
-          const loggedUserData = request.user
-          const cartProducts = await cartsService.getById(loggedUserData.cart)
+    this.get('/cart', ['USER', 'PREMIUM'], async (request, response) => {
+      try {
+        const loggedUserData = request.user
+        const cartProducts = await cartsService.getById(loggedUserData.cart)
 
-          response.render('cart', {
-            cartProducts,
-            loggedUserData,
-            style: 'cart.css',
-          })
-        } catch (error) {
-          response.render('cart', error.message)
-        }
+        response.render('cart', {
+          cartProducts,
+          loggedUserData,
+          style: 'cart.css',
+        })
+      } catch (error) {
+        response.render('cart', error.message)
       }
-    )
+    })
 
     this.get('/users', ['ADMIN'], async (request, response) => {
       try {
@@ -91,21 +86,17 @@ class ViewsRouter extends CustomRouter {
       }
     })
 
-    this.get(
-      '/chat',
-      ['USER', 'PREMIUM', 'ADMIN'],
-      async (request, response) => {
-        try {
-          const loggedUserData = request.user
-          response.render('chat', {
-            loggedUserData,
-            style: 'chat.css',
-          })
-        } catch (error) {
-          response.render('chat', error.message)
-        }
+    this.get('/chat', ['USER', 'PREMIUM'], async (request, response) => {
+      try {
+        const loggedUserData = request.user
+        response.render('chat', {
+          loggedUserData,
+          style: 'chat.css',
+        })
+      } catch (error) {
+        response.render('chat', error.message)
       }
-    )
+    })
 
     this.get('/realtimeproducts', (request, response) => {
       response.render('realTimeProducts', { style: 'index.css' })

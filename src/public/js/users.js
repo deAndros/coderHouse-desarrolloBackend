@@ -51,7 +51,6 @@ function deleteUser(userId) {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
       if (data.status != 'SUCCESS')
         return Swal.fire(
           'Se produjo un error al eliminar el usuario, contacte con el administrador',

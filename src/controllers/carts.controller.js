@@ -40,7 +40,7 @@ class CartController {
         nextLink,
       })
     } catch (error) {
-      response.sendInternalServerError(error)
+      response.sendInternalServerError(error.message)
     }
   }
 
@@ -55,7 +55,7 @@ class CartController {
 
       response.sendSuccess({ cart: cart })
     } catch (error) {
-      response.sendInternalServerError(error)
+      response.sendInternalServerError(error.message)
     }
   }
 
@@ -133,7 +133,6 @@ class CartController {
       const requestUser = await usersService.getByEmail(request.user.email)
 
       if (productFound.owner === requestUser.email) {
-        console.log('No puede agregar al carrito un producto creado por usted')
         return response.sendBadRequest(
           new Error('No puede agregar al carrito un producto creado por usted')
         )
@@ -160,7 +159,7 @@ class CartController {
 
       response.sendSuccess({ cart: updatedCart })
     } catch (error) {
-      response.sendInternalServerError(error)
+      response.sendInternalServerError(error.message)
     }
   }
 
@@ -229,7 +228,6 @@ class CartController {
       //Llamo a getProductById aclarandole al método que el pedido es de parte del server. De esta forma evito que mi api quiera enviar dos respuestas distintas al cliente.
       const productFound = await getProductById(request, response)
 
-      console.log(productFound)
       if (!productFound)
         return response.sendBadRequest(
           new Error(`No existe un producto cuyo ID sea: ${request.params.pid}`)
@@ -248,7 +246,6 @@ class CartController {
         { $set: { 'products.$.quantity': quantity } }
       )
 
-      console.log('CARRITO ACTUALIZADO', updatedCart)
       if (!updatedCart)
         return response.sendBadRequest(
           new Error('No existe un carrito con el ID proporcionado')
@@ -256,7 +253,7 @@ class CartController {
 
       response.sendSuccess({ updatedCart: updatedCart })
     } catch (error) {
-      response.sendInternalServerError(error)
+      response.sendInternalServerError(error.message)
     }
   }
 
@@ -278,7 +275,7 @@ class CartController {
 
       response.sendSuccess({ updatedCart: updatedCart })
     } catch (error) {
-      response.sendInternalServerError(error)
+      response.sendInternalServerError(error.message)
     }
   }
 
@@ -527,7 +524,6 @@ class CartController {
         })
       }
     } catch (error) {
-      console.log(error.message)
       response.sendInternalServerError(error.message)
     }
   }
