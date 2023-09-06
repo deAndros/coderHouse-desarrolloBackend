@@ -37,4 +37,4 @@ class CartsDaoMongo {
   }
 }
 
-module.exports = CartsDaoMongo
+module.exports = new CartsDaoMongo()
